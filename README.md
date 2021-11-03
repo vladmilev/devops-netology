@@ -19,3 +19,4 @@
 - файлы с названием и расширением: .terraformrc и terraform.rc  
 	.terraformrc  
 	terraform.rc  
+new line
