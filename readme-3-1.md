@@ -62,6 +62,23 @@ ls -h
 Конструкция [[ -d /tmp ]]  проверяет условие -d /tmp наличие каталога /tmp и возвращает 0 если его нет, либо 1 если каталог существует
 
 
+12. Основываясь на знаниях о просмотре текущих (например, PATH) и установке новых переменных; командах, которые мы рассматривали, добейтесь в выводе type -a bash в виртуальной машине наличия первым пунктом в списке:
+bash is /tmp/new_path_directory/bash
+bash is /usr/local/bin/bash
+bash is /bin/bash
+
+Команды:
+vagrant@vagrant:~$ mkdir /tmp/new_path_dir/
+vagrant@vagrant:~$ cp /bin/bash /tmp/new_path_dir/
+vagrant@vagrant:~$ type -a bash
+bash is /usr/bin/bash
+bash is /bin/bash
+vagrant@vagrant:~$ PATH=/tmp/new_path_dir/:$PATH
+vagrant@vagrant:~$ type -a bash
+bash is /tmp/new_path_dir/bash
+bash is /usr/bin/bash
+bash is /bin/bash
+
 
 
 
