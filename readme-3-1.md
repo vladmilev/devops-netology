@@ -47,6 +47,20 @@ ls -h
 Слишком длинный список аргументов.
 
 
+11. В man bash поищите по /\[\[. Что делает конструкция [[ -d /tmp ]]
+
+       [[ expression ]]
+              Return a status of 0 or 1 depending on the evaluation of the conditional expression expression.  Expressions  are  com‐
+              posed  of  the  primaries described below under CONDITIONAL EXPRESSIONS.  Word splitting and pathname expansion are not
+              performed on the words between the [[ and ]]; tilde expansion, parameter and variable expansion, arithmetic  expansion,
+              command  substitution, process substitution, and quote removal are performed.  Conditional operators such as -f must be
+              unquoted to be recognized as primaries.
+
+              When used with [[, the < and > operators sort lexicographically using the current locale.
+
+Возвращает статус 0 или 1 в зависимости от оценки условного выражения (внутри). 
+Конструкция [[ -d /tmp ]]  проверяет условие -d /tmp наличие каталога /tmp и возвращает 0 если его нет, либо 1 если каталог существует
+
 
 
 
