@@ -18,18 +18,12 @@ $ vi /etc/systemd/system/node_exporter.service
 ------------------------------------
 [Unit]
 Description=Node Exporter Service
-After=network.target
 
 [Service]
-User=nodeusr
-Group=nodeusr
-Type=simple
 ExecStart=/usr/local/bin/node_exporter
-ExecReload=/bin/kill -HUP $MAINPID
-Restart=on-failure
 
 [Install]
-WantedBy=multi-user.target
+WantedBy=default.target
 ------------------------------------
 Перечитываем конфигурацию systemd:
 $ systemctl daemon-reload
@@ -37,6 +31,15 @@ $ systemctl daemon-reload
 $ systemctl enable node_exporter
 Запускаем службу:
 $ systemctl start node_exporter
+
+
+Для крона (`systemctl cat cron`) задано
+ExecStart=/usr/sbin/cron -f -P $EXTRA_OPTS
+systemd будет подгружать переменные окружения при старте cron из файла /etc/default/cron, а параметры запуска искать в переменной EXTRA_OPTS
+Мы может задать для сервиса node_exporter аналогичную запись
+ExecStart=/usr/local/bin/node_exporter -f -P $EXTRA_OPTS
+
+
 Убедимся что служба работает, остановим и снова запустим:
 $ ps -e |grep node_exporter   
    1375 ?        00:00:00 node_exporter
@@ -55,8 +58,6 @@ Password:
 ==== AUTHENTICATION COMPLETE ===
 $ ps -e |grep node_exporter
    1420 ?        00:00:00 node_exporter
-
-
 ```
 
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
