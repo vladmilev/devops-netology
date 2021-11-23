@@ -5,6 +5,57 @@
     * предусмотрите возможность добавления опций к запускаемому процессу через внешний файл (посмотрите, например, на `systemctl cat cron`),
     * удостоверьтесь, что с помощью systemctl процесс корректно стартует, завершается, а после перезагрузки автоматически поднимается.
 ```
+Установка node_exporter 
+$ wget https://github.com/prometheus/node_exporter/releases/download/v1.3.0/node_exporter-1.3.0.linux-amd64.tar.gz
+$ tar zxvf node_exporter-*.linux-amd64.tar.gz
+$ cd node_exporter-*.linux-amd64
+$ cp node_exporter /usr/local/bin/
+Создаем пользователя nodeusr и задаем его как владельца для исполняемого файла:
+$ useradd --no-create-home --shell /bin/false nodeusr
+$ chown -R nodeusr:nodeusr /usr/local/bin/node_exporter
+Создаем юнит-файл node_exporter.service для системы инициализации systemd:
+$ vi /etc/systemd/system/node_exporter.service
+------------------------------------
+[Unit]
+Description=Node Exporter Service
+After=network.target
+
+[Service]
+User=nodeusr
+Group=nodeusr
+Type=simple
+ExecStart=/usr/local/bin/node_exporter
+ExecReload=/bin/kill -HUP $MAINPID
+Restart=on-failure
+
+[Install]
+WantedBy=multi-user.target
+------------------------------------
+Перечитываем конфигурацию systemd:
+$ systemctl daemon-reload
+Разрешаем автозапуск:
+$ systemctl enable node_exporter
+Запускаем службу:
+$ systemctl start node_exporter
+Убедимся что служба работает, остановим и снова запустим:
+$ ps -e |grep node_exporter   
+   1375 ?        00:00:00 node_exporter
+$ systemctl stop node_exporter
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to stop 'node_exporter.service'.
+Authenticating as: vagrant,,, (vagrant)
+Password: 
+==== AUTHENTICATION COMPLETE ===
+$ ps -e |grep node_exporter
+$ systemctl start node_exporter
+==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
+Authentication is required to start 'node_exporter.service'.
+Authenticating as: vagrant,,, (vagrant)
+Password: 
+==== AUTHENTICATION COMPLETE ===
+$ ps -e |grep node_exporter
+   1420 ?        00:00:00 node_exporter
+
 
 ```
 
