@@ -62,7 +62,32 @@ $ ps -e |grep node_exporter
 
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 ```
+$ man node_exporter
+Служба мониторинга выводит метрики через порт 9100 - увидеть их можно вызвав курлом вывод в этот порт:  
+$ curl -s localhost:9100/metrics
 
+CPU:
+    node_cpu_seconds_total{cpu="0",mode="idle"} 2238.49
+    node_cpu_seconds_total{cpu="0",mode="system"} 16.72
+    node_cpu_seconds_total{cpu="0",mode="user"} 6.86
+    process_cpu_seconds_total
+    
+Memory:
+    node_memory_MemAvailable_bytes 
+    node_memory_MemFree_bytes
+    
+Disk(если несколько дисков то для каждого):
+    node_disk_io_time_seconds_total{device="sda"} 
+    node_disk_read_bytes_total{device="sda"} 
+    node_disk_read_time_seconds_total{device="sda"} 
+    node_disk_write_time_seconds_total{device="sda"}
+    
+Network(так же для каждого активного адаптера):
+    node_network_receive_errs_total{device="eth0"} 
+    node_network_receive_bytes_total{device="eth0"} 
+    node_network_transmit_bytes_total{device="eth0"}
+    node_network_transmit_errs_total{device="eth0"}
+    
 ```
 
 3. Установите в свою виртуальную машину [Netdata](https://github.com/netdata/netdata). Воспользуйтесь [готовыми пакетами](https://packagecloud.io/netdata/netdata/install) для установки (`sudo apt install -y netdata`). После успешной установки:
