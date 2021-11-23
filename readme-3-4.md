@@ -9,12 +9,10 @@
 $ wget https://github.com/prometheus/node_exporter/releases/download/v1.3.0/node_exporter-1.3.0.linux-amd64.tar.gz
 $ tar zxvf node_exporter-*.linux-amd64.tar.gz
 $ cd node_exporter-*.linux-amd64
-$ cp node_exporter /usr/local/bin/
-Создаем пользователя nodeusr и задаем его как владельца для исполняемого файла:
-$ useradd --no-create-home --shell /bin/false nodeusr
-$ chown -R nodeusr:nodeusr /usr/local/bin/node_exporter
+$ sudo cp node_exporter /usr/local/bin/
+
 Создаем юнит-файл node_exporter.service для системы инициализации systemd:
-$ vi /etc/systemd/system/node_exporter.service
+$ sudo nano /etc/systemd/system/node_exporter.service
 ------------------------------------
 [Unit]
 Description=Node Exporter Service
@@ -26,63 +24,51 @@ ExecStart=/usr/local/bin/node_exporter
 WantedBy=default.target
 ------------------------------------
 Перечитываем конфигурацию systemd:
-$ systemctl daemon-reload
+$ sudo systemctl daemon-reload
 Разрешаем автозапуск:
-$ systemctl enable node_exporter
+$ sudo systemctl enable node_exporter
 Запускаем службу:
-$ systemctl start node_exporter
+$ sudo systemctl start node_exporter
 
 
 Для крона (`systemctl cat cron`) задано
-ExecStart=/usr/sbin/cron -f -P $EXTRA_OPTS
+ExecStart=/usr/sbin/cron -f $EXTRA_OPTS
 systemd будет подгружать переменные окружения при старте cron из файла /etc/default/cron, а параметры запуска искать в переменной EXTRA_OPTS
 Мы может задать для сервиса node_exporter аналогичную запись
-ExecStart=/usr/local/bin/node_exporter -f -P $EXTRA_OPTS
+ExecStart=/usr/local/bin/node_exporter -f $EXTRA_OPTS
 
 
 Убедимся что служба работает, остановим и снова запустим:
 $ ps -e |grep node_exporter   
-   1375 ?        00:00:00 node_exporter
-$ systemctl stop node_exporter
-==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
-Authentication is required to stop 'node_exporter.service'.
-Authenticating as: vagrant,,, (vagrant)
-Password: 
-==== AUTHENTICATION COMPLETE ===
+   1269 ?        00:00:00 node_exporter
+$ sudo systemctl stop node_exporter
 $ ps -e |grep node_exporter
 $ systemctl start node_exporter
-==== AUTHENTICATING FOR org.freedesktop.systemd1.manage-units ===
-Authentication is required to start 'node_exporter.service'.
-Authenticating as: vagrant,,, (vagrant)
-Password: 
-==== AUTHENTICATION COMPLETE ===
 $ ps -e |grep node_exporter
-   1420 ?        00:00:00 node_exporter
+   1395man  ?        00:00:00 node_exporter
 ```
 
 2. Ознакомьтесь с опциями node_exporter и выводом `/metrics` по-умолчанию. Приведите несколько опций, которые вы бы выбрали для базового мониторинга хоста по CPU, памяти, диску и сети.
 ```
-$ man node_exporter
 Служба мониторинга выводит метрики через порт 9100 - увидеть их можно вызвав курлом вывод в этот порт:  
 $ curl -s localhost:9100/metrics
 
 CPU:
-    node_cpu_seconds_total{cpu="0",mode="idle"} 2238.49
-    node_cpu_seconds_total{cpu="0",mode="system"} 16.72
-    node_cpu_seconds_total{cpu="0",mode="user"} 6.86
-    process_cpu_seconds_total
+    node_cpu_seconds_total{cpu="0",mode="idle"} 1149.82
+    node_cpu_seconds_total{cpu="0",mode="system"} 2.02
+    node_cpu_seconds_total{cpu="0",mode="user"} 1.65
     
 Memory:
-    node_memory_MemAvailable_bytes 
-    node_memory_MemFree_bytes
+    node_memory_MemAvailable_bytes 1.799405568e+09
+    node_memory_MemFree_bytes 1.402843136e+09
     
-Disk(если несколько дисков то для каждого):
+Disk:
     node_disk_io_time_seconds_total{device="sda"} 
     node_disk_read_bytes_total{device="sda"} 
     node_disk_read_time_seconds_total{device="sda"} 
     node_disk_write_time_seconds_total{device="sda"}
     
-Network(так же для каждого активного адаптера):
+Network:
     node_network_receive_errs_total{device="eth0"} 
     node_network_receive_bytes_total{device="eth0"} 
     node_network_transmit_bytes_total{device="eth0"}
