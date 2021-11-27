@@ -219,9 +219,11 @@ sdc                    8:32   0  2.5G  0 disk
   └─md1                9:1    0    2G  0 raid1
 ```
 15. Протестируйте целостность файла:  
+```
 root@vagrant:~# gzip -t /tmp/new/test.gz  
 root@vagrant:~# echo $?  
 0  
+```
 ```
 $? - это код возврата из процесса последнего запуска. 0 означает, что ошибки не произошло. Другие значения представляют собой какое-то необычное состояние.
 
@@ -277,9 +279,11 @@ root@vagrant:~# dmesg | grep md1
                md/raid1:md1: Operation continuing on 1 devices.
 ```
 19. Протестируйте целостность файла, несмотря на "сбойный" диск он должен продолжать быть доступен:  
+```
 root@vagrant:~# gzip -t /tmp/new/test.gz  
 root@vagrant:~# echo $?  
 0  
+```
 ```
 root@vagrant:~# gzip -t /tmp/new/test.gz && echo $?
 0
