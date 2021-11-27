@@ -42,7 +42,40 @@ sdc                    8:32   0  2.5G  0 disk
 
 4. Используя fdisk, разбейте первый диск на 2 раздела: 2 Гб, оставшееся пространство.
 ```
+$ fdisk -l /dev/sdb
+Disk /dev/sdb: 2.51 GiB, 2684354560 bytes, 5242880 sectors
+Disk model: VBOX HARDDISK
+Units: sectors of 1 * 512 = 512 bytes
+Sector size (logical/physical): 512 bytes / 512 bytes
+I/O size (minimum/optimal): 512 bytes / 512 bytes
 
+$ fdisk /dev/sdb
+Первый - первичный primary
+ n   add a new partition
+ p   primary (0 primary, 0 extended, 4 free)
+First sector (2048-5242879, default 2048): 2048
+500 Мб: 500*1048576(байт в 1 Мб)
+Вычислим заключительный сектор раздела: 2048 + 500*1048576/512 = 2048 + 1024000 = 1026048
+Created a new partition 1 of type 'Linux' and of size 500 MiB.
+
+Второй раздел - логический extended
+ n
+ e   extended (container for logical partitions)
+Created a new partition 2 of type 'Extended' and of size 2 GiB.
+ p   print the partition table
+ Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdb1          2048 1026048 1024001  500M 83 Linux
+/dev/sdb2       1028096 5242879 4214784    2G  5 Extended
+Установим тип ОС для второго раздела тоже на Linux (83)
+ t   change a partition type
+ 2 
+ w   write table to disk and exit
+ 
+root@vagrant:~# lsblk /dev/sdb
+NAME   MAJ:MIN RM  SIZE RO TYPE MOUNTPOINT
+sdb      8:16   0  2.5G  0 disk
+├─sdb1   8:17   0  500M  0 part
+└─sdb2   8:18   0    2G  0 part
 ```
 
 5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
