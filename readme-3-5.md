@@ -115,20 +115,50 @@ mdadm: array /dev/md1 started.
 ```
 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
 ```
+# mdadm --create --verbose /dev/md0 -l 0 -n 2 /dev/sd{b1,c1}
+mdadm: chunk size defaults to 512K
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md0 started.
 
+# lsblk
+sdb                    8:16   0  2.5G  0 disk
+├─sdb1                 8:17   0  500M  0 part
+│ └─md0                9:0    0  996M  0 raid0
+└─sdb2                 8:18   0    2G  0 part
+  └─md1                9:1    0    2G  0 raid1
+sdc                    8:32   0  2.5G  0 disk
+├─sdc1                 8:33   0  500M  0 part
+│ └─md0                9:0    0  996M  0 raid0
+└─sdc2                 8:34   0    2G  0 part
+  └─md1                9:1    0    2G  0 raid1
 ```
 8. Создайте 2 независимых PV на получившихся md-устройствах.
 ```
+pvcreate - Initialize physical volume(s) for use by LVM
 
+pvcreate /dev/md0 /dev/md1
+  Physical volume "/dev/md0" successfully created.
+  Physical volume "/dev/md1" successfully created.
 ```
 9. Создайте общую volume-group на этих двух PV.
-
 ```
-
+ vgcreate - Create a volume group
+ 
+ # vgcreate vg1 /dev/md0 /dev/md1
+  Volume group "vg1" successfully created
+ # vgdisplay
 ```
 10. Создайте LV размером 100 Мб, указав его расположение на PV с RAID0.
 ```
+lvcreate - Create a logical volume
 
+# lvcreate -L 100M vg1 /dev/md0
+  Logical volume "lvol0" created.
+# lvs
+  LV     VG        Attr       LSize   Pool Origin Data%  Meta%  Move Log Cpy%Sync Convert
+  lvol0  vg1       -wi-a----- 100.00m
+  root   vgvagrant -wi-ao---- <62.54g
+  swap_1 vgvagrant -wi-ao---- 980.00m
 ```
 11. Создайте mkfs.ext4 ФС на получившемся LV.
 ```
