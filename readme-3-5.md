@@ -92,7 +92,26 @@ Device     Boot   Start     End Sectors  Size Id Type
 ```
 mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)
 
-
+ mdadm --help-options
+ --create      -C   : Create a new array
+ --verbose     -v   : Be more verbose about what is happening
+ mdadm --create --help
+ --level=           -l : raid level: 0,1,4,5,6,10,linear,multipath and synonyms 
+ --raid-devices=    -n : number of active devices in array
+ 
+# mdadm --create --verbose /dev/md1 -l 1 -n 2 /dev/sd{b2,c2}
+mdadm: partition table exists on /dev/sdb2
+mdadm: partition table exists on /dev/sdb2 but will be lost or
+       meaningless after creating array
+mdadm: Note: this array has metadata at the start and
+    may not be suitable as a boot device.  If you plan to
+    store '/boot' on this device please ensure that
+    your boot-loader understands md/v1.x metadata, or use
+    --metadata=0.90
+mdadm: size set to 2104320K
+Continue creating array? y
+mdadm: Defaulting to version 1.2 metadata
+mdadm: array /dev/md1 started.
 ```
 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
 ```
