@@ -80,10 +80,18 @@ sdb      8:16   0  2.5G  0 disk
 
 5. Используя sfdisk, перенесите данную таблицу разделов на второй диск.
 ```
+sfdisk - manipulate a disk partition table
+ -d, --dump <dev>                  dump partition table (usable for later input)
+$ sfdisk -d /dev/sdb | sfdisk --force /dev/sdc
 
+Device     Boot   Start     End Sectors  Size Id Type
+/dev/sdc1          2048 1026048 1024001  500M 83 Linux
+/dev/sdc2       1028096 5242879 4214784    2G 83 Linux
 ```
 6. Соберите mdadm RAID1 на паре разделов 2 Гб
 ```
+mdadm is used for building, managing, and monitoring Linux md devices (aka RAID arrays)
+
 
 ```
 7. Соберите mdadm RAID0 на второй паре маленьких разделов.
