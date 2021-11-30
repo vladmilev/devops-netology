@@ -176,9 +176,45 @@ dns.google. 2508 IN A 8.8.8.8
 dns.google указывает на A записи:
 A 8.8.4.4
 A 8.8.8.8
+
+список всех записей DNS для домена:
+~$ dig +nocmd dns.google a +noall +answer
+dns.google.             3427    IN      A       8.8.4.4
+dns.google.             3427    IN      A       8.8.8.8
+vagrant@vagrant:~$ dig +nocmd dns.google any +noall +answer
+dns.google.             3181    IN      A       8.8.4.4
+dns.google.             3181    IN      A       8.8.8.8
+dns.google.             3181    IN      RRSIG   A 8 2 900 20211230021026 20211130021026 1773 dns.google. Bze74TmqHdB62cfznKo+Otzxl4thXkUPMOLJ9tSlTCI3br1Uzj8Ncn0/ 77XBjcqMbENbNMUepvP0PybwBP3NGH+bBq4FjrbXXMcO+AbB79XMiqHX Ey9m7a20m44LYuojcPU8KEZYcN+kL81E9tTL1SSKnYWubVwiztGPjGWi qyM=
+dns.google.             1773    IN      AAAA    2001:4860:4860::8844
+dns.google.             1773    IN      AAAA    2001:4860:4860::8888
+dns.google.             1773    IN      RRSIG   AAAA 8 2 900 20211230021026 20211130021026 1773 dns.google. PQ8Oa5gSCxXh4jOsfrmaCtxz/5HeS7TQs0mSOtw1tNzjhtIvhht3eepb I8hG/366QwZUK263Q4YxpXsfIPl5gHaJxUdPDDSxhN2+P+WOEESK00AA fuaBN+/+ofHOrFglZarRR2TVedR7G2+whO0peVf0O5ZqgeQRCppAwUp1 kvA=
+
 ```
 
 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой dig  
 ```
+Запись PTR - это тип записи системы доменных имен (DNS), которая сопоставляет IP-адрес с доменом  именем хоста, и есть полной противоположностью A записи, где доменное имя указывает на IP-адрес. Из-за своей цели, PTR запись еще иногда называется обратной записью DNS.
 
+$ dig -x 8.8.8.8
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 8.8.8.8
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 8802
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;8.8.8.8.in-addr.arpa.          IN      PTR
+
+;; ANSWER SECTION:
+8.8.8.8.in-addr.arpa.   54514   IN      PTR     dns.google.
+
+;; Query time: 64 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Tue Nov 30 05:02:13 UTC 2021
+;; MSG SIZE  rcvd: 73
+
+К IP 8.8.8.8 привязано доменное имя dns.google.
 ```
