@@ -11,13 +11,36 @@ HOST: stackoverflow.com
 ```
 В ответе укажите полученный HTTP код, что он означает?  
 ```
-HTTP/1.1 400 Bad Request
+ telnet stackoverflow.com 80
+Trying 151.101.129.69...
+Connected to stackoverflow.com.
+Escape character is '^]'.
+GET /questions HTTP/1.0
+HOST: stackoverflow.com
+
+HTTP/1.1 301 Moved Permanently
+cache-control: no-cache, no-store, must-revalidate
+location: https://stackoverflow.com/questions
+x-request-guid: 37f0e269-524e-4f41-bc4b-ad9637cac919
+feature-policy: microphone 'none'; speaker 'none'
+content-security-policy: upgrade-insecure-requests; frame-ancestors 'self' https://stackexchange.com
+Accept-Ranges: bytes
+Date: Wed, 01 Dec 2021 10:38:52 GMT
+Via: 1.1 varnish
 Connection: close
-Content-Length: 0
+X-Served-By: cache-fra19122-FRA
+X-Cache: MISS
+X-Cache-Hits: 0
+X-Timer: S1638355132.341466,VS0,VE92
+Vary: Fastly-SSL
+X-DNS-Prefetch-Control: off
+Set-Cookie: prov=8e1fdef0-7ece-514e-a1d7-d031aec3ebd8; domain=.stackoverflow.com; expires=Fri, 01-Jan-2055 00:00:00 GMT; path=/; HttpOnly
 
 Connection closed by foreign host.
 
-Код состояния ответа "HTTP 400 Bad Request" указывает, что сервер не смог понять запрос из-за недействительного синтаксиса. Клиент не должен повторять этот запрос без изменений.
+
+Код состояния ответа "301 Moved Permanently" указывает, что запрошенный ресурс был окончательно перемещён в URL, указанный в заголовке Location (en-US). Браузер в случае такого ответа перенаправляется на эту страницу, а поисковые системы обновляют свои ссылки на ресурс (говоря языком SEO, вес страницы переносится на новый URL-адрес). 
+location: https://stackoverflow.com/questions
 ```
 
 2. Повторите задание 1 в браузере, используя консоль разработчика F12.  
