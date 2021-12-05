@@ -189,6 +189,74 @@ VLAN (Virtual Local Area Network) — группа устройств, имею�
 #switchport voice vlan 3
 #exit
 (источник http://snakeproject.ru/rubric/article.php?art=cisco_vlan)
+
+Задание для Linux: vlan нужно настроить на сетевом интерфейсе хоста, не коммутатора
+Источники
+http://xgu.ru/wiki/VLAN_%D0%B2_Linux
+https://itproffi.ru/nastrojka-vlan-interfejsov-v-linux/
+https://winitpro.ru/index.php/2019/11/07/nastrojka-vlan-v-linux/
+
+Оказывается задать виртуальный локальную сеть VLAN можно различными способами.
+Я пробовал способ настройки конфигурации интерфейсов в файле /etc/network/interfaces на виртуальной машине с Ubuntu 20.04
+с перезапуском службы (источник https://itproffi.ru/nastrojka-vlan-interfejsov-v-linux/ "Конфигурация VLAN в Debian и Ubuntu")
+
+~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
+       valid_lft 86199sec preferred_lft 86199sec
+    inet6 fe80::a00:27ff:fe73:60cf/64 scope link
+       valid_lft forever preferred_lft forever
+       
+vagrant@vagrant:~$ sudo nano /etc/network/interfaces
+
+        ##vlan с ID-100 для интерфейса eth0 with ID - 100 в Debian/Ubuntu Linux##
+        auto eth0.100
+        iface eth0.100 inet static
+        address 10.0.2.200
+        netmask 255.255.255.0
+        vlan-raw-device eth0
+
+$ systemctl list-unit-files | grep -i network
+networkd-dispatcher.service            enabled         enabled
+networking.service                     enabled         enabled
+systemd-network-generator.service      disabled        enabled
+systemd-networkd-wait-online.service   enabled-runtime enabled
+systemd-networkd.service               enabled-runtime enabled
+systemd-networkd.socket                disabled        enabled
+network-online.target                  static          enabled
+network-pre.target                     static          disabled
+network.target                         static          disabled
+
+vagrant@vagrant:~$ sudo systemctl restart networking
+
+vagrant@vagrant:~$ ip a
+1: lo: <LOOPBACK,UP,LOWER_UP> mtu 65536 qdisc noqueue state UNKNOWN group default qlen 1000
+    link/loopback 00:00:00:00:00:00 brd 00:00:00:00:00:00
+    inet 127.0.0.1/8 scope host lo
+       valid_lft forever preferred_lft forever
+    inet6 ::1/128 scope host
+       valid_lft forever preferred_lft forever
+2: eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc fq_codel state UP group default qlen 1000
+    link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.15/24 brd 10.0.2.255 scope global dynamic eth0
+       valid_lft 85907sec preferred_lft 85907sec
+    inet6 fe80::a00:27ff:fe73:60cf/64 scope link
+       valid_lft forever preferred_lft forever
+3: eth0.100@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP> mtu 1500 qdisc noqueue state UP group default qlen 1000
+    link/ether 08:00:27:73:60:cf brd ff:ff:ff:ff:ff:ff
+    inet 10.0.2.200/24 brd 10.0.2.255 scope global eth0.100
+       valid_lft forever preferred_lft forever
+    inet6 fe80::a00:27ff:fe73:60cf/64 scope link
+       valid_lft forever preferred_lft forever
+
+Вот он запущенный VLAN: 3: eth0.100@eth0: <BROADCAST,MULTICAST,UP,LOWER_UP>
 ```
 
 4. Какие типы агрегации интерфейсов есть в Linux? Какие опции есть для балансировки нагрузки? Приведите пример конфига.
