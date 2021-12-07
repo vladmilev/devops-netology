@@ -7,8 +7,19 @@ Username: rviews
 show ip route x.x.x.x/32
 show bgp x.x.x.x/32
 ```
-Решение:  
+Ответ:  
 ```
+route-views>show ip route 45.84.224.58  
+Routing entry for 45.84.224.0/24
+  Known via "bgp 6447", distance 20, metric 0
+  Tag 3267, type external
+  Last update from 194.85.40.15 1w1d ago
+  Routing Descriptor Blocks:
+  * 194.85.40.15, from 194.85.40.15, 1w1d ago
+      Route metric is 0, traffic share count is 1
+      AS Hops 2
+      Route tag 3267
+      MPLS label: none
 ```
 
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
