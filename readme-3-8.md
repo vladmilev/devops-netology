@@ -154,5 +154,5 @@ E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libs/libssh/libss
 
 8*. Установите Netbox, создайте несколько IP префиксов, используя curl проверьте работу API.
 ```
-
+пока не пробовал, нашел источник https://jtprog.ru/netbox/
 ```
