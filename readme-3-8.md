@@ -24,10 +24,18 @@ Routing entry for 45.84.224.0/24
 
 2. Создайте dummy0 интерфейс в Ubuntu. Добавьте несколько статических маршрутов. Проверьте таблицу маршрутизации.
 ```
+# sudo -i
 # ip link add dummy0 type dummy
-# ip route add 192.168.2.0/24 via 192.168.0.1
-# ip route add 192.168.3.159/32 via 192.168.0.1
+# ip route add 192.168.2.0/24 via 10.0.2.15
+# ip route add 192.168.3.159/32 via 10.0.2.15
 # ip route show
+default via 10.0.2.2 dev eth0 proto dhcp src 10.0.2.15 metric 100
+10.0.2.0/24 dev eth0.100 proto kernel scope link src 10.0.2.200
+10.0.2.0/24 dev eth0 proto kernel scope link src 10.0.2.15
+10.0.2.2 dev eth0 proto dhcp scope link src 10.0.2.15 metric 100
+192.168.2.0/24 via 10.0.2.15 dev eth0
+192.168.3.159 via 10.0.2.15 dev eth0
+
 ```
 
 3. Проверьте открытые TCP порты в Ubuntu, какие протоколы и приложения используют эти порты? Приведите несколько примеров.
