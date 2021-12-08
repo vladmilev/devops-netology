@@ -147,8 +147,12 @@ stream {
 
 7*. Установите bird2, настройте динамический протокол маршрутизации RIP.
 ```
+устанавливал по https://bird.network.cz/pipermail/bird-users/2020-August/014770.html
+выдает ошибку
+E: Failed to fetch http://security.ubuntu.com/ubuntu/pool/main/libs/libssh/libssh-gcrypt-4_0.9.3-2ubuntu2.1_amd64.deb  404  Not Found [IP: 91.189.88.142 80]
 ```
 
 8*. Установите Netbox, создайте несколько IP префиксов, используя curl проверьте работу API.
 ```
+
 ```
