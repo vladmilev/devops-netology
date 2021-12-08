@@ -96,6 +96,53 @@ L3 уровень получим если добавим информацию п
 
 6*. Установите Nginx, настройте в режиме балансировщика TCP или UDP.
 ```
+Установил по источнику https://nginx.org/ru/docs/install.html
+
+Балансировщик настраивается в конфигурационном файле /etc/nginx/nginx.conf
+
+http {
+    upstream myapp1 {
+        server srv1.example.com;
+        server srv2.example.com;
+        server srv3.example.com;
+    }
+
+    server {
+        listen 80;
+
+        location / {
+            proxy_pass http://myapp1;
+        }
+    }
+}
+
+По источнику http://onreader.mdl.ru/NGINXCookbook/content/Ch02.html
+stream {
+    upstream mysql_read {
+        server read1.example.com:3306 weight=5;
+        server read2.example.com:3306;
+        server 10.10.12.34:3306 backup;
+    }
+
+    server {
+        listen 3306;
+        proxy_pass mysql_read;
+    }
+}
+Это для TCP, а для UDP:  
+
+stream {
+    upstream ntp {
+        server ntp1.example.com:123 weight=2;
+        server ntp2.example.com:123;
+    }
+
+    server {
+        listen 123 udp;
+        proxy_pass ntp;
+    }
+}
+используется параметр udp
 ```
 
 7*. Установите bird2, настройте динамический протокол маршрутизации RIP.
