@@ -12,7 +12,14 @@ https://chrome.google.com/webstore/detail/bitwarden-free-password-m/nngceckbapeb
 Скриншот запроса двухфакторной идентификации https://prnt.sc/22hcgtw
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
+
+Скриншот установленного apache2 https://prnt.sc/22hjfwz
+на ubuntu 20.04 устнанавливаться не хотела, удалось поднять через виртуальную машину
 ```
+ Vagrant.configure("2") do |config|
+ 	config.vm.box = "ubuntu/bionic64"
+        config.vm.network :forwarded_port, guest: 80, host: 8080
+ end
 ```
 
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
