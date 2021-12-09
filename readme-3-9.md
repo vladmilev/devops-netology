@@ -1,7 +1,10 @@
 ## Домашнее задание к занятию "3.9. Элементы безопасности информационных систем"
 
-1. Установите Bitwarden плагин для браузера. Зарегестрируйтесь и сохраните несколько паролей.
+1. Установите Bitwarden плагин для браузера. Зарегистрируйтесь и сохраните несколько паролей.
 ```
+Плагин для хрома
+https://chrome.google.com/webstore/detail/bitwarden-free-password-m/nngceckbapebfimnlniiiahkandclblb/related?hl=ru
+Сохранил пароли к репозиториям на гитхабе, гитлабе и баттрекере
 ```
 
 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden акаунт через Google authenticator OTP.
