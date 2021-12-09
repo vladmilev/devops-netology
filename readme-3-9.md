@@ -8,8 +8,8 @@ https://chrome.google.com/webstore/detail/bitwarden-free-password-m/nngceckbapeb
 ```
 
 2. Установите Google authenticator на мобильный телефон. Настройте вход в Bitwarden акаунт через Google authenticator OTP.
-```
-```
+
+Скриншот запроса двухфакторной идентификации https://prnt.sc/22hcgtw
 
 3. Установите apache2, сгенерируйте самоподписанный сертификат, настройте тестовый сайт для работы по HTTPS.
 ```
