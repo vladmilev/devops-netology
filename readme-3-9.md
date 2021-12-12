@@ -22,10 +22,30 @@ Vagrant.configure("2") do |config|
  end
  
 настраивал самоподписание через https://www.dmosk.ru/miniinstruktions.php?mini=apache-ssl
+
+$ cd /etc/apache2/ssl
+$ sudo openssl req -new -x509 -days 1461 -nodes -out cert.pem -keyout cert.key -subj "/C=RU/ST=SPb/L=SPb/O=Global Security/OU=IT Department/CN=test.ru/CN=test"
+Can't load /home/vagrant/.rnd into RNG
+139645715239360:error:2406F079:random number generator:RAND_load_file:Cannot open file:../crypto/rand/randfile.c:88:Filename=/home/vagrant/.rnd
+Generating a RSA private key
+............+++++
+.........+++++
+writing new private key to 'cert.key'
+
+Избавился от ошибки по https://stackoverflow.com/questions/63893662/cant-load-root-rnd-into-rng
+> Try removing or commenting RANDFILE = $ENV::HOME/.rnd line in /etc/ssl/openssl.cnf
+
+$ sudo openssl req -new -x509 -days 1461 -nodes -out cert.pem -keyout cert.key -subj "/C=RU/ST=SPb/L=SPb/O=Global Security/OU=IT Department/CN=test.ru/CN=test"
+Generating a RSA private key
+...................................................................+++++
+..................+++++
+writing new private key to 'cert.key'
+-----
+
 $ sudo nano /etc/apache2/sites-enabled/site
 
 <VirtualHost *:443>
-    ServerName mysite.ru
+    ServerName test.ru
     DocumentRoot /var/www/html
 
     SSLEngine on
@@ -33,7 +53,17 @@ $ sudo nano /etc/apache2/sites-enabled/site
     SSLCertificateKeyFile ssl/cert.key
 </VirtualHost>
 
-На экране пусто - только буква R
+$ sudo systemctl restart apache2
+
+l$ apachectl configtest
+Syntax OK
+
+В браузере набираю https://test.ru
+На экране - ошибка 
+Не удается получить доступ к сайту
+Проверьте, нет ли опечаток в имени хоста test.ru.
+DNS_PROBE_FINISHED_NXDOMAIN
+
 Что не так?
 ```
 
