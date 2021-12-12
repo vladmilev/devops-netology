@@ -155,6 +155,32 @@ sslscan_scanme.nmap.org_80_20211209-224639.log
 запустить две виртуальные машины?
 как подключиться к серверу по SSH-ключу?
 может есть статьи на эту тему?
+
+1) Сгенерируем пару ключей на Windows-клиенте
+$ ssh-keygen
+Generating public/private rsa key pair.
+Enter file in which to save the key (/c/Users/79059/.ssh/id_rsa): /c/Users/79059/.ssh/test_rsa
+Enter passphrase (empty for no passphrase): 123
+Enter same passphrase again: 123
+Your identification has been saved in /c/Users/79059/.ssh/test_rsa
+Your public key has been saved in /c/Users/79059/.ssh/test_rsa.pub
+The key fingerprint is:
+SHA256:BQLKWI4VX4Yio/GGVgPok75LusoGFhGfUxrFkViry+Y 79059@LAPTOP-3V9GR47T
+The key's randomart image is:
++---[RSA 3072]----+
+|.o*o*B* .        |
+|=Oo**=.. .       |
+|=*B*o.    .      |
+|o*o o    .       |
+|o.o.    S        |
+|.o. .            |
+|o..+             |
+|+oo              |
+|*+.E             |
++----[SHA256]-----+
+
+2) Копируем открытый ключ
+
 ```
 
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
