@@ -64,8 +64,15 @@ Syntax OK
 Проверьте, нет ли опечаток в имени хоста test.ru.
 DNS_PROBE_FINISHED_NXDOMAIN
 
-Что не так?
+Команда apachectl configtest выдает ошибку
+AH00558: apache2: Could not reliably determine the server's fully qualified domain name, using 127.0.1.1. Set the 'ServerName' directive globally to suppress this message
+
+Удалось открыть сайт test.ru:443 только после того как прописал на windows-клиенте /windows/system32/drivers/etc/hosts
+127.0.1.1 test.ru
+
+через https://test.ru (без указания порта) - и как добиться такого варианта? - выдает ошибку ERR_SSL_PROTOCOL_ERROR
 ```
+Скриншот https://prnt.sc/22rkeki
 
 4. Проверьте на TLS уязвимости произвольный сайт в интернете (кроме сайтов МВД, ФСБ, МинОбр, НацБанк, РосКосмос, РосАтом, РосНАНО и любых госкомпаний, объектов КИИ, ВПК ... и тому подобное).
 ```
