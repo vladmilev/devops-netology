@@ -187,12 +187,6 @@ sslscan_scanme.nmap.org_80_20211209-224639.log
 
 5. Установите на Ubuntu ssh сервер, сгенерируйте новый приватный ключ. Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу.
 ```
-"Скопируйте свой публичный ключ на другой сервер. Подключитесь к серверу по SSH-ключу"
-Подскажите пожалуйста как это можно сделать?
-запустить две виртуальные машины?
-как подключиться к серверу по SSH-ключу?
-может есть статьи на эту тему?
-
 1) Сгенерируем пару ключей на Windows-клиенте
 $ ssh-keygen
 Generating public/private rsa key pair.
@@ -217,7 +211,18 @@ The key's randomart image is:
 +----[SHA256]-----+
 
 2) Копируем открытый ключ
+$ ssh-copy-id -p 2222 vagrant@localhost
 
+/usr/bin/ssh-copy-id: INFO: Source of key(s) to be installed: "/c/Users/79059/.ssh/id_rsa.pub"
+The authenticity of host '[localhost]:2222 ([127.0.0.1]:2222)' can't be established.
+ECDSA key fingerprint is SHA256:qhuPFuTTMpA+0yViGR/ZLtXBpcGo4mUtr2IN25CSmDw.
+Are you sure you want to continue connecting (yes/no/[fingerprint])? y
+Please type 'yes', 'no' or the fingerprint: yes
+/usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
+/usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
+vagrant@localhost: Permission denied (publickey).
+
+Насколько понимаю, ничего не было сделано, наверное файл уже существует с таким именем и его невозможно переписать
 ```
 
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
