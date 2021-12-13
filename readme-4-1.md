@@ -43,7 +43,21 @@ done
 
 ### Ваш скрипт:
 ```bash
-???
+hosts= ($(echo {192.168.0.1, 173.194.222.113, 87.250.250.242}:80))
+for ip in ${hosts[@]}
+do
+        for ip in ${1..5}
+        do
+                curl $ip
+                result= $?
+                $result >> log
+                if (($result == 0))
+                then
+                        break
+                fi
+        done
+done
+
 ```
 
 ## Обязательная задача 3
