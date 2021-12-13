@@ -43,6 +43,7 @@ done
 
 ### Ваш скрипт:
 ```bash
+#!/usr/bin/env bash
 hosts= ($(echo {192.168.0.1, 173.194.222.113, 87.250.250.242}:80))
 for ip in ${hosts[@]}
 do
@@ -65,7 +66,21 @@ done
 
 ### Ваш скрипт:
 ```bash
-???
+#!/usr/bin/env bash
+while ((1==1))
+do
+        hosts= ($(echo {192.168.0.1, 173.194.222.113, 87.250.250.242}:80))
+        for ip in ${hosts[@]}
+        do
+                curl $ip
+                if (($? != 0))
+                then
+                        $ip >> error
+                        exit
+                fi
+
+        done
+done
 ```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
