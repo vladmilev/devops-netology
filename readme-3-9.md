@@ -221,8 +221,41 @@ Please type 'yes', 'no' or the fingerprint: yes
 /usr/bin/ssh-copy-id: INFO: attempting to log in with the new key(s), to filter out any that are already installed
 /usr/bin/ssh-copy-id: INFO: 1 key(s) remain to be installed -- if you are prompted now it is to install the new keys
 vagrant@localhost: Permission denied (publickey).
-
 Насколько понимаю, ничего не было сделано, наверное файл уже существует с таким именем и его невозможно переписать
+
+SSH server на виртуальной машине установлен:
+$ sudo apt search openssh-server
+Sorting... Done
+Full Text Search... Done
+openssh-server/bionic-updates,bionic-security,now 1:7.6p1-4ubuntu0.5 amd64 [installed]
+  secure shell (SSH) server, for secure access from remote machines
+
+~/.ssh
+$ cat id_rsa.pub | ssh vagrant@localhost -p 2222 'cat >> ~/.ssh/authorized_keys'
+vagrant@localhost: Permission denied (publickey).
+
+Изменение прав доступа к папке и файлу в ней - не помогло
+ chmod 755 ~/.ssh
+vagrant@ubuntu-bionic:~$ cd .ssh
+vagrant@ubuntu-bionic:~/.ssh$ ls -lva
+total 12
+drwx------ 2 vagrant vagrant 4096 Dec 12 04:08 .
+drwxr-xr-x 5 vagrant vagrant 4096 Dec 12 05:00 ..
+-rw------- 1 vagrant vagrant  389 Dec 12 04:08 authorized_keys
+vagrant@ubuntu-bionic:~/.ssh$ chmod 755 authorized_keys
+
+Не понимаю почему невозможно подключиться по ssh
+При загрузке vargant написано
+    default: SSH address: 127.0.0.1:2222
+    default: SSH username: vagrant
+Но запуская на windows-клиенте 
+$ ssh vagrant@127.0.0.1:2222
+ssh: Could not resolve hostname 127.0.0.1:2222: Name or service not known
+79059@LAPTOP-3V9GR47T MINGW64 ~/.ssh
+$ ssh vagrant@127.0.0.1:22
+ssh: Could not resolve hostname 127.0.0.1:22: Name or service not known
+- получаю ошибку
+
 ```
 
 6. Переименуйте файлы ключей из задания 5. Настройте файл конфигурации SSH клиента, так чтобы вход на удаленный сервер осуществлялся по имени сервера.
