@@ -48,7 +48,6 @@ for result in result_os.split('\n'):
     if result.find('modified') != -1:
         prepare_result = result.replace('\tmodified:   ', '')
         print(path + prepare_result)
-        is_change = true
 ```
 
 ### Вывод скрипта при запуске при тестировании:
