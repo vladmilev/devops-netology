@@ -94,39 +94,44 @@ Modified files:
 
 ### Ваш скрипт:
 ```python
-##!/usr/bin/env python3
+#!/usr/bin/env python3
+import socket
+import time
+import datetime
 
-import socket as s
-import time as t
-import datetime as dt
-
-# set variables 
+# set variables
 i = 1
 wait = 2 # интервал проверок в секундах
-srv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.0.0'}
+srv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.$
 init=0
 
 print('*** start script ***')
 print(srv)
 print('********************')
 
-while 1==1 : #отладочное число проверок 
+while 1==1 : #отладочное число проверок
   for host in srv:
-    ip = s.gethostbyname(host)
+    ip = socket.gethostbyname(host)
     if ip != srv[host]:
       if i==1 and init !=1:
-        print(str(dt.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] ' + str(host) +' IP mistmatch: '+srv[host]+' '+ip)
+        print(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] $
       srv[host]=ip
 # счетчик итераций для отладки, закомментировать для бесконечного цикла 3 строки
-  i+=1 
-  if i >= 50 : 
+  i+=1
+  if i >= 50 :
     break
-  t.sleep(wait)
+  time.sleep(wait)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+vagrant@ubuntu-bionic:~$ ./lesson424.sh
+*** start script ***
+{'drive.google.com': '0.0.0.0', 'mail.google.com': '0.0.0.0', 'google.com': '0.0.0.0'}
+********************
+2021-12-18 07:08:24 [ERROR] drive.google.com IP mistmatch: 0.0.0.0 173.194.220.194
+2021-12-18 07:08:24 [ERROR] mail.google.com IP mistmatch: 0.0.0.0 64.233.161.83
+2021-12-18 07:08:24 [ERROR] google.com IP mistmatch: 0.0.0.0 216.58.210.174
 ```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
