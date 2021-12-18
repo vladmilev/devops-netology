@@ -41,9 +41,9 @@ for result in result_os.split('\n'):
 
 import os
 
-bash_command = ["cd ~/netology/sysadm-homeworks", "git status"]
+bash_command = ["cd ~/sysadm-homeworks", "git status"]
 result_os = os.popen(' && '.join(bash_command)).read()
-path= os.getcwd()
+path= os.getcwd()+'/sysadm-homeworks/'
 for result in result_os.split('\n'):
     if result.find('modified') != -1:
         prepare_result = result.replace('\tmodified:   ', '')
@@ -52,7 +52,9 @@ for result in result_os.split('\n'):
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+vagrant@ubuntu-bionic:~$ ./lesson42.sh
+/home/vagrant/sysadm-homeworks/04-script-02-py/README.md
+/home/vagrant/sysadm-homeworks/README.md
 ```
 
 ## Обязательная задача 3
