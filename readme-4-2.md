@@ -62,12 +62,31 @@ vagrant@ubuntu-bionic:~$ ./lesson42.sh
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+import sys
+import os
+
+if  len(sys.argv) > 1:
+        path=  sys.argv[1]
+else:
+        path= "~/sysadm-homeworks"
+print("Path= "+path)
+bash_command = ["cd "+path, "git status"]
+result_os = os.popen(' && '.join(bash_command)).read()
+print("Modified files:")
+for result in result_os.split('\n'):
+    if result.find('modified') != -1:
+        prepare_result = result.replace('\tmodified:   ', '')
+        print(path +"/"+ prepare_result)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+vagrant@ubuntu-bionic:~$ ./lesson42.sh ~/sysadm-homeworks/04-script-02-py
+Path= /home/vagrant/sysadm-homeworks/04-script-02-py
+Modified files:
+/home/vagrant/sysadm-homeworks/04-script-02-py/README.md
+/home/vagrant/sysadm-homeworks/04-script-02-py/../README.md
 ```
 
 ## Обязательная задача 4
