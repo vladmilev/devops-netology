@@ -12,7 +12,7 @@
             }
             { "name" : "second",
             "type" : "proxy",
-            "ip : 71.78.22.43
+            "ip" : "71.78.22.43"
             }
         ]
     }
@@ -24,7 +24,50 @@
 
 ### Ваш скрипт:
 ```python
-???
+#!/usr/bin/env python3
+import socket
+import time
+import datetime
+import yaml
+import json
+
+# set variables
+i = 1
+wait = 2 # интервал проверок в секундах
+srv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.$
+init=0
+
+print('*** start script ***')
+print(srv)
+print('********************')
+
+while True
+  for host in srv:
+    is_error = False
+    ip = socket.gethostbyname(host)
+    if ip != srv[host]:
+      is_error = True
+      if i==1 and init!=1:
+        print(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] $
+      srv[host]=ip
+      
+# запись всех хостов с их ip в файлы json и jaml
+    if is_error:
+      data = []  
+      for host in srv:  
+        data.append({host:ip})
+      with open('task_4_3_2.json','w') as file_json:
+        json_data= json.dumps(data)
+        file_json.write(json_data)
+      with open('task_4_3_2.yml','w') as file_yml
+        yaml_data= yaml.dump(data)
+        file_yml.write(yaml_data)
+      
+# счетчик итераций для отладки, закомментировать для бесконечного цикла 3 строки
+  i+=1
+  if i >= 50 :
+    break
+  time.sleep(wait)
 ```
 
 ### Вывод скрипта при запуске при тестировании:
