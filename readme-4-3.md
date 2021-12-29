@@ -34,35 +34,36 @@ import json
 # set variables
 i = 1
 wait = 2 # интервал проверок в секундах
-srv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.$
+srv = {'drive.google.com':'0.0.0.0', 'mail.google.com':'0.0.0.0', 'google.com':'0.0.0.0'}
 init=0
 
 print('*** start script ***')
 print(srv)
 print('********************')
 
-while True
+while True:
   for host in srv:
     is_error = False
     ip = socket.gethostbyname(host)
     if ip != srv[host]:
       is_error = True
       if i==1 and init!=1:
-        print(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] $
+        print(str(datetime.datetime.now().strftime("%Y-%m-%d %H:%M:%S")) +' [ERROR] '+
+        str(host) +' IP mistmatch: '+srv[host]+' '+ip)
       srv[host]=ip
-      
+
 # запись всех хостов с их ip в файлы json и jaml
     if is_error:
-      data = []  
-      for host in srv:  
+      data = []
+      for host in srv:
         data.append({host:ip})
       with open('task_4_3_2.json','w') as file_json:
         json_data= json.dumps(data)
         file_json.write(json_data)
-      with open('task_4_3_2.yml','w') as file_yml
+      with open('task_4_3_2.yml','w') as file_yml:
         yaml_data= yaml.dump(data)
         file_yml.write(yaml_data)
-      
+
 # счетчик итераций для отладки, закомментировать для бесконечного цикла 3 строки
   i+=1
   if i >= 50 :
@@ -72,17 +73,25 @@ while True
 
 ### Вывод скрипта при запуске при тестировании:
 ```
-???
+vagrant@ubuntu-bionic:~$ ./lesson-4-3-2.sh
+*** start script ***
+{'drive.google.com': '0.0.0.0', 'mail.google.com': '0.0.0.0', 'google.com': '0.0.0.0'}
+********************
+2021-12-28 19:53:07 [ERROR] drive.google.com IP mistmatch: 0.0.0.0 74.125.205.194
+2021-12-28 19:53:07 [ERROR] mail.google.com IP mistmatch: 0.0.0.0 74.125.131.83
+2021-12-28 19:53:07 [ERROR] google.com IP mistmatch: 0.0.0.0 142.251.1.139
 ```
 
 ### json-файл(ы), который(е) записал ваш скрипт:
 ```json
-???
+[{"drive.google.com": "142.251.1.102"}, {"mail.google.com": "142.251.1.102"}, {"google.com": "142.251.1.102"}]
 ```
 
 ### yml-файл(ы), который(е) записал ваш скрипт:
 ```yaml
-???
+- {drive.google.com: 142.251.1.102}
+- {mail.google.com: 142.251.1.102}
+- {google.com: 142.251.1.102}
 ```
 
 ## Дополнительное задание (со звездочкой*) - необязательно к выполнению
