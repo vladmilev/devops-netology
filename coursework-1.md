@@ -133,7 +133,12 @@ server {
     ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
     ssl_ciphers         HIGH:!aNULL:!MD5;
 }
+$ sudo systemctl restart nginx
 
+На Windows-машине записал в system32/drivers/etc/hosts
+127.0.0.1 test.example.com
+
+Заработало:
 https://prnt.sc/25siwul
 ```
 
@@ -192,4 +197,5 @@ $ crontab -e
 
 10 2 10 * * /var/www/html/./cert.sh
 
+Каждое 10-е число каждого месяца, в 2 часа 10 минут, будет запускаться генерация нового сертификата и перезапуск nginx, чтобы обновление вступило в силу
 ```
