@@ -44,8 +44,10 @@ Vault TLS key and self-signed certificate have been generated in '/opt/vault/tls
 
 4. Cоздайте центр сертификации по инструкции (ссылка) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 ```
-В отдельном терминале запустил
+В отдельном терминале запустил:
 $ vault server -dev -dev-root-token-id root
+
+В другом терминале:
 $ export VAULT_ADDR=http://127.0.0.1:8200
 $ export VAULT_TOKEN=root
 $ vault secrets enable pki
