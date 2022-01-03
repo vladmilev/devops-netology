@@ -83,7 +83,32 @@ Success! Data written to: pki_int/roles/example-dot-com
 
 5. Установите корневой сертификат созданного центра сертификации в доверенные в хостовой системе.
 ```
+$ ls
+CA_cert.crt  intermediate.cert.pem  pki_intermediate.csr
+vagrant@ubuntu-bionic:~$ nano CA_cert.crt
+-----BEGIN CERTIFICATE-----
+MIIDNTCCAh2gAwIBAgIUVddt7auXi317xfC2Nk5OVaOJVwEwDQYJKoZIhvcNAQEL
+BQAwFjEUMBIGA1UEAxMLZXhhbXBsZS5jb20wHhcNMjIwMTAzMDM1NTE3WhcNMzIw
+MTAxMDM1NTQ3WjAWMRQwEgYDVQQDEwtleGFtcGxlLmNvbTCCASIwDQYJKoZIhvcN
+AQEBBQADggEPADCCAQoCggEBAOmQpRIWK228LYQoe6gI0A9ULPJQqGBajs2a1kas
+tJvu/w+oVw9VuWM4xWJydaW+0WccyL/BxVBonfrNgP78LoWqoLl1p/Qh3IC85SRn
+78AdpC1tQfZ95frOpCM1nkRup6LlDTOS7CUx0Lqc8RC0GvjmQNj5QegIGEzsOBQ7
+qqMrgGSnNNlDOOxL2BknIa6WtOZpUoFuba62pEQKsyGSHUAJjf3QEmlUXfFLwwEs
+B9UbYxqFIxyRkqVkg2EJn+EBzhQeTR0HziJ9T8MSPeu0GalTSPEmH2+Fh4oFS08v
+dOVLywANECjHyJYJlzDWERys2kgCZW68ZRpVSar5mzCJ+ucCAwEAAaN7MHkwDgYD
+VR0PAQH/BAQDAgEGMA8GA1UdEwEB/wQFMAMBAf8wHQYDVR0OBBYEFL2dq7yu4GWm
+4I37kqUEdb/xI8TwMB8GA1UdIwQYMBaAFL2dq7yu4GWm4I37kqUEdb/xI8TwMBYG
+A1UdEQQPMA2CC2V4YW1wbGUuY29tMA0GCSqGSIb3DQEBCwUAA4IBAQBOrNSMjZay
+Jm8PZdrVrFL9ftd9L6dvPqH6Kipn596Ms179OP4qEPg23BjLZjYKoasE1TJsn4Ie
+ppegrQwDGJwWGFnV+glTghaaq3xKfZgnkj7xnrWSN9AfMoWQG+4AMnmOTg79oQvC
+qPz6unBY1asBzSIYQ1bOehIuBpGWozPD4do4Y2j3s+ldbfgElVjqrdzKfiAvWAbB
+qyOksGdDCt0AFopPRjS8N/2xbjun3OodVxjDGGsfWmtn0MxWmJcYr6A3o9yLN44H
+SU6Pd8+MANY82LSO/uCsG5B1KNwZIv9jVeL+mx7u2qyCZvQahVl59LUdZujmxPA7
+edHC5LEF0K3a
+-----END CERTIFICATE-----
 
+Сохранил на Windows-машине в текстовый файл и добавил (импортом) в Доверенные центры сертификации
+https://prnt.sc/25s0rcc
 ```
 
 6. Установите nginx.
