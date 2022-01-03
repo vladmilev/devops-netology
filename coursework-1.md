@@ -77,7 +77,7 @@ $ vault write pki_int/roles/example-dot-com \
 >      allow_subdomains=true \
 >      max_ttl="720h"
 Success! Data written to: pki_int/roles/example-dot-com
-~$ vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="24h"
+~$ vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h"
 
 ```
 
@@ -113,7 +113,9 @@ https://prnt.sc/25s0rcc
 
 6. Установите nginx.
 ```
-
+$ sudo apt-add-repository ppa:nginx/stable
+$ sudo apt update
+$ sudo apt install nginx
 ```
 
 7. По инструкции (ссылка) настройте nginx на https, используя ранее подготовленный сертификат:
