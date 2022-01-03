@@ -32,13 +32,46 @@ To                         Action      From
 443/tcp (v6)               ALLOW IN    Anywhere (v6)
 ```
 
-3. Установите hashicorp vault (инструкция по ссылке).
+3. Установите hashicorp vault (инструкция по ссылке https://learn.hashicorp.com/tutorials/vault/getting-started-install?in=vault/getting-started#install-vault).
 ```
-
+$ curl -fsSL https://apt.releases.hashicorp.com/gpg | sudo apt-key add -
+$ sudo apt-add-repository "deb [arch=amd64] https://apt.releases.hashicorp.com $(lsb_release -cs) main"
+$ sudo apt-get update && sudo apt-get install vault
+writing new private key to 'tls.key'
+-----
+Vault TLS key and self-signed certificate have been generated in '/opt/vault/tls'.
 ```
 
 4. Cоздайте центр сертификации по инструкции (ссылка) и выпустите сертификат для использования его в настройке веб-сервера nginx (срок жизни сертификата - месяц).
 ```
+В отдельном терминале запустил
+$ vault server -dev -dev-root-token-id root
+$ export VAULT_ADDR=http://127.0.0.1:8200
+$ export VAULT_TOKEN=root
+$ vault secrets enable pki
+Success! Enabled the pki secrets engine at: pki/
+$ vault secrets tune -max-lease-ttl=87600h pki
+Success! Tuned the secrets engine at: pki/
+$ vault write -field=certificate pki/root/generate/internal \
+     common_name="example.com" \
+     ttl=87600h > CA_cert.crt
+$ vagrant@ubuntu-bionic:~$ vault write pki/config/urls \
+      issuing_certificates="$VAULT_ADDR/v1/pki/ca" \
+      crl_distribution_points="$VAULT_ADDR/v1/pki/crl"
+Success! Data written to: pki/config/urls
+$ vault secrets enable -path=pki_int pki
+Success! Enabled the pki secrets engine at: pki_int/
+$ vault secrets tune -max-lease-ttl=43800h pki_int
+Success! Tuned the secrets engine at: pki_int/
+$ sudo apt install jq
+$ vault write -format=json pki_int/intermediate/generate/internal \
+     common_name="example.com Intermediate Authority" \
+     | jq -r '.data.csr' > pki_intermediate.csr
+$ vault write -format=json pki/root/sign-intermediate csr=@pki_intermediate.csr \
+     format=pem_bundle ttl="43800h" \
+     | jq -r '.data.certificate' > intermediate.cert.pem
+$ vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
+Success! Data written to: pki_int/intermediate/set-signed
 
 ```
 
