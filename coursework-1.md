@@ -72,6 +72,12 @@ $ vault write -format=json pki/root/sign-intermediate csr=@pki_intermediate.csr 
      | jq -r '.data.certificate' > intermediate.cert.pem
 $ vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
 Success! Data written to: pki_int/intermediate/set-signed
+$ vault write pki_int/roles/example-dot-com \
+>      allowed_domains="example.com" \
+>      allow_subdomains=true \
+>      max_ttl="720h"
+Success! Data written to: pki_int/roles/example-dot-com
+~$ vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="24h"
 
 ```
 
