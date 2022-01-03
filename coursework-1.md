@@ -122,12 +122,50 @@ $ sudo apt install nginx
 можно использовать стандартную стартовую страницу nginx для демонстрации работы сервера;
 можно использовать и другой html файл, сделанный вами;
 ```
+$ sudo nano /etc/nginx/conf.d/test-example-com.conf
+server {
+    listen 443 ssl;
+    server_name         test.example.com;
+    ssl_certificate     /opt/vault/tls/tls.crt;
+    ssl_certificate_key /opt/vault/tls/tls.key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+}
 
+https://prnt.sc/25siwul
 ```
 
 8. Откройте в браузере на хосте https адрес страницы, которую обслуживает сервер nginx.
 ```
+Создал свою страницу /var/www/html/page.html:
 
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>My page</title>
+</head>
+<body>
+        <h1>Hello world!</h1>
+</body>
+</html>
+
+$ sudo nano /etc/nginx/conf.d/test-example-com.conf
+server {
+    listen 443 ssl;
+    server_name         test.example.com;
+    ssl_certificate     /opt/vault/tls/tls.crt;
+    ssl_certificate_key /opt/vault/tls/tls.key;
+    ssl_protocols       TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers         HIGH:!aNULL:!MD5;
+    location / {
+       root /var/www/html;
+       index page.html;
+    }
+}
+
+Результат:
+https://prnt.sc/25sjjsd
 ```
 
 9. Создайте скрипт, который будет генерировать новый сертификат в vault:
