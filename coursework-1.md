@@ -2,12 +2,34 @@
 
 1. Создайте виртуальную машину Linux.
 ```
-
+ # Vagrantfile
+ Vagrant.configure("2") do |config|
+ 	config.vm.box = "ubuntu/bionic64"
+        config.vm.network "forwarded_port", guest:22, host:22
+        config.vm.network "forwarded_port", guest:443, host:443
+ end
 ```
 
 2. Установите ufw и разрешите к этой машине сессии на порты 22 и 443, при этом трафик на интерфейсе localhost (lo) должен ходить свободно на все порты.
 ```
+$ sudo apt install ufw 
+$ sudo ufw allow ssh
+$ sudo ufw allow https
+$ sudo ufw enable
+Command may disrupt existing ssh connections. Proceed with operation (y|n)? y
+Firewall is active and enabled on system startup
+$ sudo ufw status verbose
+Status: active
+Logging: on (low)
+Default: deny (incoming), allow (outgoing), disabled (routed)
+New profiles: skip
 
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW IN    Anywhere
+443/tcp                    ALLOW IN    Anywhere
+22/tcp (v6)                ALLOW IN    Anywhere (v6)
+443/tcp (v6)               ALLOW IN    Anywhere (v6)
 ```
 
 3. Установите hashicorp vault (инструкция по ссылке).
