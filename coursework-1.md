@@ -172,10 +172,22 @@ https://prnt.sc/25sjjsd
 генерируем новый сертификат так, чтобы не переписывать конфиг nginx;
 перезапускаем nginx для применения нового сертификата.
 ```
+$ sudo nano cert.sh
 
+#!/usr/bin/env bash
+export VAULT_ADDR=http://127.0.0.1:8200
+export VAULT_TOKEN=root
+vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h"
+sudo systemctl restart nginx
+
+$ sudo chmod 755 cert.sh
+$ ./cert.sh
 ```
 
 10. Поместите скрипт в crontab, чтобы сертификат обновлялся какого-то числа каждого месяца в удобное для вас время.
 ```
+$ crontab -e
+
+10 2 10 * * /var/www/html/./cert.sh
 
 ```
