@@ -186,7 +186,16 @@ export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_TOKEN=root
 vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h"
 sudo systemctl restart nginx
-
+------------------
+https://itdraft.ru/2020/12/02/hashicorp-vault-kak-czentr-sertifikaczii-ca-vault-pki/
+Генерируем новый сертификат и записываем его в формате json в файл vault.example.com.crt
+$ vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h" > vault.example.com.crt
+Сохраняем сертификаты в правильном формате
+$ cat vault.example.com.crt | jq -r .data.certificate > vault.example.com.crt.pem
+$ cat vault.example.com.crt | jq -r .data.issuing_ca >> vault.example.com.crt.pem
+$ cat vault.example.com.crt | jq -r .data.private_key > vault.example.com.crt.key
+Копируем новые сертификаты vault.example.com.crt.pem в /opt/vault/tls/tls.crt, а vault.example.com.crt.key в /opt/vault/tls/tls.key;
+------------------
 $ sudo chmod 755 cert.sh
 $ ./cert.sh
 ```
