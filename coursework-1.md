@@ -4,7 +4,8 @@
 ```
  # Vagrantfile
  Vagrant.configure("2") do |config|
- 	config.vm.box = "ubuntu/bionic64"
+ 	      config.vm.box = "ubuntu/bionic64"
+        config.vm.network "public_network"
         config.vm.network "forwarded_port", guest:22, host:22
         config.vm.network "forwarded_port", guest:443, host:443
  end
@@ -171,12 +172,12 @@ server {
 Результат:
 https://prnt.sc/25sjjsd
 
-После установки вагранта с сетевым доступом типа мост и запуском скрипта из задания 9, обновившим цепочку сертификатов (в правильном формате) - защищенное соединение стало работать с сертификатом
+После установки вагранта с сетевым доступом типа мост (подключая карту как мост, тогда она получит IP адрес от роутера) и запуском скрипта из задания 9, обновившим цепочку сертификатов (в правильном формате) - защищенное соединение стало работать с сертификатом
 https://prnt.sc/268cuzb
 
 ----- Vagrantfile -----
  Vagrant.configure("2") do |config|
- 	config.vm.box = "ubuntu/bionic64"
+       	config.vm.box = "ubuntu/bionic64"
         config.vm.network "public_network"
         config.vm.network "forwarded_port", guest:22, host:22
         config.vm.network "forwarded_port", guest:443, host:443
