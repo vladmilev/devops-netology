@@ -175,26 +175,35 @@ https://prnt.sc/25sjjsd
 9. Создайте скрипт, который будет генерировать новый сертификат в vault:
 генерируем новый сертификат так, чтобы не переписывать конфиг nginx;
 перезапускаем nginx для применения нового сертификата.
+
+(материалы: https://itdraft.ru/2020/12/02/hashicorp-vault-kak-czentr-sertifikaczii-ca-vault-pki/  
+Порядок работы скрипта:  
+Генерируем новый сертификат и записываем его в формате json в файл vault.example.com.crt  
+$ vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h" > vault.example.com.crt  
+Сохраняем сертификаты в правильном формате  
+$ cat vault.example.com.crt | jq -r .data.certificate > vault.example.com.crt.pem  
+$ cat vault.example.com.crt | jq -r .data.issuing_ca >> vault.example.com.crt.pem  
+$ cat vault.example.com.crt | jq -r .data.private_key > vault.example.com.crt.key  
+Копируем новые сертификаты vault.example.com.crt.pem в /opt/vault/tls/tls.crt, а vault.example.com.crt.key в /opt/vault/tls/tls.key)  
 ```
 $ sudo nano cert.sh
-
+------------------
 #!/usr/bin/env bash
 export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_TOKEN=root
-vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h"
+vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" $
+cat vault.example.com.crt | jq -r .data.certificate > vault.example.com.crt.pem
+cat vault.example.com.crt | jq -r .data.issuing_ca >> vault.example.com.crt.pem
+cat vault.example.com.crt | jq -r .data.private_key > vault.example.com.crt.key
+sudo cp vault.example.com.crt.pem /opt/vault/tls/tls.crt
+sudo cp vault.example.com.crt.key /opt/vault/tls/tls.key
 sudo systemctl restart nginx
-------------------
-https://itdraft.ru/2020/12/02/hashicorp-vault-kak-czentr-sertifikaczii-ca-vault-pki/
-Генерируем новый сертификат и записываем его в формате json в файл vault.example.com.crt
-$ vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h" > vault.example.com.crt
-Сохраняем сертификаты в правильном формате
-$ cat vault.example.com.crt | jq -r .data.certificate > vault.example.com.crt.pem
-$ cat vault.example.com.crt | jq -r .data.issuing_ca >> vault.example.com.crt.pem
-$ cat vault.example.com.crt | jq -r .data.private_key > vault.example.com.crt.key
-Копируем новые сертификаты vault.example.com.crt.pem в /opt/vault/tls/tls.crt, а vault.example.com.crt.key в /opt/vault/tls/tls.key;
 ------------------
 $ sudo chmod 755 cert.sh
 $ ./cert.sh
+
+Скриншот отработавшего скрипта (смотрю изменились ли файлы в папке /opt/vault/tls)
+https://prnt.sc/267f3ci
 ```
 
 10. Поместите скрипт в crontab, чтобы сертификат обновлялся какого-то числа каждого месяца в удобное для вас время.
