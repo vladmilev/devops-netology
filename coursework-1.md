@@ -183,6 +183,36 @@ https://prnt.sc/268cuzb
         config.vm.network "forwarded_port", guest:443, host:443
  end
 
+$ ifconfig
+enp0s3: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.2.15  netmask 255.255.255.0  broadcast 10.0.2.255
+        inet6 fe80::77:80ff:feca:b7e6  prefixlen 64  scopeid 0x20<link>
+        ether 02:77:80:ca:b7:e6  txqueuelen 1000  (Ethernet)
+        RX packets 1070  bytes 151377 (151.3 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 763  bytes 137293 (137.2 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+enp0s8: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 192.168.0.106  netmask 255.255.255.0  broadcast 192.168.0.255
+        inet6 fe80::a00:27ff:fe19:16ed  prefixlen 64  scopeid 0x20<link>
+        ether 08:00:27:19:16:ed  txqueuelen 1000  (Ethernet)
+        RX packets 3  bytes 1240 (1.2 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 10  bytes 1342 (1.3 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+lo: flags=73<UP,LOOPBACK,RUNNING>  mtu 65536
+        inet 127.0.0.1  netmask 255.0.0.0
+        inet6 ::1  prefixlen 128  scopeid 0x10<host>
+        loop  txqueuelen 1000  (Local Loopback)
+        RX packets 16  bytes 1628 (1.6 KB)
+        RX errors 0  dropped 0  overruns 0  frame 0
+        TX packets 16  bytes 1628 (1.6 KB)
+        TX errors 0  dropped 0 overruns 0  carrier 0  collisions 0
+
+В hosts прописал 192.168.0.106 test.example.com   
+(127.0.0.1 - локальная петля LOOPBACK)
 ```
 
 9. Создайте скрипт, который будет генерировать новый сертификат в vault:
