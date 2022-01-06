@@ -191,7 +191,7 @@ $ sudo nano cert.sh
 #!/usr/bin/env bash
 export VAULT_ADDR=http://127.0.0.1:8200
 export VAULT_TOKEN=root
-vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" $
+vault write -format=json pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h" > vault.example.com.crt
 cat vault.example.com.crt | jq -r .data.certificate > vault.example.com.crt.pem
 cat vault.example.com.crt | jq -r .data.issuing_ca >> vault.example.com.crt.pem
 cat vault.example.com.crt | jq -r .data.private_key > vault.example.com.crt.key
