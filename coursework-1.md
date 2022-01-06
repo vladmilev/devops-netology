@@ -57,7 +57,7 @@ Success! Tuned the secrets engine at: pki/
 $ vault write -field=certificate pki/root/generate/internal \
      common_name="example.com" \
      ttl=87600h > CA_cert.crt
-$ vagrant@ubuntu-bionic:~$ vault write pki/config/urls \
+$ vault write pki/config/urls \
       issuing_certificates="$VAULT_ADDR/v1/pki/ca" \
       crl_distribution_points="$VAULT_ADDR/v1/pki/crl"
 Success! Data written to: pki/config/urls
@@ -74,10 +74,7 @@ $ vault write -format=json pki/root/sign-intermediate csr=@pki_intermediate.csr 
      | jq -r '.data.certificate' > intermediate.cert.pem
 $ vault write pki_int/intermediate/set-signed certificate=@intermediate.cert.pem
 Success! Data written to: pki_int/intermediate/set-signed
-$ vault write pki_int/roles/example-dot-com \
->      allowed_domains="example.com" \
->      allow_subdomains=true \
->      max_ttl="720h"
+$ vault write pki_int/roles/example-dot-com allowed_domains="example.com" allow_subdomains=true max_ttl="720h"
 Success! Data written to: pki_int/roles/example-dot-com
 ~$ vault write pki_int/issue/example-dot-com common_name="test.example.com" ttl="720h"
 
