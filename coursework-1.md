@@ -267,3 +267,11 @@ $ crontab -e
 
 После перезапуска скрипта (новый сертификат)
 ![](screen_cert-3.png)
+
+----------------------
+1-
+https://prnt.sc/26bpdt9
+2-
+https://prnt.sc/26bpe27
+3-
+https://prnt.sc/26bpeio
