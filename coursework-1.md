@@ -260,3 +260,10 @@ $ crontab -e
 
 Каждое 10-е число каждого месяца, в 2 часа 10 минут, будет запускаться генерация нового сертификата и перезапуск nginx, чтобы обновление вступило в силу
 ```
+before
+https://prnt.sc/26bp5jr
+after
+https://prnt.sc/26bp61o
+
+ltqcndbntkmysq
+https://prnt.sc/26bp65n
