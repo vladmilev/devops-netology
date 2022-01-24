@@ -34,6 +34,22 @@ Ansible использует существующую SSH инфраструкт
 
 Приложить вывод команд установленных версий каждой из программ, оформленный в markdown.  
 ```
+VirtualBox:
+VirtualBox - графическая оболочка - скриншот версии VirtualBox 6.1 https://prnt.sc/26ib0xf
+
+Vagrant:
+$ vagrant --version
+Vagrant 2.2.19
+
+Ansible:
+(установил используя Cygwin, источник https://phoenixnap.com/kb/install-ansible-on-windows)
+$ ansible --version
+ansible 2.8.4
+  config file = /etc/ansible/ansible.cfg
+  configured module search path = ['/home/79059/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/lib/python3.7/site-packages/ansible
+  executable location = /usr/bin/ansible
+  python version = 3.7.12 (default, Nov 23 2021, 18:58:07) [GCC 11.2.0]
 
 ```
 
