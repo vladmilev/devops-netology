@@ -19,7 +19,21 @@ Hey, Netology
 ```
 Опубликуйте созданный форк в своем репозитории и предоставьте ответ в виде ссылки на https://hub.docker.com/username_repo.  
 ```
-DFG
+https://hub.docker.com/repository/docker/vladmilev/nginx
+(docker pull vladmilev/nginx:homework)
+
+Последовательность действий
+$mkdir task1
+$nano index.html
+$nano Dockerfile
+---
+FROM nginx
+
+COPY index.html /usr/share/nginx/html/index.html
+
+CMD ["nginx", "-g", "daemon off;"]
+---
+$
 ```
 
 ## Задача 2
