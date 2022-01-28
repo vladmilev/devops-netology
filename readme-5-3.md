@@ -98,9 +98,47 @@ Gitlab сервер для реализации CI/CD процессов и пр
 $ sudo apt install docker.io
 $ docker --version
 Docker version 20.10.7, build 20.10.7-0ubuntu5~18.04.3
+$ sudo systemctl start docker
+$ docker status
+docker: 'status' is not a docker command.
+See 'docker --help'
+vagrant@ubuntu-bionic:~$ sudo systemctl status docker
+● docker.service - Docker Application Container Engine
+   Loaded: loaded (/lib/systemd/system/docker.service; enabled; vendor preset: enabled)
+   Active: active (running) since Fri 2022-01-28 04:21:39 UTC; 13min ago
+     Docs: https://docs.docker.com
+ Main PID: 2408 (dockerd)
+    Tasks: 10
+   CGroup: /system.slice/docker.service
+           └─2408 /usr/bin/dockerd -H fd:// --containerd=/run/containerd/containerd.sock
 
 1. Запустите первый контейнер из образа centos c любым тэгом в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
-$ docker run --name centos_container -d centos -v /data:/data
+$ sudo docker run -v /data:/data --name container_centos -d -t centos
+
+2. Запустите второй контейнер из образа debian в фоновом режиме, подключив папку /data из текущей рабочей директории на хостовой машине в /data контейнера;
+$ sudo docker run -v /data:/data --name container_debian -d -t debian
+
+Проверим - образы
+$ sudo docker images
+REPOSITORY   TAG       IMAGE ID       CREATED        SIZE
+debian       latest    04fbdaf87a6a   2 days ago     124MB
+centos       latest    5d0da3dc9764   4 months ago   231MB
+
+Запущенные контейнеры
+$ sudo docker ps
+CONTAINER ID   IMAGE     COMMAND       CREATED              STATUS              PORTS     NAMES
+74f3bb163760   debian    "bash"        7 seconds ago        Up 5 seconds                  container_debian
+9854ff4113a7   centos    "/bin/bash"   About a minute ago   Up About a minute             container_centos
+
+3.Подключитесь к первому контейнеру с помощью docker exec и создайте текстовый файл любого содержания в /data;
+$ sudo docker exec container_centos /bin/bash -c "echo hello world>/data/test.txt"
+$ sudo docker exec container_centos /bin/bash cat /data/test.txt
+
+4.Добавьте еще один файл в папку /data на хостовой машине;
+$ sudo docker exec container_centos /bin/bash -c "echo hello world2>/data/test2.txt"
+$ sudo docker exec container_centos /bin/bash ls /data
+
+5.Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера
 ```
 
 ## Задача 4 (*)
