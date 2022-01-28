@@ -138,12 +138,28 @@ $ sudo docker exec container_centos /bin/bash cat /data/test.txt
 $ sudo docker exec container_centos /bin/bash -c "echo hello world2>/data/test2.txt"
 $ sudo docker exec container_centos /bin/bash ls /data
 
+Странно почему не выводит ничего?
+$ sudo docker exec -it container_centos /bin/bash
+[root@561ab63437b0 /]# echo hello1>/data/test1.txt
+[root@561ab63437b0 /]# ls /data
+test.txt  test1.txt  test2.txt
+Вроде все на месте
+
 5.Подключитесь во второй контейнер и отобразите листинг и содержание файлов в /data контейнера
+$ sudo docker exec -it container_debian /bin/bash
+root@fdfa0d4acb0e:/# ls /data
+test.txt  test1.txt  test2.txt
+root@fdfa0d4acb0e:/# cat /data/test.txt
+hello world
+root@fdfa0d4acb0e:/# cat /data/test1.txt
+hello1
+root@fdfa0d4acb0e:/# cat /data/test2.txt
+hello world2
 ```
 
 ## Задача 4 (*)
 Воспроизвести практическую часть лекции самостоятельно.  
 Соберите Docker образ с Ansible, загрузите на Docker Hub и пришлите ссылку вместе с остальными ответами к задачам.  
 ```
-
+постараюсь выполнить на выходных (для зачета необязательно)
 ```
