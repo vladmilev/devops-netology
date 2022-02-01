@@ -230,6 +230,7 @@ variable "centos-7-base" {
 $ terraform init
 Terraform has been successfully initialized!
 
+* Создание ключа авторизации (key.json) https://cloud.yandex.ru/docs/iam/quickstart-sa
 ```
 
 ## Задача 3
