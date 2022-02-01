@@ -118,6 +118,13 @@ vagrant@ubuntu-bionic:~/cloud$ /usr/bin/packer validate centos-7-base.json
 The configuration is valid.
 vagrant@ubuntu-bionic:~/cloud$ /usr/bin/packer build centos-7-base.json
 ...
+$ yc compute image list
++----------------------+---------------+--------+----------------------+--------+
+|          ID          |     NAME      | FAMILY |     PRODUCT IDS      | STATUS |
++----------------------+---------------+--------+----------------------+--------+
+| fd8743i92t1hlmgpok1q | centos-7-base | centos | f2eacrudv331nbat9ehb | READY  |
++----------------------+---------------+--------+----------------------+--------+
+
 https://prnt.sc/26mpr9e
 ```
 
@@ -125,6 +132,103 @@ https://prnt.sc/26mpr9e
 Создать вашу первую виртуальную машину в Яндекс.Облаке.  
 Для получения зачета, вам необходимо предоставить:  cкриншот страницы свойств созданной ВМ.
 ```
+$ mkdir terraform
+$ cd terraform
+$ nano network.tf
+-------
+# Network
+resource "yandex_vpc_network" "default" {
+  name = "net"
+}
+
+resource "yandex_vpc_subnet" "default" {
+  name = "subnet"
+  zone           = "ru-central1-a"
+  network_id     = "${yandex_vpc_network.default.id}"
+  v4_cidr_blocks = ["192.168.101.0/24"]
+}
+---------
+$ nano node01.tf
+---------
+resource "yandex_compute_instance" "node01" {
+  name                      = "node01"
+  zone                      = "ru-central1-a"
+  hostname                  = "node01.netology.cloud"
+  allow_stopping_for_update = true
+
+  resources {
+    cores  = 8
+    memory = 8
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id    = "${var.centos-7-base}"
+      name        = "root-node01"
+      type        = "network-nvme"
+      size        = "50"
+    }
+  }
+
+  network_interface {
+    subnet_id = "${yandex_vpc_subnet.default.id}"
+    nat       = true
+  }
+
+  metadata = {
+    ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+  }
+}
+--------
+$ nano output.tf
+-------
+output "internal_ip_address_node01_yandex_cloud" {
+  value = "${yandex_compute_instance.node01.network_interface.0.ip_address}"
+}
+
+output "external_ip_address_node01_yandex_cloud" {
+  value = "${yandex_compute_instance.node01.network_interface.0.nat_ip_address}"
+}
+-------
+$ nano provider.tf
+-------
+# Provider
+terraform {
+  required_providers {
+    yandex = {
+      source = "yandex-cloud/yandex"
+    }
+  }
+}
+
+provider "yandex" {
+  service_account_key_file = "key.json"
+  cloud_id  = "${var.yandex_cloud_id}"
+  folder_id = "${var.yandex_folder_id}"
+}
+-------
+$ nano variables.tf
+-------
+# Заменить на ID своего облака
+# https://console.cloud.yandex.ru/cloud?section=overview
+variable "yandex_cloud_id" {
+  default = "b1gcjvo46oid607b3pg8"
+}
+
+# Заменить на Folder своего облака
+# https://console.cloud.yandex.ru/cloud?section=overview
+variable "yandex_folder_id" {
+  default = "b1g672m7v4q205bdqfc0"
+}
+
+# Заменить на ID своего образа
+# ID можно узнать с помощью команды yc compute image list
+variable "centos-7-base" {
+  default = "fd8743i92t1hlmgpok1q"
+}
+-------
+$ terraform init
+Terraform has been successfully initialized!
 
 ```
 
