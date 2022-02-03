@@ -313,6 +313,12 @@ internal_ip_address_node01_yandex_cloud = "192.168.101.23"
 ## Задача 3
 Создать ваш первый готовый к боевой эксплуатации компонент мониторинга, состоящий из стека микросервисов.  
 Для получения зачета, вам необходимо предоставить: cкриншот работающего веб-интерфейса Grafana с текущими метриками.
+
+Скриншот результата: 
+<p align="center">
+  <img src="./yc-3.png">
+</p>
+
 ```
 vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-04-docker-compose/src$ cd ansible
 vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-04-docker-compose/src/ansible$ nano inventory
