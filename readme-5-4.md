@@ -283,13 +283,52 @@ https://console.cloud.yandex.ru/folders/b1g672m7v4q205bdqfc0?section=service-acc
 
 Теперь ошибка "Quota limit vpc.networks.count exceeded"
 
+Удалил сеть и подсеть
+$ yc vpc subnet delete --name my-subnet-a && yc vpc network delete --name net
+done (6s)
+
+Запустил 
+$ terraform apply --auto-approve
+Apply complete! Resources: 3 added, 0 changed, 0 destroyed.
+Outputs:
+external_ip_address_node01_yandex_cloud = "51.250.0.172"
+internal_ip_address_node01_yandex_cloud = "192.168.101.23"
+
+результат https://prnt.sc/26nom6o
+
 ```
 
 ## Задача 3
 Создать ваш первый готовый к боевой эксплуатации компонент мониторинга, состоящий из стека микросервисов.  
 Для получения зачета, вам необходимо предоставить: cкриншот работающего веб-интерфейса Grafana с текущими метриками.
 ```
+vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-04-docker-compose/src$ cd ansible
+vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-04-docker-compose/src/ansible$ nano inventory
+vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-04-docker-compose/src/ansible$ cat inventory
+[nodes:children]
+manager
 
+[manager]
+node01.netology.cloud ansible_host=51.250.0.172
+$ sudo apt install ansible -y
+$ ansible-playbook provision.yml
+e$ ssh centos@51.250.0.172
+[centos@node01 ~]$ sudo -i
+[root@node01 ~]# docker ps
+CONTAINER ID   IMAGE                                       COMMAND                  CREATED         STATUS                   PORTS                                                                              NAMES
+d639c092286e   gcr.io/google-containers/cadvisor:v0.34.0   "/usr/bin/cadvisor -…"   3 minutes ago   Up 2 minutes (healthy)   8080/tcp                                                                           cadvisor
+dfc91ff814de   prom/node-exporter:v0.18.1                  "/bin/node_exporter …"   3 minutes ago   Up 2 minutes             9100/tcp                                                                           nodeexporter
+b02203b141ba   prom/alertmanager:v0.20.0                   "/bin/alertmanager -…"   3 minutes ago   Up 2 minutes             9093/tcp                                                                           alertmanager
+e6e39be47a85   stefanprodan/caddy                          "/sbin/tini -- caddy…"   3 minutes ago   Up 2 minutes             0.0.0.0:3000->3000/tcp, 0.0.0.0:9090-9091->9090-9091/tcp, 0.0.0.0:9093->9093/tcp   caddy
+a4fb22c6d9f9   prom/prometheus:v2.17.1                     "/bin/prometheus --c…"   3 minutes ago   Up 2 minutes             9090/tcp                                                                           prometheus
+fe42ad4fe779   grafana/grafana:7.4.2                       "/run.sh"                3 minutes ago   Up 2 minutes             3000/tcp                                                                           grafana
+5858526d6d21   prom/pushgateway:v1.2.0                     "/bin/pushgateway"       3 minutes ago   Up 2 minutes             9091/tcp                                                                           pushgateway
+
+Открыл в браузере
+http://51.250.0.172:3000
+
+Результат: 
+https://prnt.sc/26noteu
 ```
 
 Задача 4 (*)
