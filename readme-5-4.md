@@ -231,6 +231,53 @@ $ terraform init
 Terraform has been successfully initialized!
 
 * Создание ключа авторизации (key.json) https://cloud.yandex.ru/docs/iam/quickstart-sa
+$ yc iam key create --service-account-name cloud-vladmilev --output key.json
+ERROR: service account with name "cloud-vladmilev" not found
+
+$ yc iam service-account list
++----+------+
+| ID | NAME |
++----+------+
++----+------+
+
+$ yc iam service-account create cloud-vladmilev
+id: aje4nme76j5h2qgmq6nj
+folder_id: b1g672m7v4q205bdqfc0
+created_at: "2022-02-03T03:02:58.428720721Z"
+name: cloud-vladmilev
+
+$ yc iam service-account list
++----------------------+-----------------+
+|          ID          |      NAME       |
++----------------------+-----------------+
+| aje4nme76j5h2qgmq6nj | cloud-vladmilev |
++----------------------+-----------------+
+
+$ yc iam key create --service-account-name cloud-vladmilev --output key.json
+id: ajeqjab3pq87mc93loko
+service_account_id: aje4nme76j5h2qgmq6nj
+created_at: "2022-02-03T03:04:59.736308198Z"
+key_algorithm: RSA_2048
+
+$ cp key.json ./terraform/key.json
+$ terraform plan
+╷
+│ Error: Invalid function argument
+│
+│   on node01.tf line 27, in resource "yandex_compute_instance" "node01":
+│   27:     ssh-keys = "centos:${file("~/.ssh/id_rsa.pub")}"
+
+$ ssh-keygen
+$ terraform plan
+Error: Error while requesting API to create network: server-request-id = 50bdc038-887b-4274-9b6b-64ad13f1dd67 server-trace-id = 17e208646359451a:cedd3d2acdd1ab95:17e208646359451a:1 client-request-id = a238ef62-9a48-4c92-a3f6-5565ee68d5c0 client-trace-id = 3f31a9b7-361b-43e5-b0b3-5cae2f86aa9b rpc error: code = PermissionDenied desc = Permission denied
+
+Надо назначить роль admin для созданного аккаунта - сначала узнать пользовательский id по имени пользователя
+$ yc iam user-account get <мое имя пользователя lea..>
+id: aje...
+
+vagrant@ubuntu-bionic:~/cloud/terraform$ yc iam service-account add-access-binding cloud-vladmilev --role admin --subject userAccount:aje2...
+
+И это не помогло
 ```
 
 ## Задача 3
