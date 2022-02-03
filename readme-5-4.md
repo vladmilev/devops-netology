@@ -277,7 +277,12 @@ id: aje...
 
 vagrant@ubuntu-bionic:~/cloud/terraform$ yc iam service-account add-access-binding cloud-vladmilev --role admin --subject userAccount:aje2...
 
-И это не помогло
+И это не помогло, надо делат через web https://cloud.yandex.ru/docs/iam/operations/sa/assign-role-for-sa  
+зайти в каталог и там выбрать сервисный аккаунт
+https://console.cloud.yandex.ru/folders/b1g672m7v4q205bdqfc0?section=service-accounts
+
+Теперь ошибка "Quota limit vpc.networks.count exceeded"
+
 ```
 
 ## Задача 3
