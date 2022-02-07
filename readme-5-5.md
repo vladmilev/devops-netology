@@ -17,7 +17,7 @@ docker node ls
 
 Скриншот результата: 
 <p align="center">
-  <img src="./yc-3.png">
+  <img src="./yc-swarm-1.png">
 </p>
 
 ```
@@ -34,7 +34,32 @@ $ nano variables.tf
 $ yc vpc subnet delete --name my-subnet-a && yc vpc network delete --name net
 5.Запуск
 $ terraform apply --auto-approve
-6.
+external_ip_address_node01 = "62.84.114.168"
+external_ip_address_node02 = "62.84.114.104"
+external_ip_address_node03 = "62.84.115.217"
+external_ip_address_node04 = "62.84.115.148"
+external_ip_address_node05 = "62.84.114.148"
+external_ip_address_node06 = "62.84.114.64"
+internal_ip_address_node01 = "192.168.101.11"
+internal_ip_address_node02 = "192.168.101.12"
+internal_ip_address_node03 = "192.168.101.13"
+internal_ip_address_node04 = "192.168.101.14"
+internal_ip_address_node05 = "192.168.101.15"
+internal_ip_address_node06 = "192.168.101.16"
+
+6. Подключение к ноде
+vagrant@ubuntu-bionic:~/hw/virt-homeworks/05-virt-05-docker-swarm/src/terraform$ ssh centos@62.84.114.168
+[centos@node01 ~]$ sudo -i
+[root@node01 ~]# docker node ls
+ID                            HOSTNAME             STATUS    AVAILABILITY   MANAGER STATUS   ENGINE VERSION
+i58om3p7wiygplkrzfkv3amae *   node01.netology.yc   Ready     Active         Leader           20.10.12
+gkr3tlu4reagr9ozodc95e43v     node02.netology.yc   Ready     Active         Reachable        20.10.12
+ikit7g93sn9vt39qwvezng0mj     node03.netology.yc   Ready     Active         Reachable        20.10.12
+xgsdvhg8dp0drh93orjih6cqd     node04.netology.yc   Ready     Active                          20.10.12
+aqxoqgpvl22kut2u9qug7yl4l     node05.netology.yc   Ready     Active                          20.10.12
+y1l7zcgbf3wzrq3e6gj6p3es2     node06.netology.yc   Ready     Active                          20.10.12
+
+Скриншот https://prnt.sc/26px32m
 ```
 
 ## Задача 3
