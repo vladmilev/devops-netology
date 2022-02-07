@@ -69,9 +69,37 @@ docker service ls
 
 Скриншот результата: 
 <p align="center">
-  <img src="./yc-3.png">
+  <img src="./yc-swarm-2.png">
 </p>
 
 ```
+[root@node01 ~]# cat /etc/hosts
+127.0.0.1   localhost localhost.localdomain localhost4 localhost4.localdomain4
+::1         localhost localhost.localdomain localhost6 localhost6.localdomain6
 
+192.168.101.14 node04.netology.yc
+192.168.101.15 node05.netology.yc
+192.168.101.16 node06.netology.yc
+192.168.101.12 node02.netology.yc
+192.168.101.13 node03.netology.yc
+192.168.101.11 node01.netology.yc
+
+[root@node01 ~]# docker stack ls
+NAME               SERVICES   ORCHESTRATOR
+swarm_monitoring   8          Swarm
+
+[root@node01 ~]# docker stack ps swarm_monitoring
+....
+[root@node01 ~]# docker service ls
+ID             NAME                                MODE         REPLICAS   IMAGE                                          PORTS
+hzsq6dzwkpb0   swarm_monitoring_alertmanager       replicated   1/1        stefanprodan/swarmprom-alertmanager:v0.14.0
+sr379a22kfel   swarm_monitoring_caddy              replicated   1/1        stefanprodan/caddy:latest                      *:3000->3000/tcp, *:9090->9090/tcp, *:9093-9094->9093-9094/tcp
+lbx6npjupi3v   swarm_monitoring_cadvisor           global       6/6        google/cadvisor:latest
+yt4vc2dn9vmb   swarm_monitoring_dockerd-exporter   global       6/6        stefanprodan/caddy:latest
+4w6n1p0bozpp   swarm_monitoring_grafana            replicated   1/1        stefanprodan/swarmprom-grafana:5.3.4
+nj6f6040qnj6   swarm_monitoring_node-exporter      global       6/6        stefanprodan/swarmprom-node-exporter:v0.16.0
+aj9pxvxn7tj1   swarm_monitoring_prometheus         replicated   1/1        stefanprodan/swarmprom-prometheus:v2.5.0
+6f2ysa0reb5g   swarm_monitoring_unsee              replicated   1/1        cloudflare/unsee:v0.8.0
+
+https://prnt.sc/26px5n9
 ```
