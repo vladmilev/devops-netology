@@ -13,10 +13,11 @@ version: "2.1"
 services:
   postgres:
     image: postgres:12.0
+    restart: always
     environment:
       POSTGRES_DB: "test_db"
-      POSTGRES_USER: "admin"
-      POSTGRES_PASSWORD: "admin"
+      POSTGRES_USER: "postgres"
+      POSTGRES_PASSWORD: "postgres"
       PGDATA: "/var/lib/postgresql/data/pgdata"
     volumes:
       - ../sql-init-scripts:/docker-entrypoint-initdb.d
