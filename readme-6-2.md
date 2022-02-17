@@ -9,7 +9,7 @@
 
 docker-compose.yaml
 -------------------
-version: "3.9"
+version: "2.1"
 services:
   postgres:
     image: postgres:12.0
