@@ -6,6 +6,23 @@
 Приведите получившуюся команду или docker-compose манифест.
 ```
 Источник: "Запускаем PostgreSQL в Docker: от простого к сложному" https://habr.com/ru/post/578744/
+
+docker-compose.yaml
+-------------------
+version: "3.9"
+services:
+  postgres:
+    image: postgres:12.0
+    environment:
+      POSTGRES_DB: "test_db"
+      POSTGRES_USER: "admin"
+      POSTGRES_PASSWORD: "admin"
+      PGDATA: "/var/lib/postgresql/data/pgdata"
+    volumes:
+      - ../sql-init-scripts:/docker-entrypoint-initdb.d
+      - .:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
 ```
 
 ## Задача 2
