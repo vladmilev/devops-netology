@@ -154,7 +154,37 @@ Ritchie Blackmore	Russia
    - запросы  
    - результаты их выполнения.  
 ```
-
+insert into orders VALUES (1, 'Шоколад', 10), (2, 'Принтер', 3000), (3, 'Книга', 500), (4, 'Монитор', 7000), (5, 'Гитара', 4000);
+select * from orders;
+ id |  name   | price
+----+---------+-------
+  1 | Шоколад |    10
+  2 | Принтер |  3000
+  3 | Книга   |   500
+  4 | Монитор |  7000
+  5 | Гитара  |  4000
+(5 rows)
+insert into clients VALUES (1, 'Иванов Иван Иванович', 'USA'), (2, 'Петров Петр Петрович', 'Canada'), (3, 'Иоганн Себастьян Бах', 'Japan'), (4, 'Ронни Джеймс Дио', 'Russia'), (5, 'Ritchie Blackmore', 'Russia');
+INSERT 0 5
+select * from clients;
+ id |       lastname       | country | booking
+----+----------------------+---------+---------
+  1 | Иванов Иван Иванович | USA     |
+  2 | Петров Петр Петрович | Canada  |
+  3 | Иоганн Себастьян Бах | Japan   |
+  4 | Ронни Джеймс Дио     | Russia  |
+  5 | Ritchie Blackmore    | Russia  |
+(5 rows)
+test_db=# select count (*) from orders;
+ count
+-------
+     5
+(1 row)
+test_db=# select count (*) from clients;
+ count
+-------
+     5
+(1 row)
 ```
 
 ## Задача 4
@@ -170,6 +200,17 @@ Ritchie Blackmore	Russia
 Приведите SQL-запрос для выдачи всех пользователей, которые совершили заказ, а также вывод данного запроса.  
 Подсказк - используйте директиву UPDATE.  
 ```
+update  clients set booking = 3 where id = 1;
+update  clients set booking = 4 where id = 2;
+update  clients set booking = 5 where id = 3;
+
+test_db=# select * from clients c inner join orders o on c.booking=o.id;
+ id |       lastname       | country | booking | id |  name   | price
+----+----------------------+---------+---------+----+---------+-------
+  1 | Иванов Иван Иванович | USA     |       3 |  3 | Книга   |   500
+  2 | Петров Петр Петрович | Canada  |       4 |  4 | Монитор |  7000
+  3 | Иоганн Себастьян Бах | Japan   |       5 |  5 | Гитара  |  4000
+(3 rows)
 
 ```
 
@@ -178,7 +219,16 @@ Ritchie Blackmore	Russia
 
 Приведите получившийся результат и объясните что значат полученные значения.
 ```
-
+test_db=# explain select * from clients c inner join orders o on c.booking=o.id;
+                               QUERY PLAN
+-------------------------------------------------------------------------
+ Hash Join  (cost=37.00..57.24 rows=810 width=112)
+   Hash Cond: (c.booking = o.id)
+   ->  Seq Scan on clients c  (cost=0.00..18.10 rows=810 width=72)
+   ->  Hash  (cost=22.00..22.00 rows=1200 width=40)
+         ->  Seq Scan on orders o  (cost=0.00..22.00 rows=1200 width=40)
+(5 rows)
+Показывает оценку стоимости запроса 
 ```
 
 ## Задача 6
