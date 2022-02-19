@@ -241,5 +241,107 @@ test_db=# explain select * from clients c inner join orders o on c.booking=o.id;
 Восстановите БД test_db в новом контейнере.  
 Приведите список операций, который вы применяли для бэкапа данных и восстановления.  
 ```
+\q
+$ sudo docker container list -a
+CONTAINER ID   IMAGE           COMMAND                  CREATED       STATUS       PORTS                                       NAMES
+0b51034fab0a   postgres:12.0   "docker-entrypoint.s…"   2 days ago    Up 8 hours   0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   dockersql_postgres_1
+fdfa0d4acb0e   debian          "bash"                   3 weeks ago   Up 3 weeks                                               container_debian
+561ab63437b0   centos          "/bin/bash"              3 weeks ago   Up 3 weeks                                               container_centos
 
+Выполняем в контейнере команду создания дампа
+$ sudo docker exec -t dockersql_postgres_1 pg_dump -U admin test_db -f dump_test.sql
+$ ls
+docker-compose.yaml  dump_test.sql  pgdata
+
+Останавливаем  первый контейнер
+$ sudo docker stop dockersql_postgres_1
+
+Создаем и запускаем новый контейнер - пустой контейнер с PostgreSQL
+$ sudo docker run --rm --name pg-docker2 -e POSTGRES_PASSWORD=postgres -ti -p 5432:5432 postgres:12
+
+Подключился по vagrant ssh
+$ sudo docker container list -a
+CONTAINER ID   IMAGE           COMMAND                  CREATED              STATUS                     PORTS                                       NAMES
+14ddab83398f   postgres:12     "docker-entrypoint.s…"   About a minute ago   Up About a minute          0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   pg-docker2
+0b51034fab0a   postgres:12.0   "docker-entrypoint.s…"   2 days ago           Exited (0) 4 minutes ago                                               dockersql_postgres_1
+fdfa0d4acb0e   debian          "bash"                   3 weeks ago          Up 3 weeks                                                             container_debian
+561ab63437b0   centos          "/bin/bash"              3 weeks ago          Up 3 weeks                                                             container_centos
+
+Восстановим БД test_db в новом контейнере
+$ sudo cat dump_test.sql | sudo docker exec -i pg-docker2 psql -U postgres
+SET
+SET
+SET
+SET
+SET
+ set_config
+------------
+
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ERROR:  role "admin" does not exist
+CREATE TABLE
+ERROR:  role "admin" does not exist
+COPY 5
+COPY 5
+ALTER TABLE
+ALTER TABLE
+ALTER TABLE
+ERROR:  role "test-simple-user" does not exist
+ERROR:  role "test-admin-user" does not exist
+ERROR:  role "test-simple-user" does not exist
+ERROR:  role "test-admin-user" does not exist
+vagrant@ubuntu-bionic:~/docker-sql$
+
+Интересно стало проверить - восстановились ли таблицы c данными?
+$ sudo psql -h 127.0.0.1 -U postgres
+Password for user postgres:
+psql (10.19 (Ubuntu 10.19-0ubuntu0.18.04.1), server 12.10 (Debian 12.10-1.pgdg110+1))
+WARNING: psql major version 10, server major version 12.
+         Some psql features might not work.
+Type "help" for help.
+
+postgres=# \du
+                                   List of roles
+ Role name |                         Attributes                         | Member of
+-----------+------------------------------------------------------------+-----------
+ postgres  | Superuser, Create role, Create DB, Replication, Bypass RLS | {}
+
+postgres=# \l
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+(3 rows)
+
+postgres=# \dt+
+                     List of relations
+ Schema |  Name   | Type  |  Owner   | Size  | Description
+--------+---------+-------+----------+-------+-------------
+ public | clients | table | postgres | 16 kB |
+ public | orders  | table | postgres | 16 kB |
+(2 rows)
+
+postgres=# select * from clients;
+ id |       lastname       | country | booking
+----+----------------------+---------+---------
+  4 | Ронни Джеймс Дио     | Russia  |
+  5 | Ritchie Blackmore    | Russia  |
+  1 | Иванов Иван Иванович | USA     |       3
+  2 | Петров Петр Петрович | Canada  |       4
+  3 | Иоганн Себастьян Бах | Japan   |       5
+(5 rows)
+
+ОК
 ```
