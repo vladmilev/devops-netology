@@ -230,5 +230,52 @@ secure-file-priv= NULL
 # Custom config should go here
 !includedir /etc/mysql/conf.d/
 ------------------------------------------------
+vagrant@ubuntu-bionic:~$ sudo docker volume ls
+DRIVER    VOLUME NAME
+local     1ad73b3b9e2d798aea8c2a8f571288c7b39989c545c741bfc37d2be01e1aeb72
+local     vol_mysql
 
+vagrant@ubuntu-bionic:~$ sudo docker volume inspect vol_mysql
+[
+    {
+        "CreatedAt": "2022-02-21T02:26:42Z",
+        "Driver": "local",
+        "Labels": {},
+        "Mountpoint": "/var/lib/docker/volumes/vol_mysql/_data",
+        "Name": "vol_mysql",
+        "Options": {},
+        "Scope": "local"
+    }
+]
+
+  Создал новый файл конфигурации
+vagrant@ubuntu-bionic:~$ nano my.cnf
+  Скопировал его в точку монтирования
+vagrant@ubuntu-bionic:~$ sudo cp my.cnf /var/lib/docker/volumes/vol_mysql/_data
+vagrant@ubuntu-bionic:~$ sudo docker exec -t mysql-docker cat /etc/mysql/my.cnf
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+
+#Set IO Speed
+# 0 - скорость
+# 1 - сохранность
+# 2 - универсальный параметр
+innodb_flush_log_at_trx_commit = 0
+
+#Set compression
+# Barracuda - формат файла с сжатием
+innodb_file_format=Barracuda
+
+#Set buffer
+innodb_log_buffer_size  = 1M
+
+#Set Cache size
+key_buffer_size = 640М
+
+#Set log size
+max_binlog_size = 100M
+vagrant@ubuntu-bionic:~$
 ```
