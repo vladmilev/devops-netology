@@ -21,7 +21,8 @@ Status: Downloaded newer image for mysql:8.0
 vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker volume create vol_mysql
 vol_mysql
   Запуск докер-контейнера
-vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker run --rm --name mysql-docker -e MYSQL_ROOT_PASSWORD=mysql -ti -p 3306:3306 -vl_mysql:/etc/mysql mysql:8.0
+vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker run --rm --name mysql-docker -e MYSQL_ROOT_PASSWORD=mysql -ti 
+-p 3306:3306 -vl_mysql:/etc/mysql mysql:8.0
   Подключил еще одну сессию vagrant ssh
 vagrant@ubuntu-bionic:~$ sudo docker container list -a
 CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS                    PORTS                                                  NAMES
