@@ -153,7 +153,38 @@ mysql> SELECT * FROM INFORMATION_SCHEMA.USER_ATTRIBUTES WHERE USER='test';
 - на MyISAM  
 - на InnoDB  
 ```
+mysql> SET profiling=1;
+Query OK, 0 rows affected, 1 warning (0.00 sec)
+mysql> SHOW PROFILES;
+Empty set, 1 warning (0.00 sec)
 
+mysql> SELECT TABLE_NAME,ENGINE,ROW_FORMAT,TABLE_ROWS,DATA_LENGTH,INDEX_LENGTH FROM information_schema.TABLES WHERE table_name='orders' and  TABLE_SCHEMA='test_db' ORDER BY ENGINE asc;
++------------+--------+------------+------------+-------------+--------------+
+| TABLE_NAME | ENGINE | ROW_FORMAT | TABLE_ROWS | DATA_LENGTH | INDEX_LENGTH |
++------------+--------+------------+------------+-------------+--------------+
+| orders     | InnoDB | Dynamic    |          5 |       16384 |            0 |
++------------+--------+------------+------------+-------------+--------------+
+1 row in set (0.00 sec)
+
+mysql> ALTER TABLE orders ENGINE = MyISAM;
+Query OK, 5 rows affected (0.16 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> ALTER TABLE orders ENGINE = InnoDB;
+Query OK, 5 rows affected (0.21 sec)
+Records: 5  Duplicates: 0  Warnings: 0
+
+mysql> show profiles;
++----------+------------+-------------------------------+
+| Query_ID | Duration   | Query                                                                                                                                                                            |
++----------+------------+-------------------------------+
+|        1 | 0.00034750 | SELECT * FROM orders                                                                                                                                                             |
+|        2 | 0.00340300 | SELECT * FROM information_schema.TABLES WHERE table_name='orders' and TABLE_SCHEMA='test_db' ORDER BY ENGINE asc                                                                 |
+|        3 | 0.00145000 | SELECT TABLE_NAME,ENGINE,ROW_FORMAT,TABLE_ROWS,DATA_LENGTH,INDEX_LENGTH FROM information_schema.TABLES WHERE table_name='orders' and  TABLE_SCHEMA='test_db' ORDER BY ENGINE asc |
+|        4 | 0.16153275 | ALTER TABLE orders ENGINE = MyISAM                                                                                                                                               |
+|        5 | 0.21350625 | ALTER TABLE orders ENGINE = InnoDB                                                                                                                                               |
++----------+------------+-------------------------------+
+5 rows in set, 1 warning (0.00 sec)
 ```
 
 ## Задача 4
