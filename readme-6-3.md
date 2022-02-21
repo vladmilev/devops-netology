@@ -21,8 +21,8 @@ Status: Downloaded newer image for mysql:8.0
 vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker volume create vol_mysql
 vol_mysql
   Запуск докер-контейнера
-vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker run --rm --name mysql-docker -e MYSQL_ROOT_PASSWORD=mysql -ti 
--p 3306:3306 -vl_mysql:/etc/mysql mysql:8.0
+vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker run --rm --name mysql-docker -e MYSQL_ROOT_PASSWORD=mysql -ti -p 3306:3306 
+-v vol_mysql:/etc/mysql mysql:8.0
   Подключил еще одну сессию vagrant ssh
 vagrant@ubuntu-bionic:~$ sudo docker container list -a
 CONTAINER ID   IMAGE           COMMAND                  CREATED         STATUS                    PORTS                                                  NAMES
@@ -198,5 +198,37 @@ mysql> show profiles;
 - Размер файла логов операций 100 Мб  
 Приведите в ответе измененный файл my.cnf.  
 ```
+\q
+vagrant@ubuntu-bionic:~/docker-mysql$ sudo docker exec -t mysql-docker cat /etc/mysql/my.cnf
+# Copyright (c) 2017, Oracle and/or its affiliates. All rights reserved.
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; version 2 of the License.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 51 Franklin St, Fifth Floor, Boston, MA  02110-1301 USA
+
+#
+# The MySQL  Server configuration file.
+#
+# For explanations see
+# http://dev.mysql.com/doc/mysql/en/server-system-variables.html
+
+[mysqld]
+pid-file        = /var/run/mysqld/mysqld.pid
+socket          = /var/run/mysqld/mysqld.sock
+datadir         = /var/lib/mysql
+secure-file-priv= NULL
+
+# Custom config should go here
+!includedir /etc/mysql/conf.d/
+------------------------------------------------
 
 ```
