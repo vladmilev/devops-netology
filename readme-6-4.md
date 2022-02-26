@@ -98,6 +98,58 @@ root@090cfd68d03b:/#
 Используя таблицу pg_stats, найдите столбец таблицы orders с наибольшим средним значением размера элементов в байтах.  
 Приведите в ответе команду, которую вы использовали для вычисления и полученный результат.  
 ```
+root@090cfd68d03b:/# psql -h localhost -p 5432 -U postgres
+psql (13.6 (Debian 13.6-1.pgdg110+1))
+Type "help" for help.
+
+postgres=# CREATE DATABASE test_database;
+CREATE DATABASE
+
+Вышел из докера и командной оболочки bash создал на виртуальной машине дамп-файл test_dump.sql
+vagrant@ubuntu-bionic:~$ nano test_dump.sql
+
+Смотрим название нашего контейнера
+vagrant@ubuntu-bionic:~$ sudo docker container list -a
+CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS                  PORTS                                       NAMES
+090cfd68d03b   postgres:13     "docker-entrypoint.s…"   34 minutes ago   Up 34 minutes           0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   pg-docker
+
+Запускаем дамп на выполнение в контейнере через psql
+vagrant@ubuntu-bionic:~$ sudo cat test_dump.sql | sudo docker exec -i  pg-docker psql -U postgres
+SET
+SET
+SET
+SET
+SET
+ set_config
+------------
+
+(1 row)
+
+SET
+SET
+SET
+SET
+SET
+SET
+CREATE TABLE
+ALTER TABLE
+CREATE SEQUENCE
+ALTER TABLE
+ALTER SEQUENCE
+ALTER TABLE
+COPY 8
+ setval
+--------
+      8
+(1 row)
+
+ALTER TABLE
+
+Вошел снова в докер с командной оболочкой
+vagrant@ubuntu-bionic:~$ sudo docker exec -it pg-docker bash
+
+Запускаю управляющую консоль psql внутри контейнера
+psql -h localhost -p 5432 -U postgres
 
 ```
 
