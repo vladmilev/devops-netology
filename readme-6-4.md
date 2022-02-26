@@ -197,6 +197,29 @@ test_database=# SELECT * FROM orders;
   8 | Dbiezdmin            |   501
 (8 rows)
 
+Шардирование (горизонтальное партиционирование) — это принцип проектирования базы данных, 
+при котором логически независимые строки таблицы базы данных хранятся раздельно
+
+Преобразуем существующую таблицу в партиционированную путем пересоздания
+test_database=# alter table orders rename to orders_backup;
+ALTER TABLE
+test_database=# create table orders (id integer, title varchar(80), price integer) partition by range(price);
+CREATE TABLE
+test_database=# create table orders_2 partition of orders for values from (0) to (499);
+CREATE TABLE
+test_database=# create table orders_1 partition of orders for values from (499) to (999999999);
+CREATE TABLE
+test_database=# insert into orders (id, title, price) select * from orders_backup;
+INSERT 0 8
+
+Ссылка на документацию https://postgrespro.ru/docs/postgresql/12/sql-createtable
+
+Действительно, можно было исключить "ручное" разбиение таблицы,
+если изначально сделать ее секционированной, указав опцию PARTITION BY с указанным диапазоном разбиения RANGE
+
+Сама по себе секционируемая таблица не содержит данных. Строка данных, вставляемая в эту таблицу, 
+перенаправляется в секцию в зависимости от значений столбцов или выражений в ключе разбиения. Если
+значениям в новой строке не соответствует ни одна из существующих секций, возникает ошибка.
 ```
 
 ## Задача 4
