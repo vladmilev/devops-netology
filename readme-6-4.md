@@ -114,7 +114,7 @@ CONTAINER ID   IMAGE           COMMAND                  CREATED          STATUS 
 090cfd68d03b   postgres:13     "docker-entrypoint.s…"   34 minutes ago   Up 34 minutes           0.0.0.0:5432->5432/tcp, :::5432->5432/tcp   pg-docker
 
 Запускаем дамп на выполнение в контейнере через psql
-vagrant@ubuntu-bionic:~$ sudo cat test_dump.sql | sudo docker exec -i  pg-docker psql -U postgres
+vagrant@ubuntu-bionic:~$ sudo cat test_dump.sql | sudo docker exec -i  pg-docker psql -U postgres test_database
 SET
 SET
 SET
@@ -149,8 +149,31 @@ ALTER TABLE
 vagrant@ubuntu-bionic:~$ sudo docker exec -it pg-docker bash
 
 Запускаю управляющую консоль psql внутри контейнера
-psql -h localhost -p 5432 -U postgres
+root@090cfd68d03b:/# psql -h localhost -p 5432 -U postgres
+psql (13.6 (Debian 13.6-1.pgdg110+1))
 
+postgres=# \c test_database
+You are now connected to database "test_database" as user "postgres".
+
+test_database=# \dt
+         List of relations
+ Schema |  Name  | Type  |  Owner
+--------+--------+-------+----------
+ public | orders | table | postgres
+(1 row)
+
+test_database=# ANALYSE VERBOSE public.orders;
+INFO:  analyzing "public.orders"
+INFO:  "orders": scanned 1 of 1 pages, containing 8 live rows and 0 dead rows; 8 rows in sample, 8 estimated total rows
+ANALYZE
+
+test_database=# SELECT avg_width FROM pg_stats WHERE tablename='orders';
+ avg_width
+-----------
+         4
+        16
+         4
+(3 rows)
 ```
 
 ## Задача 3
