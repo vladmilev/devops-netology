@@ -11,7 +11,83 @@
 - вывода описания содержимого таблиц
 - выхода из psql
 ```
+vagrant@ubuntu-bionic:~$ sudo docker pull postgres:13
+vagrant@ubuntu-bionic:~$ sudo docker volume create vol_postgres
+vagrant@ubuntu-bionic:~$ sudo docker run --rm --name pg-docker -e POSTGRES_PASSWORD=postgres -ti -p 5432:5432 -v vol_postgres:/var/lib/postgresql/data postgres:13
+Открыл еще одну сессию (vagrant ssh)
+vagrant@ubuntu-bionic:~$ sudo docker exec -it pg-docker bash
 
+root@090cfd68d03b:/# psql -h localhost -p 5432 -U postgres
+psql (13.6 (Debian 13.6-1.pgdg110+1))
+Type "help" for help.
+postgres=#\?
+  \dt[S+] [PATTERN]      list tables
+  \dT[S+] [PATTERN]      list data types
+  \du[S+] [PATTERN]      list roles
+  \dv[S+] [PATTERN]      list views
+  \dx[+]  [PATTERN]      list extensions
+  \dy[+]  [PATTERN]      list event triggers
+  \l[+]   [PATTERN]      list databases
+  
+- вывод списка БД\l
+postgres=# \l
+                                 List of databases
+   Name    |  Owner   | Encoding |  Collate   |   Ctype    |   Access privileges
+-----------+----------+----------+------------+------------+-----------------------
+ postgres  | postgres | UTF8     | en_US.utf8 | en_US.utf8 |
+ template0 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+ template1 | postgres | UTF8     | en_US.utf8 | en_US.utf8 | =c/postgres          +
+           |          |          |            |            | postgres=CTc/postgres
+(3 rows)
+
+- подключения к БД
+  \c[onnect] {[DBNAME|- USER|- HOST|- PORT|-] | conninfo}
+                         connect to new database (currently "postgres")
+postgres=# \c postgres
+You are now connected to database "postgres" as user "postgres".
+
+- вывод списка таблиц
+  \dt[S+] [PATTERN]      list tables
+
+postgres-# \dt
+Did not find any relations.
+postgres-# \dtS
+                    List of relations
+   Schema   |          Name           | Type  |  Owner
+------------+-------------------------+-------+----------
+ pg_catalog | pg_aggregate            | table | postgres
+ pg_catalog | pg_am                   | table | postgres
+ pg_catalog | pg_amop                 | table | postgres
+...
+- вывода описания содержимого таблиц
+ \d[S+]                 list tables, views, and sequences
+postgres-# \d pg_database
+               Table "pg_catalog.pg_database"
+    Column     |   Type    | Collation | Nullable | Default
+---------------+-----------+-----------+----------+---------
+ oid           | oid       |           | not null |
+ datname       | name      |           | not null |
+ datdba        | oid       |           | not null |
+ encoding      | integer   |           | not null |
+ datcollate    | name      |           | not null |
+ datctype      | name      |           | not null |
+ datistemplate | boolean   |           | not null |
+ datallowconn  | boolean   |           | not null |
+ datconnlimit  | integer   |           | not null |
+ datlastsysoid | oid       |           | not null |
+ datfrozenxid  | xid       |           | not null |
+ datminmxid    | xid       |           | not null |
+ dattablespace | oid       |           | not null |
+ datacl        | aclitem[] |           |          |
+Indexes:
+    "pg_database_datname_index" UNIQUE, btree (datname), tablespace "pg_global"
+    "pg_database_oid_index" UNIQUE, btree (oid), tablespace "pg_global"
+Tablespace: "pg_global"
+
+- выхода из psql
+postgres-# \q
+root@090cfd68d03b:/#
 ```
 
 ## Задача 2
