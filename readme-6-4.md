@@ -441,10 +441,27 @@ ALTER TABLE ONLY public.orders_backup
 --
 -- PostgreSQL database dump complete
 --
-
+---------------------------------------------------------------------------------------------
 Все внесенные изменения в дампе есть - PARTITION BY RANGE (price); таблицы orders_1, orders_2
 
 Как бы вы доработали бэкап-файл, чтобы добавить уникальность значения столбца title для таблиц test_database?
 - для уникальности можно добавить индекс на это поле
 CREATE INDEX ON orders ((lower(title)));
+
+Можно добавить ограничение уникальности (UNIQUE) для поля title при создании таблиц
+Например для таблицы orders
+
+CREATE TABLE public.orders (
+    id integer,
+    title character varying(80) UNIQUE,
+    price integer
+)
+Ссылка на документацию https://postgrespro.ru/docs/postgrespro/9.5/ddl-constraints
+
+Можно создать отдельное уникальное ограничение путем изменения таблицы
+
+ALTER TABLE  public.orders
+ADD CONSTRAINT unique_title UNIQUE (title);
+Ссылка на источник https://oracleplsql.ru/unique-constraints-postgresql.html
+
 ```
