@@ -33,7 +33,7 @@ COPY index.html /usr/share/nginx/html/index.html
 
 CMD ["nginx", "-g", "daemon off;"]
 ---
-$docker build -t  vladmilev/nginx:homework
+$docker build -t vladmilev/nginx:homework .
 $docker push vladmilev/nginx:homework
 ```
 
