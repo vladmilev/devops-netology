@@ -72,6 +72,9 @@ $ sudo curl localhost:9200
   "tagline" : "You Know, for Search"
 }
 
+Cсылка на образ в репозитории dockerhub:
+https://hub.docker.com/repository/docker/vladmilev/es
+
 Ниже представлены служебные файлы для сборки образа Dockerfile и elasticsearch.yml
 
 Файл Dockerfile ----------------------------------------------
