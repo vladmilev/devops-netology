@@ -23,7 +23,188 @@
 elasticsearch в логах обычно описывает проблему и пути ее решения  
 Далее мы будем работать с данным экземпляром elasticsearch.  
 ```
+Первый раз у меня все подвисло после запуска контейнера с образом ES - нехватало памяти.
+Установил новую VM с Ubuntu
+ Vagrant.configure("2") do |config|
+ 	config.vm.box = "ubuntu/bionic64"
+ end
+$ vagrant up
+$ vagrant ssh
+Установим Docker
+$ sudo apt-get update
+$ sudo apt -y install docker.io
+$ sudo docker --version
+$ sudo systemctl start docker
+$ sudo systemctl status docker
+Создал public репозиторий на hub.docker.com (es)
+Собираем образ и пушим его в удаленный репозиторий из локального реестра
+$ sudo docker build -t vladmilev/es:hw .
+$ sudo docker login -u vladmilev
+$ sudo docker push vladmilev/es:hw
+$ sudo docker images
+REPOSITORY     TAG       IMAGE ID       CREATED          SIZE
+vladmilev/es   hw        ef5b46c5cdab   10 minutes ago   2.63GB
+centos         7         eeb6ee3f44bd   5 months ago     204MB
+Запускаем контейнер с созданным образом
+$ sudo docker run -t -d -p 9200:9200 --name es_container vladmilev/es:hw
+61c759ade33aac87a0b4f26c9b898b5ab32338627ff105a9699919620216f67b
+$ sudo docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+61c759ade33a   vladmilev/es:hw   "/elasticsearch-7.11…"   16 seconds ago   Up 14 seconds   0.0.0.0:9200->9200/tcp, :::9200->9200/tcp   es_container
 
+Запрос пути по порту 9200
+$ sudo curl localhost:9200
+{
+  "name" : "netology_test",
+  "cluster_name" : "netology_cluster",
+  "cluster_uuid" : "Xp8rNQBLSu-MbnNFttzqcQ",
+  "version" : {
+    "number" : "7.11.1",
+    "build_flavor" : "default",
+    "build_type" : "tar",
+    "build_hash" : "ff17057114c2199c9c1bbecc727003a907c0db7a",
+    "build_date" : "2021-02-15T13:44:09.394032Z",
+    "build_snapshot" : false,
+    "lucene_version" : "8.7.0",
+    "minimum_wire_compatibility_version" : "6.8.0",
+    "minimum_index_compatibility_version" : "6.0.0-beta1"
+  },
+  "tagline" : "You Know, for Search"
+}
+
+Ниже представлены служебные файлы для сборки образа Dockerfile и elasticsearch.yml
+
+Файл Dockerfile ----------------------------------------------
+#6.5. Elasticsearch
+FROM centos:7
+LABEL ElasticSearch Homework 6.5
+ENV PATH=/usr/lib:/usr/lib/jvm/jre-11/bin:$PATH
+
+RUN yum install java-11-openjdk -y 
+RUN yum install wget -y 
+
+RUN wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.11.1-linux-x86_64.tar.gz \
+    && wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.11.1-linux-x86_64.tar.gz.sha512 
+RUN yum install perl-Digest-SHA -y 
+RUN shasum -a 512 -c elasticsearch-7.11.1-linux-x86_64.tar.gz.sha512 \ 
+    && tar -xzf elasticsearch-7.11.1-linux-x86_64.tar.gz \
+    && yum upgrade -y
+    
+ADD elasticsearch.yml /elasticsearch-7.11.1/config/
+ENV JAVA_HOME=/elasticsearch-7.11.1/jdk/
+ENV ES_HOME=/elasticsearch-7.11.1
+RUN groupadd elasticsearch \
+    && useradd -g elasticsearch elasticsearch
+    
+RUN mkdir /var/lib/logs \
+    && chown elasticsearch:elasticsearch /var/lib/logs \
+    && mkdir /var/lib/data \
+    && chown elasticsearch:elasticsearch /var/lib/data \
+    && chown -R elasticsearch:elasticsearch /elasticsearch-7.11.1/
+RUN mkdir /elasticsearch-7.11.1/snapshots &&\
+    chown elasticsearch:elasticsearch /elasticsearch-7.11.1/snapshots
+    
+USER elasticsearch
+CMD ["/usr/sbin/init"]
+CMD ["/elasticsearch-7.11.1/bin/elasticsearch"]
+----------------------------------------------------------------------
+Файл elasticsearch.yml  ----------------------------------------------
+# ======================== Elasticsearch Configuration =========================
+#
+# NOTE: Elasticsearch comes with reasonable defaults for most settings.
+#       Before you set out to tweak and tune the configuration, make sure you
+#       understand what are you trying to accomplish and the consequences.
+#
+# The primary way of configuring a node is via this file. This template lists
+# the most important settings you may want to configure for a production cluster.
+#
+# Please consult the documentation for further information on configuration options:
+# https://www.elastic.co/guide/en/elasticsearch/reference/index.html
+#
+# ---------------------------------- Cluster -----------------------------------
+#
+# Use a descriptive name for your cluster:
+#
+cluster.name: netology_cluster
+discovery.type: single-node
+#
+# ------------------------------------ Node ------------------------------------
+#
+# Use a descriptive name for the node:
+#
+node.name: netology_test
+#
+# Add custom attributes to the node:
+#
+#node.attr.rack: r1
+#
+# ----------------------------------- Paths ------------------------------------
+#
+# Path to directory where to store the data (separate multiple locations by comma):
+#
+path.data: /var/lib/data
+#
+# Path to log files:
+#
+path.logs: /var/lib/logs
+
+#Settings REPOSITORY PATH
+#for Image from YUM (esp)
+#path.repo: /usr/share/elasticsearch/snapshots
+#for Image from TAR (est)
+path.repo: /elasticsearch-7.11.1/snapshots
+#
+# ----------------------------------- Memory -----------------------------------
+#
+# Lock the memory on startup:
+#
+#bootstrap.memory_lock: true
+#
+# Make sure that the heap size is set to about half the memory available
+# on the system and that the owner of the process is allowed to use this
+# limit.
+#
+# Elasticsearch performs poorly when the system is swapping the memory.
+#
+# ---------------------------------- Network -----------------------------------
+#
+# Set the bind address to a specific IP (IPv4 or IPv6):
+#
+network.host: 0.0.0.0
+#
+# Set a custom port for HTTP:
+#
+#http.port: 9200
+#
+# For more information, consult the network module documentation.
+#
+# --------------------------------- Discovery ----------------------------------
+#
+# Pass an initial list of hosts to perform discovery when this node is started:
+# The default list of hosts is ["127.0.0.1", "[::1]"]
+#
+discovery.seed_hosts: ["127.0.0.1", "[::1]"]
+#
+# Bootstrap the cluster using an initial set of master-eligible nodes:
+#
+#cluster.initial_master_nodes: ["node-1", "node-2"]
+#
+# For more information, consult the discovery and cluster formation module documentation.
+#
+# ---------------------------------- Gateway -----------------------------------
+#
+# Block initial recovery after a full cluster restart until N nodes are started:
+#
+#gateway.recover_after_nodes: 3
+#
+# For more information, consult the gateway module documentation.
+#
+# ---------------------------------- Various -----------------------------------
+#
+# Require explicit names when deleting indices:
+#
+#action.destructive_requires_name: true
+----------------------------------------------------------------------
 ```
 
 ## Задача 2
