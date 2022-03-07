@@ -403,4 +403,13 @@ vagrant@ubuntu-bionic:~$ curl -X GET localhost:9200/_cat/indices?v
 health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
 green  open   test-2 Y1zyul9PQ-u3rSzLz6Lrlw   1   0          0            0       208b           208b
 
+(6) восстановить состояние кластера elasticsearch из snapshot, созданного ранее, итоговый список индексов
+vagrant@ubuntu-bionic:~$ curl -X POST localhost:9200/_snapshot/netology_backup/elasticsearch/_restore?pretty -H 'Content-Type: application/json' -d'{"include_global_state":true}'{
+  "accepted" : true
+}
+
+vagrant@ubuntu-bionic:~$ curl -X GET http://localhost:9200/_cat/indices?v
+health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2 Y1zyul9PQ-u3rSzLz6Lrlw   1   0          0            0       208b           208b
+green  open   test   WHnGTCLcSI-m-39PMBoM3Q   1   0          0            0       208b           208b
 ```
