@@ -309,7 +309,7 @@ health status index uuid pri rep docs.count docs.deleted store.size pri.store.si
 - восстанавливать индексы из бэкапов  
  
 Создайте директорию {путь до корневой директории с elasticsearch в образе}/snapshots.  
-Используя API зарегистрируйте данную директорию как snapshot repository c именем netology_backup.  
+Используя API [зарегистрируйте](https://www.elastic.co/guide/en/elasticsearch/reference/current/snapshots-register-repository.html#snapshots-register-repository) данную директорию как snapshot repository c именем netology_backup.  
 Приведите в ответе запрос API и результат вызова API для создания репозитория.  
 Создайте индекс test с 0 реплик и 1 шардом и приведите в ответе список индексов.  
 Создайте snapshot состояния кластера elasticsearch.  
@@ -321,5 +321,86 @@ health status index uuid pri rep docs.count docs.deleted store.size pri.store.si
 Подсказки:
 возможно вам понадобится доработать elasticsearch.yml в части директивы path.repo и перезапустить elasticsearch  
 ```
+(1) snapshot repository c именем netology_backup
+- в образе создавалась директория для snapshot:
+  RUN mkdir /elasticsearch-7.11.1/snapshots && chown elasticsearch:elasticsearch /elasticsearch-7.11.1/snapshots
+- в настройках elasticsearch.yml указанная директория была назначена репозиторию:
+  path.repo: /elasticsearch-7.11.1/snapshots
+- зарегистрируем ее с именем netology_backup как snapshot repository:
+vagrant@ubuntu-bionic:~$ curl -XPOST localhost:9200/_snapshot/netology_backup?pretty -H 'Content-Type: application/json' -d'{"type": "fs", "settings": { "location":"/elasticsearch-7.11.1/snapshots" }}'
+{
+  "acknowledged" : true
+}
+- проверка
+vagrant@ubuntu-bionic:~$ curl -XGET http://localhost:9200/_snapshot/netology_backup?pretty
+{
+  "netology_backup" : {
+    "type" : "fs",
+    "settings" : {
+      "location" : "/elasticsearch-7.11.1/snapshots"
+    }
+  }
+}
+
+(2) создать индекс test с 0 реплик и 1 шардом и получить список индексов
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/test -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 1,  "number_of_replicas": 0 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"test"}
+
+vagrant@ubuntu-bionic:~$ curl -X GET localhost:9200/_cat/indices?v
+health status index uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test  iXegz6TKTgGWMEDk5RWw8w   1   0          0            0       208b           208b
+
+(3) создать snapshot состояния кластера elasticsearch
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/_snapshot/netology_backup/elasticsearch?wait_for_completion=true
+
+{"snapshot":{"snapshot":"elasticsearch","uuid":"yQybFjlDSeu0Em7DlByBmw","version_id":7110199,"version":"7.11.1","indices":["test"],"data_streams":[],"include_global_state":true,"state":"SUCCESS","start_time":"2022-03-07T04:17:39.276Z","start_time_in_millis":1646626659276,"end_time":"2022-03-07T04:17:39.276Z","end_time_in_millis":1646626659276,"duration_in_millis":0,"failures":[],"shards":{"total":1,"failed":0,"successful":1}}}vagrant@ubuntu-bionic:~$ {"snapshot":{"snapshot":"elasticsearch","uuid":"wixOT9zMS_WYXlGfNw7nsQ","version_id":7110199,"verlobal_state":true,"state":"SUCCESS","start_time":"2021-03-06T12:23:31.388Z","start_time_in_millis":1615033411388,"end_time":"2021-03-06T12:23:31.988Z","end_time_in_millis":1615033411988,"duration_in_millis":600,"failures":[],"shards":{"total":1,"failed":0,"successful":1}}}
+
+(4) привести список файлов в директории со snapshotами
+- запустим  bash оболочку в интерективном режиме в докер-контейнере с ES
+vagrant@ubuntu-bionic:~$ sudo docker ps
+CONTAINER ID   IMAGE             COMMAND                  CREATED        STATUS        PORTS                                       NAMES
+61c759ade33a   vladmilev/es:hw   "/elasticsearch-7.11…"   20 hours ago   Up 20 hours   0.0.0.0:9200->9200/tcp, :::9200->9200/tcp   es_container
+vagrant@ubuntu-bionic:~$ sudo docker exec -it es_container bash
+
+[elasticsearch@61c759ade33a /]$ ls
+anaconda-post.log     elasticsearch-7.11.1-linux-x86_64.tar.gz         lib    opt   sbin  usr
+bin                   elasticsearch-7.11.1-linux-x86_64.tar.gz.sha512  lib64  proc  srv   var
+dev                   etc                                              media  root  sys
+elasticsearch-7.11.1  home                                             mnt    run   tmp
+[elasticsearch@61c759ade33a /]$ cd elasticsearch-7.11.1
+[elasticsearch@61c759ade33a elasticsearch-7.11.1]$ ls
+LICENSE.txt  README.asciidoc  config  lib   modules  snapshots
+NOTICE.txt   bin              jdk     logs  plugins
+[elasticsearch@61c759ade33a elasticsearch-7.11.1]$ cd snapshots
+[elasticsearch@61c759ade33a snapshots]$ ls
+index-1       meta-2e8dEBQEQmi0y56M0NwQ0w.dat  snap-yQybFjlDSeu0Em7DlByBmw.dat
+index.latest  meta-yQybFjlDSeu0Em7DlByBmw.dat
+indices       snap-2e8dEBQEQmi0y56M0NwQ0w.dat
+[elasticsearch@61c759ade33a snapshots]$ ls -lha
+total 96K
+drwxr-xr-x 1 elasticsearch elasticsearch 4.0K Mar  7 04:26 .
+drwxr-xr-x 1 elasticsearch elasticsearch 4.0K Mar  6 08:47 ..
+-rw-r--r-- 1 elasticsearch elasticsearch  633 Mar  7 04:26 index-1
+-rw-r--r-- 1 elasticsearch elasticsearch    8 Mar  7 04:26 index.latest
+drwxr-xr-x 3 elasticsearch elasticsearch 4.0K Mar  7 04:17 indices
+-rw-r--r-- 1 elasticsearch elasticsearch  31K Mar  7 04:26 meta-2e8dEBQEQmi0y56M0NwQ0w.dat
+-rw-r--r-- 1 elasticsearch elasticsearch  31K Mar  7 04:17 meta-yQybFjlDSeu0Em7DlByBmw.dat
+-rw-r--r-- 1 elasticsearch elasticsearch  267 Mar  7 04:26 snap-2e8dEBQEQmi0y56M0NwQ0w.dat
+-rw-r--r-- 1 elasticsearch elasticsearch  269 Mar  7 04:17 snap-yQybFjlDSeu0Em7DlByBmw.dat
+
+(5) удалить индекс test и создать индекс test-2, вывести список индексов
+vagrant@ubuntu-bionic:~$ curl -X DELETE localhost:9200/test?pretty
+{
+  "acknowledged" : true
+}
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/test-2?pretty -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 1,  "number_of_replicas": 0 }}'
+{
+  "acknowledged" : true,
+  "shards_acknowledged" : true,
+  "index" : "test-2"
+}
+vagrant@ubuntu-bionic:~$ curl -X GET localhost:9200/_cat/indices?v
+health status index  uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   test-2 Y1zyul9PQ-u3rSzLz6Lrlw   1   0          0            0       208b           208b
 
 ```
