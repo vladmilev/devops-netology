@@ -232,6 +232,60 @@ ind-3	2	4
 При проектировании кластера elasticsearch нужно корректно рассчитывать количество реплик и шард,  
 иначе возможна потеря данных индексов, вплоть до полной, при деградации системы.  
 ```
+(1) добавить 3 индекса
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/ind-1 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 1,  "number_of_replicas": 0 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"ind-1"}
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/ind-2 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 2,  "number_of_replicas": 1 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"ind-2"}
+vagrant@ubuntu-bionic:~$ curl -X PUT localhost:9200/ind-3 -H 'Content-Type: application/json' -d'{ "settings": { "number_of_shards": 4,  "number_of_replicas": 2 }}'
+{"acknowledged":true,"shards_acknowledged":true,"index":"ind-3"}
+
+(2) получить список индексов и статусов
+vagrant@ubuntu-bionic:~$ curl -X GET 'http://localhost:9200/_cat/indices?v'
+health status index uuid                   pri rep docs.count docs.deleted store.size pri.store.size
+green  open   ind-1 CRsrHtC5SR-w8Uu9FyMOgw   1   0          0            0       208b           208b
+yellow open   ind-3 oQgVYeaXRVyUEFImEFxXaQ   4   2          0            0       832b           832b
+yellow open   ind-2 nDHgXvPHTu6Bx5Quv0K7sg   2   1          0            0       416b           416b
+
+состояние 2 индекса
+vagrant@ubuntu-bionic:~$ curl -X GET 'http://localhost:9200/_cluster/health/ind-2?pretty'
+{
+  "cluster_name" : "netology_cluster",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 2,
+  "active_shards" : 2,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 2,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 41.17647058823529
+}
+
+(3) получить состояние кластера
+vagrant@ubuntu-bionic:~$ curl -XGET localhost:9200/_cluster/health/?pretty=true
+{
+  "cluster_name" : "netology_cluster",
+  "status" : "yellow",
+  "timed_out" : false,
+  "number_of_nodes" : 1,
+  "number_of_data_nodes" : 1,
+  "active_primary_shards" : 7,
+  "active_shards" : 7,
+  "relocating_shards" : 0,
+  "initializing_shards" : 0,
+  "unassigned_shards" : 10,
+  "delayed_unassigned_shards" : 0,
+  "number_of_pending_tasks" : 0,
+  "number_of_in_flight_fetch" : 0,
+  "task_max_waiting_in_queue_millis" : 0,
+  "active_shards_percent_as_number" : 41.17647058823529
+}
 
 ```
 
