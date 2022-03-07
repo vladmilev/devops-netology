@@ -216,7 +216,7 @@ discovery.seed_hosts: ["127.0.0.1", "[::1]"]
 - изучать состояние кластера  
 - обосновывать причину деградации доступности данных  
 - 
-Ознакомтесь с документацией и добавьте в elasticsearch 3 индекса, в соответствии со таблицей:  
+Ознакомтесь с [документацией](https://www.elastic.co/guide/en/elasticsearch/reference/current/indices-create-index.html) и добавьте в elasticsearch 3 индекса, в соответствии со таблицей:  
 ```
 Имя	Количество реплик	Количество шард
 ind-1	0	1
@@ -286,7 +286,21 @@ vagrant@ubuntu-bionic:~$ curl -XGET localhost:9200/_cluster/health/?pretty=true
   "task_max_waiting_in_queue_millis" : 0,
   "active_shards_percent_as_number" : 41.17647058823529
 }
+(4) почему часть индексов и кластер находится в состоянии yellow?  
+в статусе yellow индексы с назначенным числом реплик, но поскольку нет других серверов, 
+куда можно эти реплики реплицировать, эта возможность реализована быть не может.
 
+(5) удалите все индексы
+vagrant@ubuntu-bionic:~$ curl -X DELETE localhost:9200/ind-1
+{"acknowledged":true}
+vagrant@ubuntu-bionic:~$ curl -X DELETE localhost:9200/ind-2
+{"acknowledged":true}
+vagrant@ubuntu-bionic:~$ curl -X DELETE localhost:9200/ind-3
+{"acknowledged":true}
+проверочно - смотрим  состояние индексов
+vagrant@ubuntu-bionic:~$ curl -X GET localhost:9200/_cat/indices?v
+health status index uuid pri rep docs.count docs.deleted store.size pri.store.size
+пусто - значит все индексы удалены
 ```
 
 ## Задача 3
