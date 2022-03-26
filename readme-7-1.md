@@ -85,7 +85,17 @@ Terraform v0.13.7
 $ wget https://hashicorp-releases.website.yandexcloud.net/terraform/0.12.31/terraform_0.12.31_linux_amd64.zip
 ..
 2022-03-26 01:41:33 (6.73 MB/s) - ‘terraform_0.12.31_linux_amd64.zip’ saved [28441056/28441056]
-$ unzip terraform_0.12.31_linux_amd64.zip -d /usr/local/bin/
+$ sudo unzip terraform_0.12.31_linux_amd64.zip -d /usr/local/bin/
+$ terraform --version
+Terraform v0.12.31
 
+переименую в terraform12 а terraform13 обратно в terraform
+vagrant@ubuntu-bionic:~$ sudo mv /usr/local/bin/terraform /usr/local/bin/terraform12
+vagrant@ubuntu-bionic:~$ sudo mv /usr/local/bin/terraform13 /usr/local/bin/terraform
 
+вывод --version двух версий терраформа
+vagrant@ubuntu-bionic:~$ terraform --version
+Terraform v0.13.7
+vagrant@ubuntu-bionic:~$ /usr/local/bin/terraform12 --version
+Terraform v0.12.31
 ```
