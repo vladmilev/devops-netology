@@ -57,7 +57,15 @@
 Установите терраформ при помощи менеджера пакетов используемого в вашей операционной системе.  
 В виде результата этой задачи приложите вывод команды terraform --version.  
 ```
+vagrant@ubuntu-bionic:~$ wget https://hashicorp-releases.website.yandexcloud.net/terraform/0.13.7/terraform_0.13.7_linux_amd64.zip
+vagrant@ubuntu-bionic:~$ sudo unzip terraform_0.13.7_linux_amd64.zip -d /usr/local/bin/
+Archive:  terraform_0.13.7_linux_amd64.zip
+  inflating: /usr/local/bin/terraform
+vagrant@ubuntu-bionic:~$ terraform --version
+Terraform v0.13.7
 
+Your version of Terraform is out of date! The latest version
+is 1.1.7. You can update by downloading from https://www.terraform.io/downloads.html
 ```
 
 ## Задача 3. Поддержка легаси кода.
@@ -68,5 +76,16 @@
 
 В виде результата этой задачи приложите вывод --version двух версий терраформа доступных на вашем компьютере или виртуальной машине.
 ```
+переименовал установленную версию 0.13
+$ sudo mv /usr/local/bin/terraform /usr/local/bin/terraform13
+$ /usr/local/bin/terraform13 --version
+Terraform v0.13.7
+
+скачал старую версию 0.12 с зеркала Яндекса https://hashicorp-releases.website.yandexcloud.net/terraform/
+$ wget https://hashicorp-releases.website.yandexcloud.net/terraform/0.12.31/terraform_0.12.31_linux_amd64.zip
+..
+2022-03-26 01:41:33 (6.73 MB/s) - ‘terraform_0.12.31_linux_amd64.zip’ saved [28441056/28441056]
+$ unzip terraform_0.12.31_linux_amd64.zip -d /usr/local/bin/
+
 
 ```
