@@ -7,7 +7,8 @@
 3. Создать доски kanban и scrum  
 
 ```
-atlassian.com загрузил через VPN Psiphon 3 зарегистрировал на vlad@kww.su, сайт с Jira + Confluence vladmilev.atlassian.net  
+atlassian.com загрузил через VPN Psiphon 3 зарегистрировал на vlad@kww.su, 
+сайт с Jira + Confluence vladmilev.atlassian.net  
 ```
 
 ### Основная часть
@@ -41,5 +42,14 @@ Done <-> Closed, Open
 ```
 https://prnt.sc/qg1Gc4sjdvTh
 https://prnt.sc/8pak8kqQjrNJ
-
 ```
+Скриншот workflow для bug-задач: 
+<p align="center">
+  <img src="./workflow1.png">
+</p>
+
+Скриншот workflow для остальных задач: 
+<p align="center">
+  <img src="./workflow2.png">
+</p>
+
