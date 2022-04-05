@@ -39,5 +39,7 @@ Done <-> Closed, Open
 
 Если всё отработало в рамках ожидания - выгрузить схемы workflow для импорта в XML. Файлы с workflow приложить к решению задания.
 ```
+https://prnt.sc/qg1Gc4sjdvTh
+https://prnt.sc/8pak8kqQjrNJ
 
 ```
