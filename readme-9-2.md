@@ -44,11 +44,15 @@ docker run -d --name sonarqube -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -p 9000:9000 sona
 sonar-scanner.bat -D"sonar.projectKey=test" -D"sonar.login=4c08914fe12e95361896417106ffe88877ecedb7" -Dsonar.coverage.exclusions=fail.py
 Простые сценарии использования Sonarqube https://habr.com/ru/post/652607/
 ```
-Скриншот запуска с ошибкой  
-https://prnt.sc/H9Gss4WU1Vpk
+Скриншот запуска с ошибкой (https://prnt.sc/H9Gss4WU1Vpk)  
+<p align="center">
+  <img src="./sonar_failed.png">
+</p>
 
-Скриншот запуска после исправлений  
-https://prnt.sc/nRbGLFiFZCj7
+Скриншот запуска после исправлений (https://prnt.sc/nRbGLFiFZCj7)  
+<p align="center">
+  <img src="./sonar_passed.png">
+</p>
 
 ## Знакомство с Nexus
 Подготовка к выполнению:
