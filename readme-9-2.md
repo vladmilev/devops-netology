@@ -23,7 +23,19 @@
 - Делаем скриншот успешного прохождения анализа, прикладываем к решению ДЗ
 ```
 SonarQube - статический анализатор кода
-
+1) перебросил порт 9000 для Vagrant c целью доступа по http://localhost:9000/
+ Vagrant.configure("2") do |config|
+ 	config.vm.box = "ubuntu/bionic64"
+        config.vm.network "forwarded_port", guest:9000, host:9000
+ end
+2) в логах
+sudo -s
+docker logs -f sonarqube
+выдает ошибку "Native memory allocation (mmap) failed to map 65536 bytes for committing reserved memory"оперативной 
+- увеличение оперативной памяти виртуальной машины в два раза результата не дало
+- поиск решения навел на https://github.com/SonarSource/docker-sonarqube/issues/185 помогло (ES_JAVA_OPTS="-Xms1g -Xmx1g")
+docker rm sonarqube
+docker run -d --name sonarqube -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -p 9000:9000 sonarqube:8.7-community
 ```
 
 ## Знакомство с Nexus
