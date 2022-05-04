@@ -36,6 +36,13 @@ docker logs -f sonarqube
 - поиск решения навел на https://github.com/SonarSource/docker-sonarqube/issues/185 помогло (ES_JAVA_OPTS="-Xms1g -Xmx1g")
 docker rm sonarqube
 docker run -d --name sonarqube -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -p 9000:9000 sonarqube:8.7-community
+Создал проект test
+Скачал windows-архив по ссылке https://docs.sonarqube.org/latest/analysis/scan/sonarscanner/
+Установил в корень C:\sonar, указал путь в PATH C:\sonar\bin, файл fail.py создал в директории C:\sonar\project
+В conf\sonar-scanner.properties добавил строчку: sonar.host.url=http://localhost:9000
+Запуск
+sonar-scanner.bat -D"sonar.projectKey=test" -D"sonar.login=4c08914fe12e95361896417106ffe88877ecedb7" -Dsonar.coverage.exclusions=fail.py
+Простые сценарии использования Sonarqube https://habr.com/ru/post/652607/
 ```
 
 ## Знакомство с Nexus
@@ -43,7 +50,7 @@ docker run -d --name sonarqube -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -p 9000:9000 sona
 1. Выполняем docker pull sonatype/nexus3
 2. Выполняем docker run -d -p 8081:8081 --name nexus sonatype/nexus3
 3. Ждём запуск, смотрим логи через docker logs -f nexus
-4. Проверяем готовность сервиса через бразуер (http://localhost:8081/)
+4. ПроверяемC:\sonar\project готовность сервиса через бразуер (http://localhost:8081/)
 5. Узнаём пароль от admin через docker exec -it nexus /bin/bash
 6. Подключаемся под админом, меняем пароль, сохраняем анонимный доступ
 
