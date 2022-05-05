@@ -83,7 +83,7 @@ type: tar.gz
 <p align="center">
   <img src="./nexus_ok.png">
 </p>
-Ответ: [Скачать файл maven-metadata.xml]()
+Ответ: [Скачать файл maven-metadata.xml]("./maven-metadata.xml)
 ```
 Nexus Sonatype - менеджер репозиториев для локального хранения и управления артефактами, зависимостями и Docker-образами.  
 Error
