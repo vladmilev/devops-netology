@@ -21,6 +21,18 @@
 - Исправляем ошибки, которые он выявил(включая warnings)
 - Запускаем анализатор повторно - проверяем, что QG пройдены успешно
 - Делаем скриншот успешного прохождения анализа, прикладываем к решению ДЗ
+
+Скриншот запуска с ошибкой (https://prnt.sc/H9Gss4WU1Vpk)  
+<p align="center">
+  <img src="./sonar_failed.png">
+</p>
+
+Скриншот запуска после исправлений (https://prnt.sc/nRbGLFiFZCj7)  
+<p align="center">
+  <img src="./sonar_passed.png">
+</p>
+
+Подробности
 ```
 SonarQube - статический анализатор кода
 1) перебросил порт 9000 для Vagrant c целью доступа по http://localhost:9000/
@@ -44,15 +56,6 @@ docker run -d --name sonarqube -e ES_JAVA_OPTS="-Xms1g -Xmx1g" -p 9000:9000 sona
 sonar-scanner.bat -D"sonar.projectKey=test" -D"sonar.login=4c08914fe12e95361896417106ffe88877ecedb7" -Dsonar.coverage.exclusions=fail.py
 Простые сценарии использования Sonarqube https://habr.com/ru/post/652607/
 ```
-Скриншот запуска с ошибкой (https://prnt.sc/H9Gss4WU1Vpk)  
-<p align="center">
-  <img src="./sonar_failed.png">
-</p>
-
-Скриншот запуска после исправлений (https://prnt.sc/nRbGLFiFZCj7)  
-<p align="center">
-  <img src="./sonar_passed.png">
-</p>
 
 ## Знакомство с Nexus
 Подготовка к выполнению:
@@ -73,10 +76,18 @@ classifier: distrib
 type: tar.gz
 ```
 - В него же загружаем такой же артефакт, но с version: 8_102
-- Проверяем, что все файлы загрузились успешно
+- Проверяем, что все файлы загрузились успешно 
 - В ответе присылаем файл maven-metadata.xml для этого артефекта
+
+Скриншот проверки, что файлы загружены (https://prnt.sc/6ZTnTE0g4LUP)  
+<p align="center">
+  <img src="./nexus_ok.png">
+</p>
+Ответ: [Скачать файл maven-metadata.xml]()
 ```
 Nexus Sonatype - менеджер репозиториев для локального хранения и управления артефактами, зависимостями и Docker-образами.  
+Error
+OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x0000000717000000, 1890582528, 0) failed; error='Cannot allocate memory' (errno=12)
 ```
 
 ## Знакомство с Maven
