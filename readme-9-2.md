@@ -82,12 +82,21 @@ type: tar.gz
 Скриншот проверки, что файлы загружены (https://prnt.sc/6ZTnTE0g4LUP)  
 <p align="center">
   <img src="./nexus_ok.png">
-</p>
-Ответ: [Скачать файл maven-metadata.xml]("./maven-metadata.xml)
+</p>  
+
+Ответ: [Скачать файл maven-metadata.xml](https://github.com/vladmilev/devops-netology/blob/main/maven-metadata.xml)  
+
+Подробности  
 ```
 Nexus Sonatype - менеджер репозиториев для локального хранения и управления артефактами, зависимостями и Docker-образами.  
-Error
+- vagrant перебросил для браузера порт 8081
+- удалил старый контейнер и образ - docker stop, rm, rmi
+- получил ошибку в логах (docker logs -f nexus):
 OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x0000000717000000, 1890582528, 0) failed; error='Cannot allocate memory' (errno=12)
+- помогло увеличение памяти в virtualbox (в настройках) до 5125 Мб
+- пароль админа cd /nexus-data; cat admin.passwrd
+- Sign сменил пароль на 123, Enable anonymous access
+- добавление артифактов - через maven-releases
 ```
 
 ## Знакомство с Maven
