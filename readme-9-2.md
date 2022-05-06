@@ -122,4 +122,7 @@ OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x0000000717000000, 18
 Подробности  
 ```
 Apache Maven — фреймворк для автоматизации сборки проектов на основе описания их структуры в файлах на языке POM, являющемся подмножеством XML.
+Устанавливал в Windows по https://www.examclouds.com/ru/java/java-core-russian/install-maven
+mvn package возвращает ошибку если sonatype/nexus3 не запущен в докер контейнере виртуальной машины
+Проверять следует поддиректорию target
 ```
