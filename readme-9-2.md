@@ -112,6 +112,14 @@ OpenJDK 64-Bit Server VM warning: INFO: os::commit_memory(0x0000000717000000, 18
 - Проверяем директорию ~/.m2/repository/, находим наш артефакт
 - В ответе присылаем исправленный файл pom.xml
 
+Скриншот создания jar файла проекта (https://prnt.sc/-p-nRkGp8Lgh)  
+<p align="center">
+  <img src="./maven_ok.png">
+</p>  
+
+Ответ: [Скачать файл pom.xml](https://github.com/vladmilev/devops-netology/blob/main/pom.xml)  
+
+Подробности  
 ```
 Apache Maven — фреймворк для автоматизации сборки проектов на основе описания их структуры в файлах на языке POM, являющемся подмножеством XML.
 ```
