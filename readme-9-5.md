@@ -52,7 +52,11 @@ https://gitlab.com/vlad_milev/mnt-ci/-/issues/1
 Внести изменения по тексту из задания  
 Подготовить Merge Requst, влить необходимые изменения в master, проверить, что сборка прошла успешно  
 ```
-
+Создал ветку из самой задачи (issue) 
+Для входа в IDE зашел в ветку репозитория и нажал кнопку
+Сделал изменение ответа и commit
+MR на ветку и merge
+сборки запускались автоматически
 ```
 
 ## Tester
@@ -60,6 +64,21 @@ https://gitlab.com/vlad_milev/mnt-ci/-/issues/1
 Поднять докер-контейнер с образом python-api:latest и проверить возврат метода на корректность  
 Закрыть Issue с комментарием об успешности прохождения, указав желаемый результат и фактически достигнутый  
 ```
+$ sudo -s
+root@ubuntu-bionic:~# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS                                       NAMES
+ad68f884c2ef   c9404ab62bca   "python3 /python_api…"   31 minutes ago   Up 31 minutes   0.0.0.0:5290->5290/tcp, :::5290->5290/tcp   nervous_mirzakhani
+
+root@ubuntu-bionic:~# docker stop ad68f884c2ef
+ad68f884c2ef
+root@ubuntu-bionic:~# docker rm ad68f884c2ef
+ad68f884c2ef
+
+root@ubuntu-bionic:~#  docker run -d -p 5290:5290 registry.gitlab.com/vlad_milev/mnt-ci/python-api
+dc8c5ae3ff73ffee813097fb46b4f055a40a41db41c4dd248e42fc0eb429d43e
+
+root@ubuntu-bionic:~#  curl localhost:5290/get_info
+{"version": 3, "method": "GET", "message": "Running"}
 ```
 
 ## Итог
@@ -67,5 +86,3 @@ https://gitlab.com/vlad_milev/mnt-ci/-/issues/1
 
 ## Необязательная часть
 Автомазируйте работу тестировщика, пусть у вас будет отдельный конвейер, который автоматически поднимает контейнер и выполняет проверку, например, при помощи curl. На основе вывода - будет приниматься решение об успешности прохождения тестирования
-```
-```
