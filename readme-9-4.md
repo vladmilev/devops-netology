@@ -6,6 +6,12 @@
 3. Дождитесь запуска teamcity, выполните первоначальную настройку  
 4. Авторизуйте агент  
 5. Сделайте fork репозитория https://github.com/aragastmatb/example-teamcity  
+```
+
+>>> Permission problem: TEAMCITY_DATA_PATH '/data/teamcity_server/datadir' is not a writeable directory
+
+
+```
 
 ## Основная часть   
 1. Создайте новый проект в teamcity на основе fork
