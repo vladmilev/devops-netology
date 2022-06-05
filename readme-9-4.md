@@ -49,4 +49,10 @@ fatal: Could not read from remote repository.
 
 Please make sure you have the correct access rights
 and the repository exists.
+
+Проблема решилась - повторил соединение на офисном компе - завелось! - очевидно на ноуте что-то не то с SSH-ключами
+создал новую ветку, добавил изменения и смержил в мастер через pull request
+артефакты сборки должны появиться на ВМ с Nexus, но плейбука для его поднятия нет, поэтому пропустил эти пункты
+добился выполнения двух шагов сборки и отправил последние изменения (конфигурации проекта) в репозиторий
+https://github.com/vladmilev/example-teamcity
 ```
