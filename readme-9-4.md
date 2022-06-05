@@ -39,4 +39,14 @@ fork репозитория - создание копии чужого репо�
 1. указать Repository URL
 2. autodetect конфигурации - запускается автоматически, создается Build Step Maven
 3. Run - кнопка справа вверху, Test passed: 3 - ветка только master
+5. не могу выполнить миграцию в репозиторий - соединение по SSH-ключу не проходит, выдает ошибку: Connection failed!
+Test connection failed in Nethology2 / Build
+git -c credential.helper= ls-remote origin command failed.
+exit code: 128
+stderr: Warning: Permanently added 'github.com,140.82.121.3' (ECDSA) to the list of known hosts.
+git@github.com: Permission denied (publickey).
+fatal: Could not read from remote repository.
+
+Please make sure you have the correct access rights
+and the repository exists.
 ```
