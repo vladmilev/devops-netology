@@ -8,7 +8,12 @@
 https://www.terraform.io/docs/backends/types/s3.html  
 Зарегистрируйте бэкэнд в терраформ проекте как описано по ссылке выше.  
 ```
-
+(may1) -terraform (установлен из хранилища yc -5.4, 7.1)
+$ curl https://storage.yandexcloud.net/yandexcloud-yc/install.sh | bash
+$ exit
+$ vagrant ssh
+$ yc --version
+Yandex.Cloud CLI 0.91.0 linux/amd64
 ```
 
 ## Задача 2. Инициализируем проект и создаем воркспейсы.
