@@ -51,4 +51,46 @@ yc config list
 ```
 Cвой образ ami можно создать при помощи Packer, тем более что он реализует подход IaC
 
+Добавил ресурс в main.tf
+resource "yandex_compute_image" "ubuntu-image" {
+  name   = "my-ubuntu-image"
+  family = "ubuntu-2004-lts"
+}
+
+Результат выполнения terraform plan
+
+Refreshing Terraform state in-memory prior to plan...
+The refreshed state will be used to calculate this plan, but will not be
+persisted to local or remote state storage.
+------------------------------------------------------------------------
+An execution plan has been generated and is shown below.
+Resource actions are indicated with the following symbols:
+  + create
+Terraform will perform the following actions:
+  # yandex_compute_image.ubuntu-image will be created
+  + resource "yandex_compute_image" "ubuntu-image" {
+      + created_at      = (known after apply)
+      + family          = "ubuntu-2004-lts"
+      + folder_id       = (known after apply)
+      + id              = (known after apply)
+      + min_disk_size   = (known after apply)
+      + name            = "my-ubuntu-image"
+      + os_type         = (known after apply)
+      + pooled          = (known after apply)
+      + product_ids     = (known after apply)
+      + size            = (known after apply)
+      + source_disk     = (known after apply)
+      + source_family   = (known after apply)
+      + source_image    = (known after apply)
+      + source_snapshot = (known after apply)
+      + source_url      = (known after apply)
+      + status          = (known after apply)
+    }
+Plan: 1 to add, 0 to change, 0 to destroy.
+-----------------------------------------------------------------------
+Note: You didn't specify an "-out" parameter to save this plan, so Terraform
+can't guarantee that exactly these actions will be performed if
+"terraform apply" is subsequently run.
+
+Ссылка на репозиторий с конфигурацией терраформа 
 ```
