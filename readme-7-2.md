@@ -92,5 +92,5 @@ Note: You didn't specify an "-out" parameter to save this plan, so Terraform
 can't guarantee that exactly these actions will be performed if
 "terraform apply" is subsequently run.
 
-Ссылка на репозиторий с конфигурацией терраформа 
+Ссылка на репозиторий с конфигурацией терраформа https://github.com/vladmilev/terra72
 ```
