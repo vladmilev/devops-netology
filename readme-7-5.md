@@ -5,6 +5,10 @@
 ## Задача 1. Установите golang.  
 Воспользуйтесь инструкций с официального сайта: https://golang.org/.  
 Так же для тестирования кода можно использовать песочницу: https://play.golang.org/.  
+```
+установка через apt (ubuntu)
+$ sudo apt install golang-go -y
+```
 
 ## Задача 2. Знакомство с gotour.  
 У Golang есть обучающая интерактивная консоль https://tour.golang.org/.   
@@ -28,7 +32,7 @@ func main() {
     var input float64
     fmt.Scanf("%f", &input)
 
-    output := input * 0.3048
+    output := input / 0.3048
     fmt.Printf("This is in feet: %v", output)    
 }
 ```
@@ -87,7 +91,28 @@ func printDividedThree(size int) {
 ## Задача 4. Протестировать код (не обязательно).
 Создайте тесты для функций из предыдущего задания.
 
-**Решение:**
-```
+**Решение:**  
 
+-тестировал 2 задачу с функцией minElement()  
+```
+$ go test
+PASS
+ok  	task2	0.001s
+
+- для запуска еще выполнял   
+$ go mod init task2
+
+- сам файл с тестом task2_test.go
+                                             
+package main
+
+import "testing"
+
+func TestMinElement(t *testing.T) {
+        var x = []int {32, 5, 12, 6}
+        min := minElement(x,4)
+        if (min != 5) {
+                t.Error("Expected min != 5 ", min)
+        }
+}
 ```
