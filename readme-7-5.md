@@ -20,6 +20,7 @@
 **Решение:**
 ```
 package main
+
 import "fmt"
 
 func main() {
@@ -28,7 +29,7 @@ func main() {
     fmt.Scanf("%f", &input)
 
     output := input * 0.3048
-    fmt.Println("This is in feet: %f", output)    
+    fmt.Printf("This is in feet: %v", output)    
 }
 ```
 
@@ -37,13 +38,37 @@ x := []int{48,96,86,68,57,82,63,70,37,34,83,27,19,97,9,17,}
 
 **Решение:**
 ```
+package main
 
+import "fmt"
+
+func main() {
+	var x = []int{48, 96, 86, 68, 57, 82, 63, 70, 37, 34, 83, 27, 19, 97, 9, 17}
+	result := minElement(x, 16)
+	fmt.Printf("Minimum element is: %v", result)
+}
+
+func minElement(x []int, size int) int {
+	if size <= 0 {
+		return -1
+	}
+	var min int = x[0]
+	for i := 0; i < size; i++ {
+		if x[i] < min {
+			min = x[i]
+		}
+	}
+	return min
+}
 ```
 
 Напишите программу, которая выводит числа от 1 до 100, которые делятся на 3. То есть (3, 6, 9, …).  
 
 **Решение:**
 ```
+func printDividedThree(x) {
+	
+}
 
 ```
 В виде решения ссылку на код или сам код.
