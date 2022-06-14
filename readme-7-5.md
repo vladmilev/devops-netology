@@ -66,10 +66,21 @@ func minElement(x []int, size int) int {
 
 **Решение:**
 ```
-func printDividedThree(x) {
-	
+package main
+
+import "fmt"
+
+func main() {
+	printDividedThree(100)
 }
 
+func printDividedThree(size int) {
+	for i := 1; i <= size; i++ {
+		if i%3 == 0 {
+			fmt.Println(i)
+		}
+	}
+}
 ```
 В виде решения ссылку на код или сам код.
 
