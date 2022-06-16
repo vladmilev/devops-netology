@@ -29,6 +29,10 @@ terraform недоступен
 1. надо поднять docker-контейнер с запущенным Atlantis (работающий сервер) и настроить его
 https://www.runatlantis.io/docs/deployment.html#deployment-2 (в секции Deployment есть раздел для Docker)  
 
+# sudo -s
+# docker pull ghcr.io/runatlantis/atlantis
+# docker run ghcr.io/runatlantis/atlantis server --gh-user=vladmilev --gh-token=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 --repo-allowlist=*
+ 
 2. настроить свой репозиторий на работу с ним
 Видео демо-работы с Atlantis https://www.youtube.com/watch?v=ASdnj59iG2E
 
