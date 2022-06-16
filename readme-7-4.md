@@ -27,6 +27,8 @@ terraform недоступен
 В качестве результата приложите ссылку на файлы server.yaml и atlantis.yaml.
 ```
 1. надо поднять docker-контейнер с запущенным Atlantis (работающий сервер) и настроить его
+https://www.runatlantis.io/docs/deployment.html#deployment-2 (в секции Deployment есть раздел для Docker)  
+
 2. настроить свой репозиторий на работу с ним
 Видео демо-работы с Atlantis https://www.youtube.com/watch?v=ASdnj59iG2E
 
