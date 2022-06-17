@@ -8,9 +8,25 @@
 
 ## Задача 1.
 Давайте потренируемся читать исходный код AWS провайдера, который можно склонировать от сюда: https://github.com/hashicorp/terraform-provider-aws.git. Просто найдите нужные ресурсы в исходном коде и ответы на вопросы станут понятны.  
-Найдите, где перечислены все доступные resource и data_source, приложите ссылку на эти строки в коде на гитхабе.  
-Для создания очереди сообщений SQS используется ресурс aws_sqs_queue у которого есть параметр name.  
+1. Найдите, где перечислены все доступные resource и data_source, приложите ссылку на эти строки в коде на гитхабе.  
+```
+ResourcesMap и DataSourcesMap находятся в файле terraform-provider-aws/internal/provider/provider.go (:902, :423)
+https://github.com/hashicorp/terraform-provider-aws/blob/47b48e5ea3b2d7543d431e8c07787767597ce0e9/internal/provider/provider.go
+```
+2. Для создания очереди сообщений SQS используется ресурс aws_sqs_queue у которого есть параметр name.  
 С каким другим параметром конфликтует name? Приложите строчку кода, в которой это указано.  
+```
+конфликтует с параметром "name_prefix"
+"name": {
+				Type:          schema.TypeString,
+				Optional:      true,
+				ForceNew:      true,
+				Computed:      true,
+>>>				ConflictsWith: []string{"name_prefix"},
+				ValidateFunc:  validateSQSQueueName,
+			},
+https://github.com/hashicorp/terraform-provider-aws/blob/8e4d8a3f3f781b83f96217c2275f541c893fec5a/aws/resource_aws_sqs_queue.go#L56
+```
 Какая максимальная длина имени?  
 Какому регулярному выражению должно подчиняться имя?  
 ```
