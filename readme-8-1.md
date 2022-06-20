@@ -29,6 +29,37 @@ ansible [core 2.11.12]
   python version = 3.6.9 (default, Mar 15 2022, 13:55:28) [GCC 8.4.0]
   jinja version = 2.10
   libyaml = True
+  
+Копирую исходный репозиторий 
+$ mkdir netology
+$ cd netology
+~/netology$ git clone git@github.com:vladmilev/mnt-homeworks.git
+
+Инициализирую новый репозиторий https://github.com/vladmilev/ansible
+echo "# ansible" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:vladmilev/ansible.git
+git push -u origin main
+
+Копирую файлы ДЗ в поддиректрию ansible-01
+vagrant@ubuntu-bionic:~/netology/ansible01$ cp -R ~/netology/mnt-homeworks/08-ansible-01-base/playbook/group_vars ~/netology/ansible01
+vagrant@ubuntu-bionic:~/netology/ansible01$ cp -R ~/netology/mnt-homeworks/08-ansible-01-base/playbook/inventory ~/netology/ansible01
+vagrant@ubuntu-bionic:~/netology/ansible01$ cp -R ~/netology/mnt-homeworks/08-ansible-01-base/playbook/*.* ~/netology/ansible01
+vagrant@ubuntu-bionic:~/netology/ansible01$ ll
+total 24
+drwxrwxr-x 4 vagrant vagrant 4096 Jun 20 03:46 ./
+drwxrwxr-x 5 vagrant vagrant 4096 Jun 20 03:35 ../
+-rw-rw-r-- 1 vagrant vagrant 1293 Jun 20 03:46 README.md
+drwxrwxr-x 5 vagrant vagrant 4096 Jun 20 03:44 group_vars/
+drwxrwxr-x 2 vagrant vagrant 4096 Jun 20 03:45 inventory/
+-rw-rw-r-- 1 vagrant vagrant  209 Jun 20 03:46 site.yml
+
+git add *
+git commit -m "added files with homework-08-01"
+git push -u origin main
 ```
 
 ## Основная часть  
