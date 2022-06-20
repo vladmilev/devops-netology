@@ -7,6 +7,28 @@
 ```
 создал новый репозиторий под это задание - ansible, каталог под домашку 01
 работал через vagrant (машина ansible)
+установил docker
+# sudo apt install docker.io
+docker.io is already the newest version (20.10.7-0ubuntu5~18.04.3).
+установил ansible
+# sudo apt install python3-pip -y
+# sudo pip3 install ansible
+
+$ ansible --version
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the
+controller starting with Ansible 2.12. Current version: 3.6.9 (default, Mar 15
+2022, 13:55:28) [GCC 8.4.0]. This feature will be removed from ansible-core in
+version 2.12. Deprecation warnings can be disabled by setting
+deprecation_warnings=False in ansible.cfg.
+ansible [core 2.11.12]
+  config file = None
+  configured module search path = ['/home/vagrant/.ansible/plugins/modules', '/usr/share/ansible/plugins/modules']
+  ansible python module location = /usr/local/lib/python3.6/dist-packages/ansible
+  ansible collection location = /home/vagrant/.ansible/collections:/usr/share/ansible/collections
+  executable location = /usr/local/bin/ansible
+  python version = 3.6.9 (default, Mar 15 2022, 13:55:28) [GCC 8.4.0]
+  jinja version = 2.10
+  libyaml = True
 ```
 
 ## Основная часть  
