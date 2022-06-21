@@ -325,7 +325,28 @@ ok: [ubuntu] => {
 ```
 12. Заполните README.md ответами на вопросы. Сделайте git push в ветку master. В ответе отправьте ссылку на ваш открытый репозиторий с изменённым playbook и заполненным README.md.  
 ```
+# git add ansible01/*
+# git status
+On branch main
+Your branch is up to date with 'origin/main'.
 
+Changes to be committed:
+  (use "git reset HEAD <file>..." to unstage)
+
+        modified:   ansible01/README.md
+        modified:   ansible01/group_vars/all/examp.yml
+        modified:   ansible01/group_vars/deb/examp.yml
+        modified:   ansible01/group_vars/el/examp.yml
+        modified:   ansible01/inventory/prod.yml
+
+Untracked files:
+  (use "git add <file>..." to include in what will be committed)
+
+        mnt-homeworks/
+# git commit -m "homework 8.1 done"
+$ git push
+
+Ссылка на репозиторий: https://github.com/vladmilev/ansible/tree/main/ansible01
 ```
 
 ## Необязательная часть  
