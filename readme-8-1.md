@@ -145,19 +145,101 @@ some_fact - для хоста centos7 ="el", для хоста ubuntu ="deb"
 ```
 5. Добавьте факты в group_vars каждой из групп хостов так, чтобы для some_fact получились следующие значения: для deb - 'deb default fact', для el - 'el default fact'
 ```
-
+прописываем:
+# nano group_vars/deb/examp.yml
+# nano group_vars/el/examp.yml
 ```
 6. Повторите запуск playbook на окружении prod.yml. Убедитесь, что выдаются корректные значения для всех хостов.  
 ```
+# ansible-playbook -i inventory/prod.yml site.yml
+PLAY [Print os facts] *************************************************************************************************************************************
 
+TASK [Gathering Facts] ************************************************************************************************************************************
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] *******************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *****************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP ************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 7. При помощи ansible-vault зашифруйте факты в group_vars/deb и group_vars/el с паролем netology.  
 ```
+# ansible-vault encrypt group_vars/el/examp.yml group_vars/deb/examp.yml
+New Vault password:
+Confirm New Vault password:
+Encryption successful
 
+# cat group_vars/el/examp.yml
+$ANSIBLE_VAULT;1.1;AES256
+64666562616266346461653164636335396235376434626366323363343834333330663265633936
+6239323866613836316637393137393862333965343061350a633261633863313565316137393431
+33623039383639353834623262653037356230646562626364653036306662643966386339333134
+3166323631373966360a626338623464613130623334303537623261346632383761616632323034
+32646632333163613230353166633635393530316231303861326131376632323062333331643063
+3966333638346363353230323331616264383636653430363661
+# cat group_vars/deb/examp.yml
+$ANSIBLE_VAULT;1.1;AES256
+32626432666134333464663634386333616465316531666337613735623736326239366664343330
+6362353638643366333165363463306135376563656337340a366639353763323039633366353234
+65363431346335633361336163383730356437613534353037313264363334636137663131306462
+3839303434613332610a636332623831363562313937646136666532356666653463623330346134
+35316665663336356537313865386162323630656435663333666434373161613638386563613364
+3663373463653331356435363130643038663361323536386365
+root@ubuntu-bionic:~/netology/ansible01#
 ```
 8. Запустите playbook на окружении prod.yml. При запуске ansible должен запросить у вас пароль. Убедитесь в работоспособности.  
 ```
+# ansible-playbook -i inventory/prod.yml site.yml --ask-vault-pass
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12. Current version: 3.6.9 (default, Mar 15
+2022, 13:55:28) [GCC 8.4.0]. This feature will be removed from ansible-core in version 2.12. Deprecation warnings can be disabled by setting
+deprecation_warnings=False in ansible.cfg.
+Vault password:
 
+PLAY [Print os facts] *************************************************************************************************************************************
+
+TASK [Gathering Facts] ************************************************************************************************************************************
+[DEPRECATION WARNING]: Distribution Ubuntu 18.04 on host ubuntu should use /usr/bin/python3, but is using /usr/bin/python for backward compatibility with
+prior Ansible releases. A future Ansible release will default to using the discovered platform python for this host. See https://docs.ansible.com/ansible-
+core/2.11/reference_appendices/interpreter_discovery.html for more information. This feature will be removed in version 2.12. Deprecation warnings can be
+disabled by setting deprecation_warnings=False in ansible.cfg.
+ok: [ubuntu]
+ok: [centos7]
+
+TASK [Print OS] *******************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "CentOS"
+}
+ok: [ubuntu] => {
+    "msg": "Ubuntu"
+}
+
+TASK [Print fact] *****************************************************************************************************************************************
+ok: [centos7] => {
+    "msg": "el default fact"
+}
+ok: [ubuntu] => {
+    "msg": "deb default fact"
+}
+
+PLAY RECAP ************************************************************************************************************************************************
+centos7                    : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
 ```
 9. Посмотрите при помощи ansible-doc список плагинов для подключения. Выберите подходящий для работы на control node.  
 ```
