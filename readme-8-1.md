@@ -243,7 +243,11 @@ ubuntu                     : ok=3    changed=0    unreachable=0    failed=0    s
 ```
 9. Посмотрите при помощи ansible-doc список плагинов для подключения. Выберите подходящий для работы на control node.  
 ```
+https://docs.ansible.com/ansible/latest/network/getting_started/basic_concepts.html
+Control node
+Any machine with Ansible installed. You can run Ansible commands and playbooks by invoking the ansible or ansible-playbook command from any control node. You can use any computer that has a Python installation as a control node - laptops, shared desktops, and servers can all run Ansible. However, you cannot use a Windows machine as a control node. You can have multiple control nodes.
 
+#
 ```
 10. В prod.yml добавьте новую группу хостов с именем local, в ней разместите localhost с необходимым типом подключения.  
 ```
