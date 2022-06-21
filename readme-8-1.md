@@ -5,7 +5,7 @@
 - Создайте свой собственный публичный репозиторий на github с произвольным именем.  
 - Скачайте playbook из репозитория с домашним заданием и перенесите его в свой репозиторий.  
 ```
-создал новый репозиторий под это задание - ansible, каталог под домашку 01
+создал новый репозиторий под это задание - ansible, каталог под домашку ~/netology/ansible01
 работал через vagrant (машина ansible)
 установил docker
 # sudo apt install docker.io
@@ -65,15 +65,51 @@ git push -u origin main
 ## Основная часть  
 1. Попробуйте запустить playbook на окружении из test.yml, зафиксируйте какое значение имеет факт some_fact для указанного хоста при выполнении playbook'a.  
 ```
+$ ansible-playbook -i inventory/test.yml site.yml
+запустил задачи из site.yml на хостах из окружения inventory/test.yml (1 хост- localhost)
+TASK [Print OS] *************************************************************************************************
+ok: [localhost] => {
+    "msg": "Ubuntu"
+}
 
+TASK [Print fact] ***********************************************************************************************
+ok: [localhost] => {
+    "msg": 12
+}
+
+- переменная some_fact=12
 ```
 2. Найдите файл с переменными (group_vars) в котором задаётся найденное в первом пункте значение и поменяйте его на 'all default fact'.  
 ```
-
+в файле /group_vars/all/examp.yml
+$ nano group_vars/all/examp.yml
+  some_fact: "all default fact"
 ```
 3. Воспользуйтесь подготовленным (используется docker) или создайте собственное окружение для проведения дальнейших испытаний.  
 ```
+подчистил контейнеры и образы (docker rm, rmi), скачал нужные образы
+# sudo -s
+# docker pull pycontribs/centos:7
+# docker pull pycontribs/ubuntu:latest
 
+смотрим список образов
+# docker image list
+REPOSITORY                                         TAG       IMAGE ID       CREATED         SIZE
+registry.gitlab.com/vlad_milev/mnt-ci/python-api   latest    c60f9e6a5a0a   2 weeks ago     432MB
+ghcr.io/runatlantis/atlantis                       latest    af9576465a67   5 weeks ago     592MB
+sonatype/nexus3                                    latest    b7c023b6a9b9   2 months ago    655MB
+pycontribs/centos                                  7         bafa54e44377   14 months ago   488MB
+pycontribs/ubuntu                                  latest    42a4e3b21923   2 years ago     664MB
+
+запускаем докер-контейнеры с нужными образами (для prod окружения - inventory/prod.yml)
+# docker run -d --name centos7 bafa54e44377 /bin/sleep 1000000000000000000
+e1b451bfc80f500d7344c20a7899991fd876c33205ca7ae3f39c91947be2b565
+# docker run -d --name ubuntu 42a4e3b21923 /bin/sleep 1000000000000000000
+809de5580da887efa49386b710f761e6809807a354b2535fc5dcb7bc749fd23a
+# docker ps
+CONTAINER ID   IMAGE          COMMAND                  CREATED          STATUS          PORTS     NAMES
+809de5580da8   42a4e3b21923   "/bin/sleep 10000000…"   5 seconds ago    Up 4 seconds              ubuntu
+e1b451bfc80f   bafa54e44377   "/bin/sleep 10000000…"   34 seconds ago   Up 32 seconds             centos7
 ```
 4. Проведите запуск playbook на окружении из prod.yml. Зафиксируйте полученные значения some_fact для каждого из managed host.  
 ```
