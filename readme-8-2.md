@@ -85,6 +85,17 @@ template - копирование требуемой конфигурации
         src: templates/kib.sh.j2
         dest: /etc/profile.d/kib.sh
       tags: kibana
+      
+Дополнительно добавлена конфигурация template\kib.sh.j2
+# Warning: This file is Ansible Managed, manual changes will be overwritten on next playbook run.
+#!/usr/bin/env bash
+export KIBANA_HOME={{ kibana_home }}
+export PATH=$PATH:$KIBANA_HOME/bin
+
+переменные group_vars/kibana/vars.yml
+---
+  kibana_version: "7.12.0"
+  kibana_home: "/opt/kibana/{{ kibana_version }}"
 ```
 5. Запустите ansible-lint site.yml и исправьте ошибки, если они есть.
 ```
