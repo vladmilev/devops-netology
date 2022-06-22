@@ -3,10 +3,23 @@
 ## Подготовка к выполнению  
 1. Cоздайте свой собственный (или используйте старый) публичный репозиторий на github с произвольным именем.
 2. Скачайте [playbook](https://github.com/netology-code/mnt-homeworks/blob/master/08-ansible-02-playbook/playbook) из репозитория с домашним заданием и перенесите его в свой репозиторий.
+```
+использую репозиторий с первого задания https://github.com/vladmilev/ansible каталог под эту домашку ~/netology/ansible02 (машина ansible)
+копирую из целевого репозитория (скачан уже в первом задании) в директорию с домашкой:
+cp -R ~/netology/mnt-homeworks/08-ansible-02-playbook/playbook/group_vars ~/netology/ansible02
+cp -R ~/netology/mnt-homeworks/08-ansible-02-playbook/playbook/inventory ~/netology/ansible02
+cp -R ~/netology/mnt-homeworks/08-ansible-02-playbook/playbook/templates ~/netology/ansible02
+cp -R ~/netology/mnt-homeworks/08-ansible-02-playbook/playbook/*.* ~/netology/ansible02
+```
 3. Подготовьте хосты в соответствии с группами из предподготовленного playbook.
+```
+docker установлен, буду через него сервисы запускать
+```
 4. Скачайте дистрибутив [java](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) и положите его в директорию playbook/files/.
 ```
-
+$ mkdir files
+$ cd files
+$ curl -O https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.15.1%2B2/d76aabb62f1c47aa8588b9ae5a8a5b46/jdk-11.0.15.1_linux-x64_bin.tar.gz
 ```
 
 ## Основная часть
