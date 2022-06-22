@@ -78,7 +78,7 @@ template - копирование требуемой конфигурации
     - name: Upload tar.gz kibana from remote URL
       get_url:
         url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
-        dest: "/tmp/kibana-{{ elastic_version }}-linux-x86_64.tar.gz"
+        dest: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
         mode: 0755
         timeout: 60
         force: true
