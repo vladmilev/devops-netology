@@ -25,19 +25,66 @@ $ curl -O https://www.oracle.com/webapps/redirect/signon?nexturl=https://downloa
 ## Основная часть
 1. Приготовьте свой собственный inventory файл prod.yml.
 ```
-
+vagrant@ubuntu-bionic:~/netology/ansible02/inventory$ nano prod.yml
+---
+elasticsearch:
+  hosts:
+    elastic-1:
+      ansible_connection: docker
+kibana:
+  hosts:
+    kibana-1:
+      ansible_connection: docker
 ```
 2. Допишите playbook: нужно сделать ещё один play, который устанавливает и настраивает kibana.
 ```
-
+kibana - пример установки прикладной программы, по-сути будет дублировать заданные таски по установке elasticsearch (добавится конфигурация параметров)
 ```
 3. При создании tasks рекомендую использовать модули: get_url, template, unarchive, file.
 ```
-
+get_url - будет использован для скачивания архива программы
+file - для создания директории 
+unarchive - разархивирование архива
+template - копирование требуемой конфигурации
 ```
 4. Tasks должны: скачать нужной версии дистрибутив, выполнить распаковку в выбранную директорию, сгенерировать конфигурацию с параметрами.
 ```
-
+- name: Install Kibana
+  hosts: kibana
+  tasks:
+    - name: Upload tar.gz kibana from remote URL
+      get_url:
+        url: "https://artifacts.elastic.co/downloads/kibana/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        dest: "/tmp/kibana-{{ elastic_version }}-linux-x86_64.tar.gz"
+        mode: 0755
+        timeout: 60
+        force: true
+        validate_certs: false
+      register: get_kibana
+      until: get_kibana is succeeded
+      tags: kibana
+    - name: Create directrory for Kibana
+      file:
+        state: directory
+        path: "{{ kibana_home }}"
+      tags: kibana
+    - name: Extract Kibana in the installation directory
+      become: true
+      unarchive:
+        copy: false
+        src: "/tmp/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+        dest: "{{ kibana_home }}"
+        extra_opts: [--strip-components=1]
+        creates: "{{ kibana_home }}/bin/kibana"
+      tags:
+        - skip_ansible_lint
+        - kibana
+    - name: Set environment Kibana
+      become: true
+      template:
+        src: templates/kib.sh.j2
+        dest: /etc/profile.d/kib.sh
+      tags: kibana
 ```
 5. Запустите ansible-lint site.yml и исправьте ошибки, если они есть.
 ```
