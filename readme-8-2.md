@@ -128,6 +128,9 @@ risky-file-permissions: File permissions unset or incorrect
 ```
 6. Попробуйте запустить playbook на этом окружении с флагом --check.
 ```
+fatal: [elastic-1]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/elasticsearch-7.10.1-linux-x86_64.tar.gz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 403: Forbidden", "status_code": 403, "url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-linux-x86_64.tar.gz"}
+
+Похоже скачивание архива из России заблокировано, нужно зеркало
 
 ```
 7. Запустите playbook на prod.yml окружении с флагом --diff. Убедитесь, что изменения на системе произведены.
