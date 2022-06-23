@@ -147,7 +147,12 @@ fatal: [elastic-1]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/e
 ```
 10. Готовый playbook выложите в свой репозиторий, в ответ предоставьте ссылку на него.
 ```
+# git add ansible02/*
+# git status
+# git commit -m "homework 8.2"
+$ git push
 
+Ссылка на репозиторий: https://github.com/vladmilev/ansible/tree/main/ansible02
 ```
 
 ## Необязательная часть
