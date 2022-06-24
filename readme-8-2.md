@@ -232,6 +232,7 @@ https://github.com/vladmilev/ansible/blob/main/ansible02/README.md
 $ git push
 
 Ссылка на репозиторий: https://github.com/vladmilev/ansible/tree/main/ansible02
+Ссылка на playbook: https://github.com/vladmilev/ansible/blob/main/ansible02/site.yml
 ```
 
 ## Необязательная часть
