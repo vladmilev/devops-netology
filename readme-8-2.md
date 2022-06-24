@@ -230,6 +230,12 @@ https://github.com/vladmilev/ansible/blob/main/ansible02/README.md
 # git status
 # git commit -m "homework 8.2"
 $ git push
+дистрибутив java удалил поскольку выдает ограничение на  закачку 
+remote: error: File ansible02/files/jdk-11.0.15.1_linux-x64_bin.tar.gz is 161.01 MB; this exceeds GitHub's file size limit of 100.00 MB
+$ git reset --soft HEAD~3
+$ git commit -m "without big file (error)"
+$ rm files -r
+$ git push -f
 
 Ссылка на репозиторий: https://github.com/vladmilev/ansible/tree/main/ansible02
 Ссылка на playbook: https://github.com/vladmilev/ansible/blob/main/ansible02/site.yml
