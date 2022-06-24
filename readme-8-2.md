@@ -42,7 +42,10 @@ f579c89dd2cc   bafa54e44377   "/bin/sleep 10000000…"   44 seconds ago   Up 43 
 ```
 $ mkdir files
 $ cd files
-$ curl -O https://www.oracle.com/webapps/redirect/signon?nexturl=https://download.oracle.com/otn/java/jdk/11.0.15.1%2B2/d76aabb62f1c47aa8588b9ae5a8a5b46/jdk-11.0.15.1_linux-x64_bin.tar.gz
+Скачал через VPN (иначе блокирует - 403) на виндос-машину, скопировал в папку вагранта, затем на вирт.машине нашел этот архив и скопировал в целевую папку
+root@ubuntu-bionic:/vagrant# cp jdk-11.0.15.1_linux-x64_bin.tar.gz ~/netology/ansible02/files/jdk-11.0.15.1_linux-x64_bin.tar.gz
+root@ubuntu-bionic:~/netology/ansible02/files# ll
+-rwxr-xr-x 1 vagrant vagrant 168829286 Jun 24 03:01 jdk-11.0.15.1_linux-x64_bin.tar.gz*
 ```
 
 ## Основная часть
@@ -131,7 +134,7 @@ risky-file-permissions: File permissions unset or incorrect
 $ sudo ansible-playbook -i inventory/prod.yml site.yml --check
 fatal: [elastic-1]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/elasticsearch-7.10.1-linux-x86_64.tar.gz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 403: Forbidden", "status_code": 403, "url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-linux-x86_64.tar.gz"}
 
-Похоже скачивание архива из России заблокировано, нужно зеркало
+Похоже скачивание архива из России заблокировано, нужно зеркало - скачал архивы через VPN и забросил на доступный хостинг - указав для скачивания ссылки в site.yml
 
 ```
 7. Запустите playbook на prod.yml окружении с флагом --diff. Убедитесь, что изменения на системе произведены.
