@@ -136,14 +136,89 @@ fatal: [elastic-1]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/e
 
 Похоже скачивание архива из России заблокировано, нужно зеркало - скачал архивы через VPN и забросил на доступный хостинг - указав для скачивания ссылки в site.yml
 
+$ sudo ansible-playbook -i inventory/prod.yml site.yml -vvv
+PLAY RECAP *************************************************************************************************************************************
+elastic-1                  : ok=11   changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+kibana-1                   : ok=11   changed=7    unreachable=0    failed=0    skipped=0    rescued=0    ignored=0
+
+$ sudo ansible-playbook -i inventory/prod.yml site.yml --chec
+PLAY RECAP *************************************************************************************************************************************
+elastic-1                  : ok=9    changed=1    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+kibana-1                   : ok=9    changed=1    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
 ```
 7. Запустите playbook на prod.yml окружении с флагом --diff. Убедитесь, что изменения на системе произведены.
 ```
-
+$ sudo ansible-playbook -i inventory/prod.yml site.yml --diff
+PLAY RECAP *************************************************************************************************************************************
+elastic-1                  : ok=9    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+kibana-1                   : ok=9    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
 ```
 8. Повторно запустите playbook с флагом --diff и убедитесь, что playbook идемпотентен.
 ```
+$ sudo ansible-playbook -i inventory/prod.yml site.yml --diff
+PLAY [Install Java] ****************************************************************************************************************************
 
+TASK [Gathering Facts] *************************************************************************************************************************
+ok: [kibana-1]
+ok: [elastic-1]
+
+TASK [Set facts for Java 11 vars] **************************************************************************************************************
+ok: [elastic-1]
+ok: [kibana-1]
+
+TASK [Upload .tar.gz file containing binaries from local storage] ******************************************************************************
+ok: [elastic-1]
+ok: [kibana-1]
+
+TASK [Ensure installation dir exists] **********************************************************************************************************
+ok: [elastic-1]
+ok: [kibana-1]
+
+TASK [Extract java in the installation directory] **********************************************************************************************
+skipping: [elastic-1]
+skipping: [kibana-1]
+
+TASK [Export environment variables] ************************************************************************************************************
+ok: [elastic-1]
+ok: [kibana-1]
+
+PLAY [Install Elasticsearch] *******************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************
+ok: [elastic-1]
+
+TASK [Upload tar.gz Elasticsearch from remote URL] *********************************************************************************************
+ok: [elastic-1]
+
+TASK [Create directrory for Elasticsearch] *****************************************************************************************************
+ok: [elastic-1]
+
+TASK [Extract Elasticsearch in the installation directory] *************************************************************************************
+skipping: [elastic-1]
+
+TASK [Set environment Elastic] *****************************************************************************************************************
+ok: [elastic-1]
+
+PLAY [Install Kibana] **************************************************************************************************************************
+
+TASK [Gathering Facts] *************************************************************************************************************************
+ok: [kibana-1]
+
+TASK [Upload tar.gz kibana from remote URL] ****************************************************************************************************
+ok: [kibana-1]
+
+TASK [Create directrory for Kibana] ************************************************************************************************************
+ok: [kibana-1]
+
+TASK [Extract Kibana in the installation directory] ********************************************************************************************
+skipping: [kibana-1]
+
+TASK [Set environment Kibana] ******************************************************************************************************************
+ok: [kibana-1]
+
+PLAY RECAP *************************************************************************************************************************************
+elastic-1                  : ok=9    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
+kibana-1                   : ok=9    changed=0    unreachable=0    failed=0    skipped=2    rescued=0    ignored=0
 ```
 9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
 ```
