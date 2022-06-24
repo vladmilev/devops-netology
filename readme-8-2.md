@@ -222,7 +222,7 @@ kibana-1                   : ok=9    changed=0    unreachable=0    failed=0    s
 ```
 9. Подготовьте README.md файл по своему playbook. В нём должно быть описано: что делает playbook, какие у него есть параметры и теги.
 ```
-
+https://github.com/vladmilev/ansible/blob/main/ansible02/README.md
 ```
 10. Готовый playbook выложите в свой репозиторий, в ответ предоставьте ссылку на него.
 ```
