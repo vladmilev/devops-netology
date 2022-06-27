@@ -109,7 +109,7 @@ $ sudo chown vagrant:vagrant roles
 $ sudo chown vagrant:vagrant requirements.yml
 Так - появилась папка с ролью java в каталоге roles
 
-# molecule test
+$ molecule test
 Ошибка 
 CRITICAL Failed to pre-validate .. unallowed value docker
 $ pip3 install molecule-docker
@@ -126,7 +126,44 @@ INFO     Initialized scenario in /home/vagrant/elastic-role/molecule/default suc
 ```
 4. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 ```
+$ cat  molecule.yml
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: instance
+    image: quay.io/centos/centos:stream8
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
 
+Изменил - добавив еще ubuntu:latest, centos7, centos8
+$ nano molecule.yml
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: centos8
+    image: docker.io/pycontribs/centos:8
+    pre_build_image: true
+  - name: centos7
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+  - name: ubuntu
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+
+$ molecule test
 ```
 5. Создайте новый каталог с ролью при помощи molecule init role --driver-name docker kibana-role. Можете использовать другой драйвер, который более удобен вам.
 ```
