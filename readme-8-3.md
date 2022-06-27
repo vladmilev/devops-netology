@@ -64,11 +64,16 @@ drwxrwxr-x 3 vagrant vagrant      4096 Jun 27 06:42 ../
 ```
 4. Установите molecule: `pip3 install molecule`
 ```
-
+выдавала множество ошибок
+обновил pip
+$ sudo apt-get install python3-pip
+$ sudo pip3 install --upgrade pip
+установил с флагом --ignore-installed под root
+root@ubuntu-bionic:~/netology/ansible03# pip3 install molecule --ignore-installed
 ```
 5. Добавьте публичную часть своего ключа к своему профилю в github.
 ```
-
+ранее, пушил по SSH в github репозитории elastic-role и kibana-role - значит ключ рабочий и публичная часть опубликована на github
 ```
 
 ## Основная часть  
