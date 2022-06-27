@@ -91,11 +91,38 @@ root@ubuntu-bionic:~/netology/ansible03# pip3 install molecule --ignore-installe
 ```
 2. При помощи ansible-galaxy скачать себе эту роль. Запустите molecule test, посмотрите на вывод команды.
 ```
+Установил только после выхода из рута
+vagrant@ubuntu-bionic:~/netology/ansible03$ ansible-galaxy install -r requirements.yml -p roles
+[DEPRECATION WARNING]: Ansible will require Python 3.8 or newer on the controller starting with Ansible 2.12.
+ Current version: 3.6.9 (default, Mar 15 2022, 13:55:28) [GCC 8.4.0]. This feature will be removed from
+ansible-core in version 2.12. Deprecation warnings can be disabled by setting deprecation_warnings=False in
+ansible.cfg.
+/usr/local/lib/python3.6/dist-packages/ansible/parsing/vault/__init__.py:44: CryptographyDeprecationWarning: Python 3.6 is no longer supported by the Python core team. Therefore, support for it is deprecated in cryptography and will be removed in a future release.
+  from cryptography.exceptions import InvalidSignature
+Starting galaxy role install process
+- extracting java to /home/vagrant/netology/ansible03/roles/java
+- extracting java to /home/vagrant/.ansible/roles/java
+- java (1.0.1) was installed successfully
 
+Но в указанной папке не было java - изменил владельца на папку и файл
+$ sudo chown vagrant:vagrant roles
+$ sudo chown vagrant:vagrant requirements.yml
+Так - появилась папка с ролью java в каталоге roles
+
+# molecule test
+Ошибка 
+CRITICAL Failed to pre-validate .. unallowed value docker
+$ pip3 install molecule-docker
+vagrant@ubuntu-bionic:~/netology/ansible03/roles/java$ molecule test
+ERROR    Computed fully qualified role name of java does not follow current galaxy requirements.
+Please edit meta/main.yml and assure we can correctly determine full role name
 ```
 3. Перейдите в каталог с ролью elastic-role и создайте сценарий тестирования по умолчаню при помощи molecule init scenario --driver-name docker.
 ```
-
+пришлось удалить папку elastic-role\molecula\default
+vagrant@ubuntu-bionic:~/elastic-role$ molecule init scenario --driver-name docker
+INFO     Initializing new scenario default...
+INFO     Initialized scenario in /home/vagrant/elastic-role/molecule/default successfully.
 ```
 4. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 ```
