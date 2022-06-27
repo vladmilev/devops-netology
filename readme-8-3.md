@@ -126,6 +126,7 @@ INFO     Initialized scenario in /home/vagrant/elastic-role/molecule/default suc
 ```
 4. Добавьте несколько разных дистрибутивов (centos:8, ubuntu:latest) для инстансов и протестируйте роль, исправьте найденные ошибки, если они есть.
 ```
+- инстансы для тестирования через molecule указываются в сценарии
 $ cat  molecule.yml
 ---
 dependency:
@@ -164,6 +165,29 @@ verifier:
   name: ansible
 
 $ molecule test
+ERROR    Computed fully qualified role name of elastic-role does not follow current galaxy requirements.
+Please edit meta/main.yml and assure we can correctly determine full role name:
+galaxy_info:
+role_name: my_name  # if absent directory name hosting role is used instead
+namespace: my_galaxy_namespace  # if absent, author is used instead
+
+- Добавил в meta/main.yml блок
+galaxy_info:
+  role_name: linux_administration
+  namespace: glennbell
+  
+$ sudo molecule test
+
+fatal: [centos7]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/elasticsearch-7.10.1-linux-x86_64.tar.gz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 403: Forbidden", "status_code": 403, "url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-linux-x86_64.tar.gz"}
+fatal: [ubuntu]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/elasticsearch-7.10.1-linux-x86_64.tar.gz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 403: Forbidden", "status_code": 403, "url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-linux-x86_64.tar.gz"}
+fatal: [centos8]: FAILED! => {"attempts": 3, "changed": false, "dest": "/tmp/elasticsearch-7.10.1-linux-x86_64.tar.gz", "elapsed": 0, "msg": "Request failed", "response": "HTTP Error 403: Forbidden", "status_code": 403, "url": "https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-7.10.1-linux-x86_64.tar.gz"}
+
+PLAY RECAP *********************************************************************
+centos7                    : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+centos8                    : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+ubuntu                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
+
+403 - заблокированы по IP при попытке скачать, но процесс был запущен!)
 ```
 5. Создайте новый каталог с ролью при помощи molecule init role --driver-name docker kibana-role. Можете использовать другой драйвер, который более удобен вам.
 ```
