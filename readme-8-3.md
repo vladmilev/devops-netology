@@ -3,15 +3,47 @@
 ## Подготовка к выполнению  
 1. Создайте два пустых публичных репозитория в любом своём проекте: elastic-role и kibana-role.
 ```
+Инициализирую новый репозиторий https://github.com/vladmilev/elastic-role
+$ mkdir elastic-role
+$ cd elastic-role
+echo "# elastic-role" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:vladmilev/elastic-role.git
+git push -u origin main
 
+Инициализирую новый репозиторий https://github.com/vladmilev/kibana-role
+$ mkdir kibana-role
+$ cd kibana-role
+echo "# kibana-role" >> README.md
+git init
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:vladmilev/kibana-role.git
+git push -u origin main
 ```
 2. Скачайте [role](https://github.com/netology-code/mnt-homeworks/blob/master/08-ansible-03-role/roles) из репозитория с домашним заданием и перенесите его в свой репозиторий elastic-role.
 ```
-
+Копирую файлы ДЗ в поддиректрию elastic-role
+vagrant@ubuntu-bionic:~/elastic-role$ cp -R ~/netology/mnt-homeworks/08-ansible-03-role/roles ~/elastic-role
+defaults  
+handlers  
+meta  
+molecule
+tasks  
+templates  
+tests  
+vars  
 ```
 3. Скачайте дистрибутив [java](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) и положите его в директорию `playbook/files/`.
 ```
-
+Скачивал ранее для ДЗ-8-2 
+(через VPN на виндос-машину, копировал в папку вагранта, затем на вирт.машине нашел этот архив и скопировал в целевую папку)
+копирую из папки с ДЗ-8.2
+# cp ~/netology/ansible02/files/jdk-11.0.15.1_linux-x64_bin.tar.gz ~/netology/ansible03/files/jdk-11.0.15.1_linux-x64_bin.tar.gz
 ```
 4. Установите molecule: `pip3 install molecule`
 ```
