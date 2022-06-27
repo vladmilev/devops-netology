@@ -191,11 +191,30 @@ ubuntu                     : ok=1    changed=0    unreachable=0    failed=1    s
 ```
 5. Создайте новый каталог с ролью при помощи molecule init role --driver-name docker kibana-role. Можете использовать другой драйвер, который более удобен вам.
 ```
+vagrant@ubuntu-bionic:~/netology/ansible03$ molecule init role --driver-name docker kibana-role
 
+CRITICAL Outside collections you must mention role namespace like: molecule init role 'acme.myrole'. Be sure you use only lowercase characters and underlines. See https://galaxy.ansible.com/docs/contributing/creating_role.html
 ```
 6. На основе tasks из старого playbook заполните новую role. Разнесите переменные между vars и default. Проведите тестирование на разных дистрибитивах (centos:7, centos:8, ubuntu).
 ```
-
+vagrant@ubuntu-bionic:~$ ansible-galaxy init kibana-role --force
+- Role kibana-role was created successfully
+vagrant@ubuntu-bionic:~$ cd kibana-role
+vagrant@ubuntu-bionic:~/kibana-role$ ll
+total 52
+drwxrwxr-x 11 vagrant vagrant 4096 Jun 27 09:58 ./
+drwxr-xr-x 20 vagrant vagrant 4096 Jun 27 09:00 ../
+drwxrwxr-x  8 vagrant vagrant 4096 Jun 27 06:33 .git/
+-rw-rw-r--  1 vagrant vagrant  539 Jun 27 09:58 .travis.yml
+-rw-rw-r--  1 vagrant vagrant 1328 Jun 27 09:58 README.md
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 defaults/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 files/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 handlers/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 meta/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 tasks/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 templates/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 tests/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 vars/
 ```
 7. Выложите все roles в репозитории. Проставьте тэги, используя семантическую нумерацию.
 ```
@@ -211,6 +230,7 @@ ubuntu                     : ok=1    changed=0    unreachable=0    failed=1    s
 ```
 10. Выложите playbook в репозиторий.
 ```
+
 ```
 11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
 ```
