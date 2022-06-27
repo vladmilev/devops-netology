@@ -3,6 +3,7 @@
 ## Подготовка к выполнению  
 1. Создайте два пустых публичных репозитория в любом своём проекте: elastic-role и kibana-role.
 ```
+Сначала создал 2 public-репозитория на github.com (elastic-role и kibana-role)
 Инициализирую новый репозиторий https://github.com/vladmilev/elastic-role
 $ mkdir elastic-role
 $ cd elastic-role
