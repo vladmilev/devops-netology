@@ -29,22 +29,38 @@ git push -u origin main
 2. Скачайте [role](https://github.com/netology-code/mnt-homeworks/blob/master/08-ansible-03-role/roles) из репозитория с домашним заданием и перенесите его в свой репозиторий elastic-role.
 ```
 Копирую файлы ДЗ в поддиректрию elastic-role
-vagrant@ubuntu-bionic:~/elastic-role$ cp -R ~/netology/mnt-homeworks/08-ansible-03-role/roles ~/elastic-role
-defaults  
-handlers  
-meta  
-molecule
-tasks  
-templates  
-tests  
-vars  
+vagrant@ubuntu-bionic:~/elastic-role$ cp -R ~/netology/mnt-homeworks/08-ansible-03-role/roles/* ~/elastic-role
+vagrant@ubuntu-bionic:~/elastic-role$ cp -R ~/netology/mnt-homeworks/08-ansible-03-role/roles/*.* ~/elastic-role  
+vagrant@ubuntu-bionic:~/elastic-role$ cp -R ~/netology/mnt-homeworks/08-ansible-03-role/roles/.travis.yml ~/elastic-role
+vagrant@ubuntu-bionic:~/elastic-role$ ll
+total 60
+drwxrwxr-x 11 vagrant vagrant 4096 Jun 27 06:38 ./
+drwxr-xr-x 18 vagrant vagrant 4096 Jun 27 06:31 ../
+drwxrwxr-x  8 vagrant vagrant 4096 Jun 27 06:36 .git/
+-rw-rw-r--  1 vagrant vagrant  539 Jun 27 06:39 .travis.yml
+-rw-rw-r--  1 vagrant vagrant  598 Jun 27 06:38 .yamllint
+-rw-rw-r--  1 vagrant vagrant 4436 Jun 27 06:38 README.md
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 defaults/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 handlers/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 meta/
+drwxrwxr-x  3 vagrant vagrant 4096 Jun 27 06:36 molecule/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 tasks/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 templates/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 tests/
+drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 06:36 vars/
 ```
 3. Скачайте дистрибутив [java](https://www.oracle.com/java/technologies/javase-jdk11-downloads.html) и положите его в директорию `playbook/files/`.
 ```
 Скачивал ранее для ДЗ-8-2 
 (через VPN на виндос-машину, копировал в папку вагранта, затем на вирт.машине нашел этот архив и скопировал в целевую папку)
-копирую из папки с ДЗ-8.2
-# cp ~/netology/ansible02/files/jdk-11.0.15.1_linux-x64_bin.tar.gz ~/netology/ansible03/files/jdk-11.0.15.1_linux-x64_bin.tar.gz
+vagrant@ubuntu-bionic:~/netology/ansible03$ mkdir files
+vagrant@ubuntu-bionic:/vagrant# cp jdk-11.0.15.1_linux-x64_bin.tar.gz ~/netology/ansible03/files/jdk-11.0.15.1_linux-x64_bin.tar.gz
+vagrant@ubuntu-bionic:~$ cd ~/netology/ansible03/files/
+vagrant@ubuntu-bionic:~/netology/ansible03/files$ ll
+\total 164888
+drwxrwxr-x 2 vagrant vagrant      4096 Jun 27 06:45 ./
+drwxrwxr-x 3 vagrant vagrant      4096 Jun 27 06:42 ../
+-rwxrwxr-x 1 vagrant vagrant 168829286 Jun 27 06:45 jdk-11.0.15.1_linux-x64_bin.tar.gz*
 ```
 4. Установите molecule: `pip3 install molecule`
 ```
