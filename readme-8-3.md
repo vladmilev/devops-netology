@@ -257,10 +257,19 @@ ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    s
 ```
 https://github.com/vladmilev/elastic-role
 https://github.com/vladmilev/kibana-role
+
+добавил теги через выпуск релиза
+https://github.com/vladmilev/kibana-role/releases/tag/1.0.1
+https://github.com/vladmilev/elastic-role/releases/tag/1.0.1
 ```
 8. Добавьте roles в requirements.yml в playbook.
 ```
-  - name: kibana-role 
+---
+  - name: java
+    src: git@github.com:netology-code/mnt-homeworks-ansible.git
+    scm: git
+    version: "1.0.1"
+  - name: kibana-role
     src: git@github.com:vladmilev/kibana-role.git
     scm: git
     version: "1.0.1"
@@ -268,19 +277,35 @@ https://github.com/vladmilev/kibana-role
     src: git@github.com:vladmilev/elastic-role.git
     scm: git
     version: "1.0.1"
-    
 ```
 9. Переработайте playbook на использование roles.
 ```
-
+---
+- name: Test roles
+  hosts: all
+  roles:
+    - java
+    - elastic-role
+    - kibana-role
+    
+cp -R ~/netology/ansible02/inventory ~/netology/ansible03
+vagrant@ubuntu-bionic:~/netology/ansible03$ ansible-galaxy install -r requirements.yml -p roles
+vagrant@ubuntu-bionic:~/netology/ansible03$ sudo ansible-playbook -i inventory/prod.yml site.yml
 ```
 10. Выложите playbook в репозиторий.
 ```
+vagrant@ubuntu-bionic:~/netology$ sudo git add ansible03/*
+vagrant@ubuntu-bionic:~/netology$ git reset ansible03/files/jdk-11.0.15.1_linux-x64_bin.tar.gz
+vagrant@ubuntu-bionic:~/netology$ sudo git commit -m "homework 8.3"
+vagrant@ubuntu-bionic:~/netology$ git push -f
 
+https://github.com/vladmilev/ansible/tree/main/ansible03
 ```
 11. В ответ приведите ссылки на оба репозитория с roles и одну ссылку на репозиторий с playbook.
 ```
-
+https://github.com/vladmilev/elastic-role
+https://github.com/vladmilev/kibana-role
+https://github.com/vladmilev/ansible/tree/main/ansible03
 ```
 
 ## Необязательная часть  
