@@ -49,6 +49,12 @@ CONTAINER ID   IMAGE                          COMMAND                  CREATED  
 8bc2fc11b627   ghcr.io/runatlantis/atlantis   "docker-entrypoint.s…"   11 minutes ago   Up 11 minutes             elated_black
 - выходит сервис не выдает открытых портов?
 Что не так, помогите разобраться?
+
+В сообщении выше вы написали:
+no GitHub webhook secret set. This could allow attackers to spoof requests from GitHub
+
+Вот инструкция как установить этот секрет:
+https://www.runatlantis.io/docs/configuring-webhooks.html#github-github-enterprise
 ```
 
 ## Задача 3. Знакомство с каталогом модулей
