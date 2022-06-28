@@ -116,6 +116,7 @@ $ pip3 install molecule-docker
 vagrant@ubuntu-bionic:~/netology/ansible03/roles/java$ molecule test
 ERROR    Computed fully qualified role name of java does not follow current galaxy requirements.
 Please edit meta/main.yml and assure we can correctly determine full role name
+- теперь прошло
 ```
 3. Перейдите в каталог с ролью elastic-role и создайте сценарий тестирования по умолчаню при помощи molecule init scenario --driver-name docker.
 ```
@@ -174,7 +175,7 @@ namespace: my_galaxy_namespace  # if absent, author is used instead
 - Добавил в meta/main.yml блок
 galaxy_info:
   role_name: linux_administration
-  namespace: glennbell
+  namespace: vagrant
   
 $ sudo molecule test
 
@@ -188,6 +189,11 @@ centos8                    : ok=1    changed=0    unreachable=0    failed=1    s
 ubuntu                     : ok=1    changed=0    unreachable=0    failed=1    skipped=0    rescued=0    ignored=0
 
 403 - заблокированы по IP при попытке скачать, но процесс был запущен!)
+- заменил в task на скачивание (get_url) url на свое зеркало url: "https://domstor.ru/userfiles/realt-translator/test/kibana-{{ kibana_version }}-linux-x86_64.tar.gz"
+выполнило:
+PLAY RECAP *********************************************************************
+localhost                  : ok=2    changed=2    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+INFO     Pruning extra files from scenario ephemeral directory
 ```
 5. Создайте новый каталог с ролью при помощи molecule init role --driver-name docker kibana-role. Можете использовать другой драйвер, который более удобен вам.
 ```
@@ -215,10 +221,42 @@ drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 tasks/
 drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 templates/
 drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 tests/
 drwxrwxr-x  2 vagrant vagrant 4096 Jun 27 09:58 vars/
+
+Переменные записал в defaults
+Создал сценарий тестирования molecule init scenario --driver-name docker
+- добавил в него инстансы ubuntu:latest, centos7, centos8
+vagrant@ubuntu-bionic:~/kibana-role$ nano molecule/default/molecule.yml
+---
+dependency:
+  name: galaxy
+driver:
+  name: docker
+platforms:
+  - name: centos8
+    image: docker.io/pycontribs/centos:8
+    pre_build_image: true
+  - name: centos7
+    image: docker.io/pycontribs/centos:7
+    pre_build_image: true
+  - name: ubuntu
+    image: docker.io/pycontribs/ubuntu:latest
+    pre_build_image: true
+provisioner:
+  name: ansible
+verifier:
+  name: ansible
+
+Провел тестирование
+$ sudo molecule test
+PLAY RECAP *********************************************************************
+centos7                    : ok=4    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+centos8                    : ok=4    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
+ubuntu                     : ok=4    changed=0    unreachable=0    failed=0    skipped=1    rescued=0    ignored=0
 ```
 7. Выложите все roles в репозитории. Проставьте тэги, используя семантическую нумерацию.
 ```
-
+https://github.com/vladmilev/elastic-role
+https://github.com/vladmilev/kibana-role
 ```
 8. Добавьте roles в requirements.yml в playbook.
 ```
