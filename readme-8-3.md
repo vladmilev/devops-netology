@@ -260,7 +260,15 @@ https://github.com/vladmilev/kibana-role
 ```
 8. Добавьте roles в requirements.yml в playbook.
 ```
-
+  - name: kibana-role 
+    src: git@github.com:vladmilev/kibana-role.git
+    scm: git
+    version: "1.0.1"
+  - name: elastic-role
+    src: git@github.com:vladmilev/elastic-role.git
+    scm: git
+    version: "1.0.1"
+    
 ```
 9. Переработайте playbook на использование roles.
 ```
