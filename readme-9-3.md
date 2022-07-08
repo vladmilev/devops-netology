@@ -6,6 +6,19 @@
 установил для ВМ c ubuntu https://pkg.jenkins.io/debian-stable/
 ВМ (may1) с открытым для сервера jenkins портом 8080
 
+попытка выполнить 1-ю строку по инструкции - выдает ошибку
+
+vagrant@ubuntu-bionic:~$   curl -fsSL https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo tee \
+>     /usr/share/keyrings/jenkins-keyring.asc > /dev/null
+curl: (6) Could not resolve host: pkg.jenkins.io
+
+С другой инструкцией https://www.digitalocean.com/community/tutorials/how-to-install-jenkins-on-ubuntu-20-04-ru
+другая ошибка
+
+vagrant@ubuntu-bionic:~$ wget -q -O - https://pkg.jenkins.io/debian-stable/jenkins.io.key | sudo apt-key add -
+gpg: no valid OpenPGP data found.
+
+Что делать и как быть?
 ```
 2. Запустить и проверить работоспособность
 ```
