@@ -25,15 +25,6 @@ id: aje1sgffja87k3fi62gj
 назначил созданному сервисному аккаунту (aje1sgffja87k3fi62gj) роль editor  
 Создал статические ключи доступа:
 vagrant@ubuntu-bionic:~$ yc iam access-key create --service-account-name vlad-milev-account --description "this key is for my bucket"  
-```
-access_key:
-  id: aje0l384ecr806lvq7b5
-  service_account_id: aje1sgffja87k3fi62gj
-  created_at: "2022-07-11T08:32:18.314514263Z"
-  description: this key is for my bucket
-  key_id: YCAJEaV2ZXaHwH6VBpUb3tq-4
-secret: YCMcTly1laq2YHK6Vd61cL4NqvvohnDeSQZtccfo
-```
 Через консоль console.cloud.yandex.ru создал бакет vlad-milev-bucket  
 Можно писать и запускать код - предварительно создам новый репозиторий (под диплом) https://github.com/vladmilev/diplom  
 $ git clone git@github.com:vladmilev/diplom.git
