@@ -23,19 +23,18 @@ https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 194.58.112.
 $ yc iam service-account create --name vlad-milev-account --description "favorite service account"  
 id: aje1sgffja87k3fi62gj  
 назначил созданному сервисному аккаунту (aje1sgffja87k3fi62gj) роль editor  
-Создал статические ключи доступа:
-vagrant@ubuntu-bionic:~$ yc iam access-key create --service-account-name vlad-milev-account --description "this key is for my bucket"  
-Через консоль console.cloud.yandex.ru создал бакет vlad-milev-bucket  
-Можно писать и запускать код - предварительно создам новый репозиторий (под диплом) https://github.com/vladmilev/diplom  
+Создал статические ключи доступа:  
+$ yc iam access-key create --service-account-name vlad-milev-account --description "this key is for my bucket"   
+Через консоль console.cloud.yandex.ru создал бакет vlad-milev-bucket   
+Можно писать и запускать код - предварительно создам новый репозиторий (под диплом) https://github.com/vladmilev/diplom   
 $ git clone git@github.com:vladmilev/diplom.git
 
 Настройки провайдера и бэкенда - providers.tf  
-
-git add README.md
-git commit -m "first commit"
+```
 git branch -M main
-git remote add origin git@github.com:vladmilev/elastic-role.git
+git remote add origin git@github.com:vladmilev/diplom.git
 git push -u origin main
+```
 
 nginx let's encrypt для домена
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
