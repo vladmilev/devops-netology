@@ -19,8 +19,32 @@ https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 194.58.112.
 На виртуальной машине (may1) уже оказались установлены yc и terraform  
 Настройку бакета (бекэнда) делал по [Загрузка состояний Terraform в Object Storage](https://cloud.yandex.ru/docs/tutorials/infrastructure-management/terraform-state-storage)  
 
-предварительно - создал сервис-аккаунт
-$ yc iam service
+предварительно - создал сервис-аккаунт:  
+$ yc iam service-account create --name vlad-milev-account --description "favorite service account"  
+id: aje1sgffja87k3fi62gj  
+назначил созданному сервисному аккаунту (aje1sgffja87k3fi62gj) роль editor  
+Создал статические ключи доступа:
+vagrant@ubuntu-bionic:~$ yc iam access-key create --service-account-name vlad-milev-account --description "this key is for my bucket"  
+```
+access_key:
+  id: aje0l384ecr806lvq7b5
+  service_account_id: aje1sgffja87k3fi62gj
+  created_at: "2022-07-11T08:32:18.314514263Z"
+  description: this key is for my bucket
+  key_id: YCAJEaV2ZXaHwH6VBpUb3tq-4
+secret: YCMcTly1laq2YHK6Vd61cL4NqvvohnDeSQZtccfo
+```
+Через консоль console.cloud.yandex.ru создал бакет vlad-milev-bucket  
+Можно писать и запускать код - предварительно создам новый репозиторий (под диплом) https://github.com/vladmilev/diplom  
+$ git clone git@github.com:vladmilev/diplom.git
+
+Настройки провайдера и бэкенда - providers.tf  
+
+git add README.md
+git commit -m "first commit"
+git branch -M main
+git remote add origin git@github.com:vladmilev/elastic-role.git
+git push -u origin main
 
 nginx let's encrypt для домена
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
