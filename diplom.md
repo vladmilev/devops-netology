@@ -31,6 +31,14 @@ $ git clone git@github.com:vladmilev/diplom.git
 
 Настройки провайдера и бэкенда - providers.tf  
 Настройки сети и двух подсетей в разных зонах доступности - network.tf  
+Инициализируем terrraform
+$ terraform init
+Создаем воркспейсы stage и prod:  
+$ terraform workspace new stage  
+$ terraform workspace new prod  
+(долго выдавала ошибку доступа - надо вызвать ACL-бакета через три точки в списке бакетов консоли в браузере)  
+указанные воркспейсы появились в бакете облака:  
+>![PID 1](../img/workspaces.png)  
 
 ```
 git branch -M main
