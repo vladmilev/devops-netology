@@ -30,28 +30,13 @@ $ yc iam access-key create --service-account-name vlad-milev-account --descripti
 $ git clone git@github.com:vladmilev/diplom.git
 
 Настройки провайдера и бэкенда - providers.tf  
+Настройки сети и двух подсетей в разных зонах доступности - network.tf  
+
 ```
 git branch -M main
 git remote add origin git@github.com:vladmilev/diplom.git
 git push -u origin main
 
-resource "yandex_vpc_network" "network-1" {
-  name = "network1"
-}
-
-resource "yandex_vpc_subnet" "subnet-1" {
-  name           = "subnet1"
-  zone           = "ru-central1-a"
-  network_id     = yandex_vpc_network.network-1.id
-  v4_cidr_blocks = ["10.128.0.0/24"]
-}
-
-resource "yandex_vpc_subnet" "subnet-2" {
-  name           = "subnet2"
-  zone           = "ru-central1-b"
-  network_id     = yandex_vpc_network.network-1.id
-  v4_cidr_blocks = ["10.129.0.0/24"]
-}
 ```
 
 nginx let's encrypt для домена
