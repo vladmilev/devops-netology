@@ -39,12 +39,15 @@ $ terraform workspace new prod
 (долго выдавала ошибку доступа - надо вызвать ACL-бакета через три точки в списке бакетов консоли в браузере)  
 указанные воркспейсы появились в бакете облака:  
 >![PID 1](../img/workspaces.png)  
-
+$ terraform apply  
+создает (на данном этапе) 1 сеть (network-1) с двумя подсетями (subnet-1, subnet-2)  
+$ terraform destroy  
+удаляет указанные ресурсы из облака  
+Закоммитим изменения:  
 ```
-git branch -M main
-git remote add origin git@github.com:vladmilev/diplom.git
-git push -u origin main
-
+$ git add *
+$ git commit -m "terraform init"
+$ git push
 ```
 
 nginx let's encrypt для домена
