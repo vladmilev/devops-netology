@@ -54,6 +54,7 @@ nginx let's encrypt для домена
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
 https://help.reg.ru/hc/ru/articles/4408047570961-%D0%9A%D0%B0%D0%BA-%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B8%D1%82%D1%8C-Nginx-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-Let-s-Encrypt-%D0%BD%D0%B0-Ubuntu-18-04-20-04
 
-поиск по запросу: Ansible Nginx и letsencrypt
-[ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)
-[КАК РАБОТАТЬ С ANSIBLE: ПРОСТАЯ И УДОБНАЯ ШПАРГАЛКА](https://www.8host.com/blog/kak-rabotat-s-ansible-prostaya-i-udobnaya-shpargalka/)
+поиск по запросу: Ansible Nginx и letsencrypt  
+1 ссылка https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
+[ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)  
+[КАК РАБОТАТЬ С ANSIBLE: ПРОСТАЯ И УДОБНАЯ ШПАРГАЛКА](https://www.8host.com/blog/kak-rabotat-s-ansible-prostaya-i-udobnaya-shpargalka/)  
