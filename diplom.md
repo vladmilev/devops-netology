@@ -56,9 +56,328 @@ Reverse proxy (обратный прокси-сервер) — тип прокс
 
 Поиск по запросу: Ansible Nginx и letsencrypt выдал первую ссылку с решением https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
 
+1. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
+```
+resource "yandex_compute_instance" "nginx" {
+  name     = "nginx"
+  hostname = "milevsky.quest"
+
+  resources {
+    cores  = 2
+    memory = 2
+  }
+
+  boot_disk {
+    initialize_params {
+      image_id = "fd8ic5bmgr51h6e7bh1v"
+    }
+  }
+
+  network_interface {
+    subnet_id      = yandex_vpc_subnet.subnet-1.id
+    nat            = true
+    nat_ip_address = var.yc_public_ip
+  }
+
+  metadata = {
+    ssh-keys  = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
+  }
+}
+```
+
+2. указываем хост сервера в файле hosts  
+```
+[nginx]
+milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
+```
+
+3. формируем плей для выполнения nginx-server.yml
+```
+- hosts: nginx
+  become: true
+  roles:
+   - Nginx_LetsEncrypt
+```   
+
+4. Формируем роль Nginx_LetsEncrypt  
+список задач roles/Nginx_LetsEncrypt/tasks/main.yml
+```
+---
+- name: python-simplejson
+  raw: apt-get install -y python-simplejson
+
+- name: Upgrade system
+  apt: update_cache=yes
+
+- name: Install nginx
+  apt: name=nginx state=latest
+
+- name: install letsencrypt
+  apt: name=letsencrypt state=latest
+
+- name: create letsencrypt directory
+  file: name=/var/www/letsencrypt state=directory
+
+- name: Remove default nginx config
+  file: name=/etc/nginx/sites-enabled/default state=absent
+
+- name: Install system nginx config
+  template:
+    src: templates/nginx.conf.j2
+    dest: /etc/nginx/nginx.conf
+
+- name: Install nginx site for letsencrypt requests
+  template:
+    src: templates/nginx-http.j2
+    dest: /etc/nginx/sites-enabled/http
+
+- name: Reload nginx to activate letsencrypt site
+  service: name=nginx state=restarted
+
+- name: Create letsencrypt certificate front
+  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
+  args:
+    creates: /etc/letsencrypt/live/{{ domain_name }}
+  
+- name: Generate dhparams
+  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
+  args:
+    creates: /etc/nginx/dhparams.pem
+
+- name: Install nginx site for specified site
+  template:
+    src: templates/nginx-le.j2
+    dest: /etc/nginx/sites-enabled/le
+
+- name: Reload nginx to activate specified site
+  service: name=nginx state=restarted
+
+- name: Add letsencrypt cronjob for cert renewal
+  cron:
+    name: letsencrypt_renewal
+    special_time: weekly
+    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} && service nginx reload
+```
+настройка для /etc/nginx/nginx.conf - в roles/Nginx_LetsEncrypt/templates/nginx.conf.j2
+```
+user www-data;
+worker_processes 4;
+pid /run/nginx.pid;
+
+events {
+    worker_connections 768;
+}
+
+http {
+
+    sendfile on;
+    tcp_nopush on;
+    tcp_nodelay on;
+    keepalive_timeout 65;
+    types_hash_max_size 2048;
+    include /etc/nginx/mime.types;
+    default_type application/octet-stream;
+
+    access_log /var/log/nginx/access.log;
+    error_log /var/log/nginx/error.log;
+
+    gzip on;
+    gzip_disable "msie6";
+
+    include /etc/nginx/conf.d/*.conf;
+    include /etc/nginx/sites-enabled/*;
+}
+```
+настройка для /etc/nginx/sites-enabled/http - в roles/Nginx_LetsEncrypt/templates/nginx-http.j2
+```
+server_tokens off;
+
+server {
+    listen 80;
+    server_name {{ domain_name }};
+
+    location /.well-known/acme-challenge {
+        root /var/www/letsencrypt;
+        try_files $uri $uri/ =404;
+    }
+
+    location / {
+        rewrite ^ https://{{ domain_name }}$request_uri? permanent;
+    }
+}
+```
+настройка для /etc/nginx/sites-enabled/le - в roles/Nginx_LetsEncrypt/templates/nginx-le.j2
+```
+add_header X-Frame-Options SAMEORIGIN;
+add_header X-Content-Type-Options nosniff;
+add_header X-XSS-Protection "1; mode=block";
+add_header Content-Security-Policy "default-src 'self'; script-src 'self' 'unsafe-inline' 'unsafe-eval' https://www.google-analytics.com; img-src 'self' data: https://www.google-analytics.com; style-src 'self' 'unsafe-inline'; font-src 'self'; frame-src 'none'; object-src 'none'";
 
 
+# HTTPS server
+#
+server {
+    listen 443 ssl;
+    server_name {{ domain_name }};
 
+    ssl on;
+    ssl_certificate         /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/{{ domain_name }}/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/{{ domain_name }}/fullchain.pem;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 5m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+    ssl_dhparam /etc/nginx/dhparams.pem;
+    ssl_prefer_server_ciphers on;
+
+#    root /var/www/{{ domain_name }};
+#    index index.html index.htm;
+
+    location / {
+#        try_files $uri $uri/ =404;
+         proxy_pass http://app.milevsky.quest/;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+         proxy_set_header X-Forwarded-Proto https;
+         proxy_set_header HTTPS YES;
+    }
+}
+server {
+    listen 80;
+
+    server_name _;
+
+  rewrite ^(.*) https://$host$1 permanent;
+}
+server {
+    listen 443 ssl;
+    server_name grafana.milevsky.quest;
+
+    ssl on;
+    ssl_certificate         /etc/letsencrypt/live/grafana.milevsky.quest/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/grafana.milevsky.quest/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/grafana.milevsky.quest/fullchain.pem;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 5m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+    ssl_dhparam /etc/nginx/dhparams.pem;
+    ssl_prefer_server_ciphers on;
+    location / {
+#        try_files $uri $uri/ =404;
+         proxy_pass http://monitoring.zhukops.ru:3000/;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto https;
+#         proxy_set_header HTTPS YES;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name prometheus.zhukops.ru;
+
+    ssl on;
+    ssl_certificate         /etc/letsencrypt/live/prometheus.zhukops.ru/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/prometheus.zhukops.ru/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/prometheus.zhukops.ru/fullchain.pem;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 5m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+    ssl_dhparam /etc/nginx/dhparams.pem;
+    ssl_prefer_server_ciphers on;
+    location / {
+#        try_files $uri $uri/ =404;
+         proxy_pass http://monitoring.milevsky.quest:9090/;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto https;
+#         proxy_set_header HTTPS YES;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name alertmanager.milevsky.quest;
+
+    ssl on;
+    ssl_certificate         /etc/letsencrypt/live/alertmanager.milevsky.quest/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/alertmanager.milevsky.quest/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/alertmanager.milevsky.quest/fullchain.pem;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 5m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+    ssl_dhparam /etc/nginx/dhparams.pem;
+    ssl_prefer_server_ciphers on;
+    location / {
+#        try_files $uri $uri/ =404;
+         proxy_pass http://monitoring.milevsky.quest:9093/;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto https;
+#         proxy_set_header HTTPS YES;
+    }
+}
+server {
+    listen 443 ssl;
+    server_name gitlab.milevsky.quest;
+
+    ssl on;
+    ssl_certificate         /etc/letsencrypt/live/gitlab.milevsky.quest/fullchain.pem;
+    ssl_certificate_key     /etc/letsencrypt/live/gitlab.milevsky.quest/privkey.pem;
+    ssl_trusted_certificate /etc/letsencrypt/live/gitlab.milevsky.quest/fullchain.pem;
+
+    ssl_session_cache shared:SSL:50m;
+    ssl_session_timeout 5m;
+    ssl_stapling on;
+    ssl_stapling_verify on;
+
+    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
+    ssl_ciphers "ECDHE-RSA-AES256-GCM-SHA384:ECDHE-RSA-AES128-GCM-SHA256:DHE-RSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-SHA384:ECDHE-RSA-AES128-SHA256:ECDHE-RSA-AES256-SHA:ECDHE-RSA-AES128-SHA:DHE-RSA-AES256-SHA256:DHE-RSA-AES128-SHA256:DHE-RSA-AES256-SHA:DHE-RSA-AES128-SHA:ECDHE-RSA-DES-CBC3-SHA:EDH-RSA-DES-CBC3-SHA:AES256-GCM-SHA384:AES128-GCM-SHA256:AES256-SHA256:AES128-SHA256:AES256-SHA:AES128-SHA:DES-CBC3-SHA:HIGH:!aNULL:!eNULL:!EXPORT:!DES:!MD5:!PSK:!RC4";
+
+    ssl_dhparam /etc/nginx/dhparams.pem;
+    ssl_prefer_server_ciphers on;
+    location / {
+#        try_files $uri $uri/ =404;
+         proxy_pass http://gitlab.milevsky.quest;
+         proxy_set_header Host $http_host;
+         proxy_set_header X-Forwarded-Host $http_host;
+         proxy_set_header X-Real-IP $remote_addr;
+         proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+#         proxy_set_header X-Forwarded-Proto https;
+#         proxy_set_header HTTPS YES;
+    }
+}
+```
 
 [ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)  
 nginx let's encrypt для домена
