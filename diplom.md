@@ -84,23 +84,30 @@ resource "yandex_compute_instance" "nginx" {
   }
 }
 ```
+variables.tf  
+```
+variable "yc_public_ip" {
+  default = "194.58.112.174"
+}
+```
 
-2. указываем хост сервера в файле hosts  
+2. указываем хост сервера в файле ansible/hosts  
 ```
 [nginx]
 milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
 ```
 
-3. формируем плей для выполнения nginx-server.yml
+3. формируем плей для выполнения ansible/nginx-server.yml
 ```
 - hosts: nginx
   become: true
+  gather_facts: true
   roles:
    - Nginx_LetsEncrypt
 ```   
 
 4. Формируем роль Nginx_LetsEncrypt  
-список задач roles/Nginx_LetsEncrypt/tasks/main.yml
+список задач ansible/roles/Nginx_LetsEncrypt/tasks/main.yml
 ```
 ---
 - name: python-simplejson
@@ -158,7 +165,7 @@ milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
     special_time: weekly
     job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} && service nginx reload
 ```
-настройка для /etc/nginx/nginx.conf - в roles/Nginx_LetsEncrypt/templates/nginx.conf.j2
+настройка для /etc/nginx/nginx.conf - в ansible/roles/Nginx_LetsEncrypt/templates/nginx.conf.j2
 ```
 user www-data;
 worker_processes 4;
@@ -188,7 +195,7 @@ http {
     include /etc/nginx/sites-enabled/*;
 }
 ```
-настройка для /etc/nginx/sites-enabled/http - в roles/Nginx_LetsEncrypt/templates/nginx-http.j2
+настройка для /etc/nginx/sites-enabled/http - в ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2
 ```
 server_tokens off;
 
@@ -206,7 +213,7 @@ server {
     }
 }
 ```
-настройка для /etc/nginx/sites-enabled/le - в roles/Nginx_LetsEncrypt/templates/nginx-le.j2
+настройка для /etc/nginx/sites-enabled/le - в ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2
 ```
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-Content-Type-Options nosniff;
