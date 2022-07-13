@@ -1,6 +1,6 @@
 # Дипломный практикум в YandexCloud
 
-## Доменное имя
+## 1. Доменное имя
 - зарегистрирован домен `milevsky.quest` через регистратора https://www.reg.ru/  
 - добавлены настройки для субдоменов (А-записи, указывают соответствие доменного имени и IPv4-адреса) 
 ```
@@ -13,7 +13,7 @@ https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 194.58.112.
 Личный кабинет https://www.reg.ru/user/account 
 >![PID 1](../img/dns.png)  
 
-## Облачная инфраструктура 
+## 2. Облачная инфраструктура 
 (развертывание инфраструктуры с помощью Terraform на базе облачного провайдера YandexCloud)
 
 На виртуальной машине (may1) уже оказались установлены yc и terraform  
@@ -39,22 +39,29 @@ $ terraform workspace new prod
 (долго выдавала ошибку доступа - надо вызвать ACL-бакета через три точки в списке бакетов консоли в браузере)  
 указанные воркспейсы появились в бакете облака:  
 >![PID 1](../img/workspaces.png)  
+
 $ terraform apply  
 создает (на данном этапе) 1 сеть (network-1) с двумя подсетями (subnet-1, subnet-2)  
 $ terraform destroy  
 удаляет указанные ресурсы из облака  
-Закоммитим изменения:  
-```
-$ git add *
-$ git commit -m "terraform init"
-$ git push
-```
 
+## 3. Nginx и LetsEncrypt  
+(Ansible роль для установки Nginx и LetsEncrypt)  
+Необходимо создать reverse proxy с поддержкой TLS для обеспечения безопасного доступа к веб-сервисам по HTTPS.  
+
+Reverse proxy (обратный прокси-сервер) — тип прокси-сервера, который ретранслирует запросы клиентов из внешней сети на один или несколько серверов, логически расположенных во внутренней сети. При этом для клиента это выглядит так, будто запрашиваемые ресурсы находятся непосредственно на прокси-сервере).  
+
+Поиск по запросу: Ansible Nginx и letsencrypt выдал первую ссылку с решением https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
+
+
+
+
+
+[ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)  
 nginx let's encrypt для домена
 https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
 https://help.reg.ru/hc/ru/articles/4408047570961-%D0%9A%D0%B0%D0%BA-%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B8%D1%82%D1%8C-Nginx-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-Let-s-Encrypt-%D0%BD%D0%B0-Ubuntu-18-04-20-04
 
-поиск по запросу: Ansible Nginx и letsencrypt  
-1 ссылка https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
-[ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)  
-[КАК РАБОТАТЬ С ANSIBLE: ПРОСТАЯ И УДОБНАЯ ШПАРГАЛКА](https://www.8host.com/blog/kak-rabotat-s-ansible-prostaya-i-udobnaya-shpargalka/)  
+
+
+
