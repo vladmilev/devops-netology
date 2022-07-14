@@ -56,7 +56,10 @@ Reverse proxy (обратный прокси-сервер) — тип прокс
 
 Поиск по запросу: Ansible Nginx и letsencrypt выдал первую ссылку с решением https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
 
-1. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
+1. В вашей доменной зоне настроены все A-записи на внешний адрес этого сервера:
+Статья про Cloud DNS https://cloud.yandex.ru/docs/dns/quickstart
+
+2. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
 ```
 resource "yandex_compute_instance" "nginx" {
   name     = "nginx"
@@ -87,17 +90,17 @@ resource "yandex_compute_instance" "nginx" {
 variables.tf  
 ```
 variable "yc_public_ip" {
-  default = "194.58.112.174"
+  default = "62.84.117.51"
 }
 ```
 
-2. указываем хост сервера в файле ansible/hosts  
+3. указываем хост сервера в файле ansible/hosts  
 ```
 [nginx]
 milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
 ```
 
-3. формируем плей для выполнения ansible/nginx-server.yml
+4. формируем плей для выполнения ansible/nginx-server.yml
 ```
 - hosts: nginx
   become: true
@@ -106,7 +109,7 @@ milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
    - Nginx_LetsEncrypt
 ```   
 
-4. Формируем роль Nginx_LetsEncrypt  
+5. Формируем роль Nginx_LetsEncrypt  
 список задач ansible/roles/Nginx_LetsEncrypt/tasks/main.yml
 ```
 ---
