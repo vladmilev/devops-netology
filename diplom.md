@@ -58,7 +58,23 @@ Reverse proxy (обратный прокси-сервер) — тип прокс
 
 1. В вашей доменной зоне настроены все A-записи на внешний адрес этого сервера:
 Статья про Cloud DNS https://cloud.yandex.ru/docs/dns/quickstart  
-В Virtual Private Cloud / IP-адреса - зарезервировал адрес в ru-central1-a (subnet-1)  62.84.118.248
+
+У регистратора (reg.ru) указал список NS-серверов Яндекс Облака (ns1.yandexcloud.net. ns2.yandexcloud.net.) - так было указано в документации "Делегируйте ваше доменное имя, указав адреса серверов имен ns1.yandexcloud.net. и ns2.yandexcloud.net. Yandex Cloud у вашего регистратора"
+
+В Virtual Private Cloud / IP-адреса - зарезервировал адрес в ru-central1-a (subnet-1)  62.84.118.248  
+Этот адрес указал для настроек терраформа для сервера nginx - nat_ip_address = var.yc_public_ip ("62.84.118.248")  
+
+В Cloud DNS создал публичную зону milevsky.quest.   
+для нее настроил A-записи (A — сопоставление доменного имени и IPv4-адреса [ссылка](https://cloud.yandex.ru/docs/dns/concepts/resource-record?utm_source=console&utm_medium=side-bar-left&utm_campaign=dns) )  с указаем статического выделенного IPv4 адреса
+```
+alertmanager.milevsky.quest.	A	600	62.84.118.248
+gitlab.milevsky.quest.	A	600	62.84.118.248
+grafana.milevsky.quest.	A	600	62.84.118.248
+milevsky.quest.	NS	3600	ns1.yandexcloud.net.ns2.yandexcloud.net.
+milevsky.quest.	SOA	3600	ns1.yandexcloud.net. mx.cloud.yandex.net. 1 10800 900 604800 86400
+prometheus.milevsky.quest.	A	600	62.84.118.248
+www.milevsky.quest.	A	600	62.84.117.51
+```
 
 2. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
 ```
