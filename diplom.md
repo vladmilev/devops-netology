@@ -57,7 +57,8 @@ Reverse proxy (обратный прокси-сервер) — тип прокс
 Поиск по запросу: Ansible Nginx и letsencrypt выдал первую ссылку с решением https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
 
 1. В вашей доменной зоне настроены все A-записи на внешний адрес этого сервера:
-Статья про Cloud DNS https://cloud.yandex.ru/docs/dns/quickstart
+Статья про Cloud DNS https://cloud.yandex.ru/docs/dns/quickstart  
+В Virtual Private Cloud / IP-адреса - зарезервировал адрес в ru-central1-a (subnet-1)  62.84.118.248
 
 2. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
 ```
@@ -90,7 +91,7 @@ resource "yandex_compute_instance" "nginx" {
 variables.tf  
 ```
 variable "yc_public_ip" {
-  default = "62.84.117.51"
+  default = "62.84.118.248"
 }
 ```
 
