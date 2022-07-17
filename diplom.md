@@ -406,10 +406,14 @@ server {
 }
 ```
 
-[ПОЛУЧЕНИЕ СЕРТИФИКАТА LET’S ENCRYPT С ПОМОЩЬЮ ANSIBLE В UBUNTU 18.04](https://www.8host.com/blog/poluchenie-sertifikata-lets-encrypt-s-pomoshhyu-ansible-v-ubuntu-18-04/)  
-nginx let's encrypt для домена
-https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-ubuntu-20-04-ru
-https://help.reg.ru/hc/ru/articles/4408047570961-%D0%9A%D0%B0%D0%BA-%D0%B7%D0%B0%D1%89%D0%B8%D1%82%D0%B8%D1%82%D1%8C-Nginx-%D1%81-%D0%BF%D0%BE%D0%BC%D0%BE%D1%89%D1%8C%D1%8E-Let-s-Encrypt-%D0%BD%D0%B0-Ubuntu-18-04-20-04
+## 4. Установка кластера MySQL 
+Необходимо разработать Ansible роль для установки кластера MySQL - сервера с именами db01.you.domain и db02.you.domain и характеристиками: 4vCPU, 4 RAM, Internal address.  
+Дополнительно:  
+- MySQL работает в режиме репликации Master/Slave.  
+- В кластере автоматически создаётся база данных c именем wordpress.  
+- В кластере автоматически создаётся пользователь wordpress с полными правами на базу wordpress и паролем wordpress.  
+
+Поиск по запросу: "Ansible role install MySQL Ubuntu servers" выдал первую ссылку с решением https://github.com/geerlingguy/ansible-role-mysql  
 
 
 
