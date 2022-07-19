@@ -414,58 +414,23 @@ server {
 - В кластере автоматически создаётся пользователь wordpress с полными правами на базу wordpress и паролем wordpress.  
 
 Поиск по запросу: "Ansible role install MySQL Ubuntu servers" выдал первую ссылку с решением https://github.com/geerlingguy/ansible-role-mysql  
-Сначала надо поднять terraform-ом 2 инстанса - mysql.tf
+Сначала надо поднять terraform-ом 2 инстанса - mysql.tf  
+затем скачиваем архив с ролью (wget, unzip) настраиваем файл конфигурации defaults\main.yml  
+доводим плейбук до рабочего состояния  
+проверяем базу данных на виртуальных машинах и работу репликации.  
+
+## 5. Установка WordPress
+Необходимо разработать Ansible роль для установки WordPress:  
+• Имя сервера: app.you.domain
+• Характеристики: 4vCPU, 4 RAM, Internal address.
+
+Ожидаемые результаты:  
+- Виртуальная машина на которой установлен WordPress и Nginx/Apache (на ваше усмотрение).  
+- В вашей доменной зоне настроена A-запись на внешний адрес reverse proxy:  https://www.you.domain (WordPress)  
+На сервере you.domain отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.  
+В браузере можно открыть URL https://www.you.domain и увидеть главную страницу WordPress.  
+
+Поиск по запросу: "Ansible role install Wordpress Nginx Ubuntu servers" выдал первую ссылку с репозиторием https://github.com/tucsonlabs/ansible-playbook-wordpress-nginx  
+
 ```
-resource "yandex_compute_instance" "db01" {
-  name     = "db01"
-  hostname = "db01.milevsky.quest"
-
-  resources {
-    cores  = 4
-    memory = 4
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = "fd82re2tpfl4chaupeuf" //Ubuntu 20.04 LTS
-    }
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = false
-  }
-
-  metadata = {
-    ssh-keys  = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-  }
-}
-
-resource "yandex_compute_instance" "db02" {
-  name     = "db02"
-  hostname = "db02.milevsky.quest"
-
-  resources {
-    cores  = 4
-    memory = 4
-  }
-
-  boot_disk {
-    initialize_params {
-      image_id = "fd82re2tpfl4chaupeuf" //Ubuntu 20.04 LTS
-    }
-  }
-
-  network_interface {
-    subnet_id = yandex_vpc_subnet.subnet-1.id
-    nat       = false
-  }
-
-  metadata = {
-    ssh-keys  = "ubuntu:${file("~/.ssh/id_rsa.pub")}"
-  }
-}
 ```
-
-
-
