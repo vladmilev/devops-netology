@@ -431,6 +431,11 @@ server {
 В браузере можно открыть URL https://www.you.domain и увидеть главную страницу WordPress.  
 
 Поиск по запросу: "Ansible role install Wordpress Nginx Ubuntu servers" выдал первую ссылку с репозиторием https://github.com/tucsonlabs/ansible-playbook-wordpress-nginx  
-
+Плейбук найденного репозитория запускает роли nginx, wordpress, mysql, php, postfix. Склонирую репозиторий, скопирую и настрою роли nginx, php, wordpress (mysql, postfix в рамках текущей задачи не обязательны)  
+Также сначала создаем инстанс terraform-а - wordpress.tf  
+Настраиваем скачанные роли и плейбук wordpress.yml  
+Доводим плейбук до рабочего состояния  
+Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси  
+Проверяем работу www.milevsky.quest  
 ```
 ```
