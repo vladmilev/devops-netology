@@ -438,4 +438,5 @@ server {
 Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси  
 Проверяем работу www.milevsky.quest  
 ```
+https://github.com/Smarzhic/dip
 ```
