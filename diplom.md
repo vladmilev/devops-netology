@@ -430,13 +430,26 @@ server {
 На сервере you.domain отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.  
 В браузере можно открыть URL https://www.you.domain и увидеть главную страницу WordPress.  
 
-Поиск по запросу: "Ansible role install Wordpress Nginx Ubuntu servers" выдал первую ссылку с репозиторием https://github.com/tucsonlabs/ansible-playbook-wordpress-nginx  
-Плейбук найденного репозитория запускает роли nginx, wordpress, mysql, php, postfix. Склонирую репозиторий, скопирую и настрою роли nginx, php, wordpress (mysql, postfix в рамках текущей задачи не обязательны)  
+Плейбук запускает роли nginx, wordpress, php.  
 Также сначала создаем инстанс terraform-а - wordpress.tf  
-Настраиваем скачанные роли и плейбук wordpress.yml  
-Доводим плейбук до рабочего состояния  
 Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси  
+Доводим плейбук до рабочего состояния  
 Проверяем работу www.milevsky.quest  
 ```
-https://github.com/Smarzhic/dip
 ```
+
+## 6. Установка Gitlab CE и Gitlab Runner  
+Необходимо настроить CI/CD систему для автоматического развертывания приложения при изменении кода.  
+• Имена серверов: gitlab.you.domain и runner.you.domain
+• Характеристики: 4vCPU, 4 RAM, Internal address.
+
+Цель: построить pipeline доставки кода в среду эксплуатации, то есть настроить автоматический деплой на сервер app.you.domain при коммите в репозиторий с WordPress. Подробнее о [Gitlab CI](https://about.gitlab.com/stages-devops-lifecycle/continuous-integration/)
+
+Ожидаемый результат:
+- Интерфейс Gitlab доступен по https. В вашей доменной зоне настроена A-запись на внешний адрес reverse proxy: https://gitlab.you.domain (Gitlab)  
+- На сервере you.domain отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab  
+- При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.  
+
+Также сначала создаем 2 инстанса terraform-ом - gitlab.tf   
+Доводим плейбук до рабочего состояния  
+Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси.  
