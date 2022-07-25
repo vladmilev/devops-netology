@@ -453,3 +453,26 @@ server {
 Сначала создаем 2 инстанса terraform-ом - gitlab.tf и runner.tf (копирование предыдущей ВМ с mysql - такая же конфигурация)   
 Доводим плейбук до рабочего состояния  
 Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси.  
+
+Pipeline .gitlab-ci.yml
+```
+before_script:
+  - eval $(ssh-agent -s)
+  - echo "$ssh_key" | tr -d '\r' | ssh-add -
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+stages:         
+  - deploy
+
+deploy-job:      
+  stage: deploy
+  script:
+    - echo "Deploying web application..." 
+    - ssh -o StrictHostKeyChecking=no ubuntu@app.milevsky.quest sudo chown ubuntu /var/www/wordpress/ -R
+    - rsync -vz -e "ssh -o StrictHostKeyChecking=no" ./* ubuntu@app.milevsky.quest:/var/www/wordpress/
+    - ssh -o StrictHostKeyChecking=no ubuntu@app.milevsky.quest rm -rf /var/www/wordpress/.git
+    - ssh -o StrictHostKeyChecking=no ubuntu@app.milevsky.quest sudo chown www-data /var/www/wordpress/ -R
+  only:
+      - tags
+```
