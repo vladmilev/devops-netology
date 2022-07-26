@@ -2,13 +2,14 @@
 
 ## 1. Доменное имя
 - зарегистрирован домен `milevsky.quest` через регистратора https://www.reg.ru/  
-- добавлены настройки для субдоменов (А-записи, указывают соответствие доменного имени и IPv4-адреса) 
+- в YandexCloud [зарезервирован статический публичный IP-адрес](https://cloud.yandex.ru/docs/vpc/operations/get-static-ip) - 62.84.118.248
+- добавлены настройки для субдоменов (А-записи, указывают соответствие доменного имени и IPv4-адреса) у регистратора  
 ```
-https://www.milevsky.quest (WordPress) www → 194.58.112.174
-https://gitlab.milevsky.quest (Gitlab) gitlab → 194.58.112.174
-https://grafana.milevsky.quest (Grafana) grafana → 194.58.112.174
-https://prometheus.milevsky.quest (Prometheus) prometheus → 194.58.112.174
-https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 194.58.112.174
+https://www.milevsky.quest (WordPress) www → 62.84.118.248
+https://gitlab.milevsky.quest (Gitlab) gitlab → 62.84.118.248
+https://grafana.milevsky.quest (Grafana) grafana → 62.84.118.248
+https://prometheus.milevsky.quest (Prometheus) prometheus → 62.84.118.248
+https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 62.84.118.248
 ```
 Личный кабинет https://www.reg.ru/user/account 
 >![PID 1](../img/dns.png)  
