@@ -1,5 +1,7 @@
 # Дипломный практикум в YandexCloud
 
+Репозиторий с исходными файлами проекта [https://github.com/vladmilev/diplom](https://github.com/vladmilev/diplom)   
+
 ## 1. Доменное имя
 - зарегистрирован домен `milevsky.quest` через регистратора https://www.reg.ru/  
 - в YandexCloud [зарезервирован статический публичный IP-адрес](https://cloud.yandex.ru/docs/vpc/operations/get-static-ip) - 62.84.118.248
@@ -12,7 +14,9 @@ https://prometheus.milevsky.quest (Prometheus) prometheus → 62.84.118.248
 https://alertmanager.milevsky.quest (Alert Manager) alertmanager → 62.84.118.248
 ```
 Личный кабинет https://www.reg.ru/user/account 
->![PID 1](../img/dns.png)  
+<p align="center">
+  <img src="./img/dns.png">
+</p>
 
 ## 2. Облачная инфраструктура 
 (развертывание инфраструктуры с помощью Terraform на базе облачного провайдера YandexCloud)
@@ -27,24 +31,27 @@ id: aje1sgffja87k3fi62gj
 Создал статические ключи доступа:  
 $ yc iam access-key create --service-account-name vlad-milev-account --description "this key is for my bucket"   
 Через консоль console.cloud.yandex.ru создал бакет vlad-milev-bucket   
-Можно писать и запускать код - предварительно создам новый репозиторий (под диплом) https://github.com/vladmilev/diplom   
+Можно писать и запускать код - предварительно, под диплом, создан новый репозиторий [https://github.com/vladmilev/diplom](https://github.com/vladmilev/diplom)   
 $ git clone git@github.com:vladmilev/diplom.git
 
-Настройки провайдера и бэкенда - providers.tf  
-Настройки сети и двух подсетей в разных зонах доступности - network.tf  
-Инициализируем terrraform
-$ terraform init
-Создаем воркспейсы stage и prod:  
-$ terraform workspace new stage  
-$ terraform workspace new prod  
+Настройки провайдера и бэкенда - [providers.tf](https://github.com/vladmilev/diplom/blob/main/terraform/providers.tf)  
+Настройки сети и двух подсетей в разных зонах доступности - [network.tf](https://github.com/vladmilev/diplom/blob/main/terraform/network.tf)  
+Инициализируем terrraform  
+`$ terraform init`  
+Создаем воркспейсы stage и prod:   
+`$ terraform workspace new stage`  
+`$ terraform workspace new prod`  
 (долго выдавала ошибку доступа - надо вызвать ACL-бакета через три точки в списке бакетов консоли в браузере)  
 указанные воркспейсы появились в бакете облака:  
->![PID 1](../img/workspaces.png)  
+<p align="center">
+  <img src="./img/workspaces.png">
+</p>
+Запускаем инфраструктуру:  
+`$ terraform apply`  
+создает (на данном этапе) 1 сеть (network-1) с двумя подсетями (subnet-1, subnet-2)    
+Удаляем по окончании работ указанные ресурсы из облака:  
+`$ terraform destroy`  
 
-$ terraform apply  
-создает (на данном этапе) 1 сеть (network-1) с двумя подсетями (subnet-1, subnet-2)  
-$ terraform destroy  
-удаляет указанные ресурсы из облака  
 
 ## 3. Nginx и LetsEncrypt  
 (Ansible роль для установки Nginx и LetsEncrypt)  
@@ -55,18 +62,16 @@ Reverse proxy (обратный прокси-сервер) — тип прокс
 Надо поднять одну виртуальную машину с сервером nginx (194.58.112.174 - адрес, доменное имя milevsky.quest) c характеристиками: 2vCPU, 2 RAM, External address (Public) и Internal address.   
 Сервер с Nginx будет служить маршрутиразтором запросов к различным серверам внутренней сети - у нас есть только один сервер с public ip (194.58.112.174), а сертификаты LetsEncrypt нужны на серверах внутри сети для безопасного трафика.  
 
-Поиск по запросу: Ansible Nginx и letsencrypt выдал первую ссылку с решением https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349  
+Поиск по запросу: Ansible Nginx и letsencrypt выдал первую [ссылку с решением](https://gist.github.com/mattiaslundberg/ba214a35060d3c8603e9b1ec8627d349)  
 
 1. В вашей доменной зоне настроены все A-записи на внешний адрес этого сервера:
 Статья про Cloud DNS https://cloud.yandex.ru/docs/dns/quickstart  
-
-У регистратора (reg.ru) указал список NS-серверов Яндекс Облака (ns1.yandexcloud.net. ns2.yandexcloud.net.) - так было указано в документации "Делегируйте ваше доменное имя, указав адреса серверов имен ns1.yandexcloud.net. и ns2.yandexcloud.net. Yandex Cloud у вашего регистратора"
 
 В Virtual Private Cloud / IP-адреса - зарезервировал адрес в ru-central1-a (subnet-1)  62.84.118.248  
 Этот адрес указал для настроек терраформа для сервера nginx - nat_ip_address = var.yc_public_ip ("62.84.118.248")  
 
 В Cloud DNS создал публичную зону milevsky.quest.   
-для нее настроил A-записи (A — сопоставление доменного имени и IPv4-адреса [ссылка](https://cloud.yandex.ru/docs/dns/concepts/resource-record?utm_source=console&utm_medium=side-bar-left&utm_campaign=dns) )  с указаем статического выделенного IPv4 адреса
+для нее настроил A-записи (A — сопоставление доменного имени и IPv4-адреса [ссылка](https://cloud.yandex.ru/docs/dns/concepts/resource-record?utm_source=console&utm_medium=side-bar-left&utm_campaign=dns) ) с указаем статического выделенного IPv4 адреса
 ```
 alertmanager.milevsky.quest.	A	600	62.84.118.248
 gitlab.milevsky.quest.	A	600	62.84.118.248
@@ -77,7 +82,7 @@ prometheus.milevsky.quest.	A	600	62.84.118.248
 www.milevsky.quest.	A	600	62.84.117.51
 ```
 
-2. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл nginx.tf
+2. Поднимем ВМ под сервер Nginx - с помощью Terraform (terraform apply) - файл [nginx.tf](https://github.com/vladmilev/diplom/blob/main/terraform/nginx.tf)
 ```
 resource "yandex_compute_instance" "nginx" {
   name     = "nginx"
@@ -115,78 +120,24 @@ variable "yc_public_ip" {
 3. указываем хост сервера в файле ansible/hosts  
 ```
 [nginx]
-milevsky.quest  letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
+milevsky.quest ansible_host=62.84.118.248 letsencrypt_email=vlad_milev@mail.ru domain_name=milevsky.quest
 ```
 
-4. формируем плей для выполнения ansible/nginx-server.yml
+4. формируем плейбук для выполнения ansible/nginx-server.yml
 ```
 - hosts: nginx
   become: true
+  become_method: sudo
+  become_user: root
+  remote_user: ubuntu
   gather_facts: true
   roles:
    - Nginx_LetsEncrypt
 ```   
 
 5. Формируем роль Nginx_LetsEncrypt  
-список задач ansible/roles/Nginx_LetsEncrypt/tasks/main.yml
-```
----
-- name: python-simplejson
-  raw: apt-get install -y python-simplejson
-
-- name: Upgrade system
-  apt: update_cache=yes
-
-- name: Install nginx
-  apt: name=nginx state=latest
-
-- name: install letsencrypt
-  apt: name=letsencrypt state=latest
-
-- name: create letsencrypt directory
-  file: name=/var/www/letsencrypt state=directory
-
-- name: Remove default nginx config
-  file: name=/etc/nginx/sites-enabled/default state=absent
-
-- name: Install system nginx config
-  template:
-    src: templates/nginx.conf.j2
-    dest: /etc/nginx/nginx.conf
-
-- name: Install nginx site for letsencrypt requests
-  template:
-    src: templates/nginx-http.j2
-    dest: /etc/nginx/sites-enabled/http
-
-- name: Reload nginx to activate letsencrypt site
-  service: name=nginx state=restarted
-
-- name: Create letsencrypt certificate front
-  shell: letsencrypt certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }}
-  args:
-    creates: /etc/letsencrypt/live/{{ domain_name }}
-  
-- name: Generate dhparams
-  shell: openssl dhparam -out /etc/nginx/dhparams.pem 2048
-  args:
-    creates: /etc/nginx/dhparams.pem
-
-- name: Install nginx site for specified site
-  template:
-    src: templates/nginx-le.j2
-    dest: /etc/nginx/sites-enabled/le
-
-- name: Reload nginx to activate specified site
-  service: name=nginx state=restarted
-
-- name: Add letsencrypt cronjob for cert renewal
-  cron:
-    name: letsencrypt_renewal
-    special_time: weekly
-    job: letsencrypt --renew certonly -n --webroot -w /var/www/letsencrypt -m {{ letsencrypt_email }} --agree-tos -d {{ domain_name }} && service nginx reload
-```
-настройка для /etc/nginx/nginx.conf - в ansible/roles/Nginx_LetsEncrypt/templates/nginx.conf.j2
+список задач [ansible/roles/Nginx_LetsEncrypt/tasks/main.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/tasks/main.yml)
+настройка для /etc/nginx/nginx.conf - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx.conf.j2]()
 ```
 user www-data;
 worker_processes 4;
@@ -216,25 +167,8 @@ http {
     include /etc/nginx/sites-enabled/*;
 }
 ```
-настройка для /etc/nginx/sites-enabled/http - в ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2
-```
-server_tokens off;
-
-server {
-    listen 80;
-    server_name {{ domain_name }};
-
-    location /.well-known/acme-challenge {
-        root /var/www/letsencrypt;
-        try_files $uri $uri/ =404;
-    }
-
-    location / {
-        rewrite ^ https://{{ domain_name }}$request_uri? permanent;
-    }
-}
-```
-настройка для /etc/nginx/sites-enabled/le - в ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2
+настройка для /etc/nginx/sites-enabled/http - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2)  
+настройка для /etc/nginx/sites-enabled/le - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2)  
 ```
 add_header X-Frame-Options SAMEORIGIN;
 add_header X-Content-Type-Options nosniff;
@@ -414,9 +348,9 @@ server {
 - В кластере автоматически создаётся база данных c именем wordpress.  
 - В кластере автоматически создаётся пользователь wordpress с полными правами на базу wordpress и паролем wordpress.  
 
-Поиск по запросу: "Ansible role install MySQL Ubuntu servers" выдал первую ссылку с решением https://github.com/geerlingguy/ansible-role-mysql  
-Сначала надо поднять terraform-ом 2 инстанса - mysql.tf  
-затем скачиваем архив с ролью (wget, unzip) настраиваем файл конфигурации defaults\main.yml  
+Поиск по запросу: "Ansible role install MySQL Ubuntu servers" выдал первую [ссылку с решением](https://github.com/geerlingguy/ansible-role-mysql)  
+Сначала надо поднять terraform-ом 2 инстанса - [mysql.tf](https://github.com/vladmilev/diplom/blob/main/terraform/mysql.tf)  
+затем скачиваем архив с ролью (wget, unzip) настраиваем файл конфигурации defaults\main.yml у этой роли  
 доводим плейбук до рабочего состояния  
 проверяем базу данных на виртуальных машинах и работу репликации.  
 
@@ -431,13 +365,15 @@ server {
 На сервере you.domain отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен WordPress.  
 В браузере можно открыть URL https://www.you.domain и увидеть главную страницу WordPress.  
 
-Плейбук запускает роли nginx, wordpress, php.  
-Также сначала создаем инстанс terraform-а - wordpress.tf  
+Плейбук запускает роли nginx, wordpress, php - [wordpress.yml](https://github.com/vladmilev/diplom/blob/main/ansible/wordpress.yml)
+Также сначала создаем инстанс terraform-а - [wordpress.tf](https://github.com/vladmilev/diplom/blob/main/terraform/wordpress.tf)  
 Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси  
 Доводим плейбук до рабочего состояния  
-Проверяем работу www.milevsky.quest  
-```
-```
+Проверяем работу www.milevsky.quest   
+В качестве базы данных при первичной настройке сайта - указываем сервер mySQL мастер db01 поднятый плейбуком mysql.yml  
+<p align="center">
+  <img src="./img/wordpress.png">
+</p>
 
 ## 6. Установка Gitlab CE и Gitlab Runner  
 Необходимо настроить CI/CD систему для автоматического развертывания приложения при изменении кода.  
@@ -451,11 +387,25 @@ server {
 - На сервере you.domain отредактирован upstream для выше указанного URL и он смотрит на виртуальную машину на которой установлен Gitlab  
 - При любом коммите в репозиторий с WordPress и создании тега (например, v1.0.0) происходит деплой на виртуальную машину.  
 
-Сначала создаем 2 инстанса terraform-ом - gitlab.tf и runner.tf (копирование предыдущей ВМ с mysql - такая же конфигурация)   
-Доводим плейбук до рабочего состояния  
-Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси.  
+Сначала создаем 2 инстанса terraform-ом - [gitlab.tf](https://github.com/vladmilev/diplom/blob/main/terraform/gitlab.tf) и [runner.tf](https://github.com/vladmilev/diplom/blob/main/terraform/runner.tf)   
 
-Pipeline .gitlab-ci.yml
+Плейбук (gitlab.yml](https://github.com/vladmilev/diplom/blob/main/ansible/gitlab.yml) основывается на одноименной [роли](https://github.com/vladmilev/diplom/tree/main/ansible/roles/gitlab) в которой изменены настройки в файле `defaults\main.yml`  
+Доводим плейбук (gitlab.yml](https://github.com/vladmilev/diplom/blob/main/ansible/gitlab.yml) до рабочего состояния.  
+
+Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси.  
+Для входа на странице браузера по адресу gitlab.milevsky.quest используем пароль, полученный командой:  
+`sudo gitlab-rake "gitlab:password:reset[root]"` (сброс и назначение нового пароля - root/root22=4)  
+
+Запускаем плейбук Gitlab Runner-a - (runner.yml](https://github.com/vladmilev/diplom/blob/main/ansible/runner.yml)  
+Для роли [gitlab-runner](https://github.com/vladmilev/diplom/tree/main/ansible/roles/gitlab-runner) изменяем настройки в файле `defaults\main.yml`
+(указываем gitlab_runner_coordinator_url и gitlab_runner_registration_token, которые можно получить на странице Setting \ CI/CD \ Runners \ Expand)  
+
+После запуска runner-а его обнаружит сервер Gitlab:
+<p align="center">
+  <img src="./img/gitlab4.png">
+</p>
+
+Pipeline .gitlab-ci.yml был взят из [документации](https://docs.gitlab.com/ee/ci/ssh_keys/):  
 ```
 before_script:
   - eval $(ssh-agent -s)
@@ -477,3 +427,64 @@ deploy-job:
   only:
       - tags
 ```
+- для связи runner-а с сервером (в секции before_script) устанавливается ssh-соединение - через ssh-agent которому передается переменная ssh_key:
+<p align="center">
+  <img src="./img/gitlab3.png">
+</p>
+
+- чтобы pipline запускался только при коммите тегов прописываем в правилах (rule): 
+```
+  only:
+      - tags
+```
+При первом входе на сервер, после авторизации, автоматически был создан проект Monitoring, в нем создан репозиторий Monitoring.git  
+
+Теперь задача связать gitlab-проект с исходными файлами нашего приложения - сайта wordpress.milevsky.quest   
+
+Запустим и инициализируем сайт wordpress.milevsky.quest (плейбук wordpress.yml), добавим все исходные файлы сайта (/var/www/wordpress) в этот репозиторий:  
+```
+git init
+git config --global --add safe.directory var/www/wordpress
+git add*
+git commit -m "first commit"
+git remote add origin http://gitlab.milevsky.quest/gitlab-instance-773ac29e/Monitoring.git
+git push -u origin --all
+```
+
+Убедимся, что pipeline отрабатывает успешно
+<p align="center">
+  <img src="./img/gitlab1.png">
+</p>
+<p align="center">
+  <img src="./img/gitlab2.png">
+</p>
+
+Теперь, при commit-е нового тега в репозиторий, изменения будут отправляться на сервер c приложением (сайт wordpress.milevsky.quest).
+
+
+## 7. Установка Prometheus, Alert Manager, Node Exporter и Grafana
+Необходимо разработать Ansible роль для установки Prometheus, Alert Manager и Grafana. Имя сервера: monitoring.you.domain (4vCPU, 4 RAM, Internal address).
+
+Цель: получение метрик со всей инфраструктуры.
+
+Результаты:
+1. Интерфейсы Prometheus, Alert Manager и Grafana доступены по https.
+2. В вашей доменной зоне настроены A-записи на внешний адрес reverse proxy:
+• https://grafana.you.domain (Grafana)
+• https://prometheus.you.domain (Prometheus)
+• https://alertmanager.you.domain (Alert Manager)
+3. На сервере you.domain отредактированы upstreams для выше указанных URL и они смотрят на виртуальную машину на которой установлены Prometheus, Alert Manager и Grafana.
+4. На всех серверах установлен Node Exporter и его метрики доступны Prometheus.
+5. У Alert Manager есть необходимый набор правил для создания алертов.
+6.В Grafana есть дашборд отображающий метрики из Node Exporter по всем серверам.
+
+Нашел [описание](https://mcs.mail.ru/docs/additionals/cases/cases-monitoring/case-node-exporter) такой связки:  
+Prometheus - центральный сервер, предназначенный для сбора и хранения данных. Сервер Prometheus с заданной периодичностью считывает метрики и помещает полученные данные в Time Series DB (разновидность баз данных, предназначенная для хранения временных рядов - значений с привязкой ко времени).  
+Exporters - процессы, обеспечивающие сбор и их передачу серверу Prometheus. Существует много разных exporters, например:  
+Node_exporter - сбор системных метрик (процессор, память, и т.д.).  
+Mysqld_exporter - сбор метрик работы сервера MySQL.  
+После запуска exporter начинает сбор соответствующих метрик и ожидает запросов от сервера Prometheus по заданному порту. Данных передаются в формате http.  
+Grafana - удобный frontend для визуализации накопленных данных.  
+Prometheus тоже умеет генерировать алерты на основе настраиваемых правил.  
+Alertmanager - позволяет сортировать алерты и отправлять сообщения только первый раз (срабатывания правила) [настройка на Ubuntu](https://losst.ru/nastrojka-alertmanager-prometheus).
+
