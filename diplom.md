@@ -136,7 +136,7 @@ milevsky.quest ansible_host=62.84.118.248 letsencrypt_email=vlad_milev@mail.ru d
 ```   
 
 (5) Формируем роль Nginx_LetsEncrypt  
-список задач [ansible/roles/Nginx_LetsEncrypt/tasks/main.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/tasks/main.yml)
+список задач [ansible/roles/Nginx_LetsEncrypt/tasks/main.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/tasks/main.yml)  
 настройка для /etc/nginx/nginx.conf - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx.conf.j2](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/templates/nginx.conf.j2)  
 настройка для /etc/nginx/sites-enabled/http - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/templates/nginx-http.j2)  
 настройка для /etc/nginx/sites-enabled/le - в [ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2](https://github.com/vladmilev/diplom/blob/main/ansible/roles/Nginx_LetsEncrypt/templates/nginx-le.j2)  
@@ -153,10 +153,10 @@ milevsky.quest ansible_host=62.84.118.248 letsencrypt_email=vlad_milev@mail.ru d
 затем скачиваем архив с ролью (wget, unzip) настраиваем файл конфигурации defaults\main.yml у этой роли  
 доводим плейбук до рабочего состояния  
 проверяем базу данных на виртуальных машинах и работу репликации:  
-<p align="center">
+<p align="left">
   <img src="./img/mysql1.png">
 </p>
-<p align="center">
+<p align="left">
   <img src="./img/mysql2.png">
 </p>
 
@@ -176,7 +176,14 @@ milevsky.quest ansible_host=62.84.118.248 letsencrypt_email=vlad_milev@mail.ru d
 Донастраиваем upsteam сервер и запускаем плейбук nginx-server.yml для работы обратного прокси  
 Доводим плейбук до рабочего состояния  
 Проверяем работу www.milevsky.quest   
-В качестве базы данных при первичной настройке сайта - указываем сервер mySQL мастер db01 поднятый плейбуком mysql.yml  
+В качестве базы данных при первичной настройке сайта - указываем IP сервера mySQL - мастер db01, поднятый плейбуком mysql.yml  
+<p align="left">
+  <img src="./img/wordpress-setup.png">
+</p>
+<p align="left">
+  <img src="./img/wordpress-setup-ok.png">
+</p>
+В результате сайт запустился:
 <p align="center">
   <img src="./img/wordpress.png">
 </p>
@@ -293,4 +300,12 @@ Mysqld_exporter - сбор метрик работы сервера MySQL.
 Grafana - удобный frontend для визуализации накопленных данных.  
 Prometheus тоже умеет генерировать алерты на основе настраиваемых правил.  
 Alertmanager - позволяет сортировать алерты и отправлять сообщения только первый раз (срабатывания правила) [настройка на Ubuntu](https://losst.ru/nastrojka-alertmanager-prometheus).
+
+Запускаем плейбук [exporter.yml](https://github.com/vladmilev/diplom/blob/main/ansible/exporter.yml), он запускает для всех хостов установку Node Exporter с помощью роли [node_exporter](https://github.com/vladmilev/diplom/tree/main/ansible/roles/node_exporter).  
+
+Запускаем плейбук [monitoring.yml](https://github.com/vladmilev/diplom/blob/main/ansible/monitoring.yml), он запускает для хоста monitoring установку Prometheus и Alert Manager с помощью роли [monitoring](https://github.com/vladmilev/diplom/tree/main/ansible/roles/monitoring) и инструмент визуализации Grafana с помощью роли [grafana](https://github.com/vladmilev/diplom/tree/main/ansible/roles/grafana).  
+
+Необхордимы [набор правил](https://awesome-prometheus-alerts.grep.to/rules.html) настраивается в файле [roles/monitoring/templates/alert.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/monitoring/templates/alert.yml).  
+
+Сбор метрик Prometheus-ом настраивается в файле [roles\monitoring\templates\prometheus.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/monitoring/templates/prometheus.yml).  
 
