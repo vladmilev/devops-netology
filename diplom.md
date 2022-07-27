@@ -307,5 +307,35 @@ Alertmanager - позволяет сортировать алерты и отп�
 
 Необхордимы [набор правил](https://awesome-prometheus-alerts.grep.to/rules.html) настраивается в файле [roles/monitoring/templates/alert.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/monitoring/templates/alert.yml).  
 
-Сбор метрик Prometheus-ом настраивается в файле [roles\monitoring\templates\prometheus.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/monitoring/templates/prometheus.yml).  
+Сбор метрик Prometheus-ом настраивается в файле [roles/monitoring/templates/prometheus.yml](https://github.com/vladmilev/diplom/blob/main/ansible/roles/monitoring/templates/prometheus.yml).  
 
+Grafana, Prometheus и Alert manager теперь доступны по https.
+<p align="center">
+  <img src="./img/prometheus.png">
+</p>
+<p align="center">
+  <img src="./img/grafana1.png">
+</p>
+<p align="center">
+  <img src="./img/alertmanager.png">
+</p>
+
+Вход в Grafana по admin/admin.   
+В интерфейсе Grafana указываем источник данных Prometheus - URL http://monitoring.milevsky.quest:9090  
+<p align="center">
+  <img src="./img/grafana2.png">
+</p>
+Импортируем шаблоны Dashboards из каталога grafana_templates
+<p align="center">
+  <img src="./img/grafana-dashboards-browse.png">
+</p>
+
+На dashboard Grafana доступны метрики со всех работающих хостов
+<p align="center">
+  <img src="./img/grafana-dashboards-app.png">
+</p>
+
+В случае недоступности метрик на одном из хостов срабатывает созданный alert
+<p align="center">
+  <img src="./img/alertmanager.png">
+</p>
