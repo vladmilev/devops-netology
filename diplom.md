@@ -339,3 +339,20 @@ Grafana, Prometheus и Alert manager теперь доступны по https.
 <p align="center">
   <img src="./img/alertmanager.png">
 </p>
+
+Скриншоты валидной ssl сертификации:
+<p align="center">
+  <img src="./img/www-ssl.png">
+</p>
+<p align="center">
+  <img src="./img/gitlab-ssl.png">
+</p>
+<p align="center">
+  <img src="./img/grafana-ssl.png">
+</p>
+<p align="center">
+  <img src="./img/prometheus-ssl.png">
+</p>
+<p align="center">
+  <img src="./img/alertmanager-ssl.png">
+</p>
